@@ -11,7 +11,12 @@ runtime: shiny_prerendered
 ---
 
 ```{r setup, include = FALSE}
-source('setup.R')
+library(learnr)
+library(shiny)
+library(fontawesome)
+library(lavaan)
+
+data(fairplayer)
 ```
 
 ## Einleitung
@@ -39,10 +44,6 @@ load('fairplayer.rda')
 *Hinweis: Wenn Sie mit diesen Daten in einem eigenen R-Skript Dinge ausprobieren möchten, können Sie die Daten mit `data(fairplayer, package = 'PsyMSc1')` laden.*
 
 Verschaffen Sie sich im folgenden Fenster einen Überblick über die Daten. Wie viele und was für Variablen enthält der Datensatz? Von wie vielen Personen liegen Daten vor? Einige Befehle sind schon beispielhaft vorgegeben - Sie können aber auch andere Befehle ergänzen, um mehr Details zu erfahren!
-
-```{r exe, exercise=TRUE}
-head(fairplayer)
-```
 
 
 ```{r data_inspection, exercise=TRUE}
