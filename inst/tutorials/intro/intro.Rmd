@@ -61,5 +61,42 @@ str(fairplayer)
 fairplayer
 ```
 
+Der Datensatz, den wir hier betrachten enthält verhaltensbezogene Selbstberichte auf jeweils drei Items zur relationalen Aggression (`ra`), Empathie (`em`) und sozialen Intelligenz (`si`). Diese insgesamt 9 Indikatoren liegen zu drei Messzeitpunkten (`t1`, `t2` und `t3`) vor. Die über `str` angeforderte Struktur verrät uns außerdem, dass diese Variable allesamt integer (`int`), also ganzzahlig, sind. Über die Items hinaus sind vier weitere Variablen im Datensatz enthalten, die Personenidentifikator (`id`), die Klasse (`class`), die Interventionsgruppe (`grp`) und das Geschlecht (`sex`) der Jugendlichen kodieren.
 
-Der Datensatz, den wir hier betrachten enthält verhaltensbezogene Selbstberichte auf jeweils drei Items zur relationalen Aggression (`ra`), Empathie (`em`) und sozialen Intelligenz (`si`). Diese insgesamt 9 Indikatoren liegen zu drei Messzeitpunkten (`t1`, `t2` und `t3`) vor.
+### Datenmanagement
+
+Eines der großen Themen in diesem Semester wird es sein, möglichst gute und zuverlässige Schätzungen für die Werte einzelner Personen auf verschiedenen psychologischen Konstrukten zu erhalten. Traditionellerweise werden dafür häufig sogenannte Skalenwerte genutzt. Diese werden meistens als Mittelwerte der Items, die ein gemeinsames Konstrukt erheben sollen, berechnet.
+
+Für die weiteren Analysen in dieser Sitzung werden wir die Skalenwerte der relationalen Aggression, Empathie und sozialen Intelligenz zum ersten Zeitpunkt benötigen. Naheliegend wäre es, diese durch einfache Arithmetik zu bestimmen, z.B. für die relationale Aggression:
+
+```{r, eval = FALSE}
+fairplayer$rat1 <- (fairplayer$ra1t1 + fairplayer$ra2t1 + fairplayer$ra3t1) / 3
+```
+
+Von diesem Vorgehen möchten wir an dieser Stelle explizit abraten. Grund dafür ist, dass es hier nicht möglich ist den Umgang mit fehlenden Werte zu beeinflussen. Darüber hinaus wird diese Strategie mit zunehmender Anzahl von Items pro Skala sehr schreibaufwändig. Das sollten wir nicht nur aus Faulheit umgehen, sondern auch weil mehr Syntax immer auch mehr mögliche Fehlerquellen bedeutet. Stattdessen empfehlen wir mir dem `rowMeans` Befehel zu arbeiten. Z.B. für die relationale Aggression:
+
+```{r}
+fairplayer$rat1 <- rowMeans(fairplayer[, c('ra1t1', 'ra2t1', 'ra3t1')],
+  na.rm = TRUE)
+```
+
+Das Argument `na.rm = TRUE` bewirkt, dass wir den Skalenwert auch dann berechnen, wenn fehlende Werte auf einzelnen Items vorliegen. Erstellen Sie die Skalenwerte für die Empathie und die soziale Intelligenz im folgenden Fenster!
+
+```{r, exercise = TRUE, exercise.eval = FALSE}
+# Empathie
+fairplayer$emt1 <- ...
+
+# Soziale Intelligenz
+fairplayer$sit1 <- ...
+```
+
+```{r scales, echo = FALSE}
+fairplayer$rat1 <- rowMeans(fairplayer[, c('ra1t1', 'ra2t1', 'ra3t1')],
+  na.rm = TRUE)
+fairplayer$emt1 <- rowMeans(fairplayer[, c('em1t1', 'em2t1', 'em3t1')],
+  na.rm = TRUE)
+fairplayer$sit1 <- rowMeans(fairplayer[, c('si1t1', 'si2t1', 'si3t1')],
+  na.rm = TRUE)
+```
+
+### Deskriptivstatistik
