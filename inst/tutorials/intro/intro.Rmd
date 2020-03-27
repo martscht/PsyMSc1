@@ -1,0 +1,64 @@
+---
+title: "lavaan Einführung"
+output:
+  learnr::tutorial:
+    progressive: true
+    allow_skip: true
+    includes:
+      after_body: footer.html
+      in_header: header.html
+runtime: shiny_prerendered
+---
+
+```{r setup, include = FALSE}
+source('setup.R')
+```
+
+## Einleitung
+
+Im Verlauf dieses Seminars soll neben der Einführung in die Theorie und Hintergründe multivariater Verfahren auch eine Einführung in deren Umsetzung gegeben werden, sodass Sie in der Lage sind, diese Verfahren in Ihrem zukünftigen akademischen und beruflichen Werdegang zu benutzen. Diese Umsetzung möchten wir Ihnen mit `lavaan` zeigen - dem meistverbreiteten Paket für multivariate Verfahren wie z.B. konfirmatorische Faktorenanalyse (CFA), Pfadanalyse oder Strukturgleichungsmodellierung (SEM) in R. Allein im März 2020 wurde `lavaan` über 30 000 mal herunter geladen; es wird in allen Bereichen der psychologischen Forschung genutzt und wurde in über 6 500 sozialwissenschaftflichen Veröffentlichungen zitiert.
+
+Dieses Tutorial bietet eine Einführung in `lavaan`. Im Zentrum stehen dabei die Grundgedanken und die typische Weise in der man in `lavaan` bei Analysen vorgeht. Um diese Ideen und Vorgehensweisen zu erkunden betrachten wir ein Beispiel aus dem letzten Semester mal aus dieser neuen Perspektive.
+
+Wir beginnen das Tutorial aber zunächst mit einer [Auffrischung Ihrer R-Fähigkeiten](#Wiederbelebung). Auch wenn Sie im Umgang mit R sehr geübt sind, nehmen Sie sich bitte trotzdem ein paar Minuten um sich noch einmal intensiv mit den Befehlen auseinanderzusetzen, die für dieses Semester von zentraler Bedeutung sind. Sollten Sie wenig Übung im Umgang mit R haben - oder wenn Sie einfach noch einmal eine etwas detaillierte Einführung in R lesen möchten - finden Sie auf [Pandar](https://pandar.netlify.com/) die [R-Einführung aus dem Bachelorstudiengang](https://pandar.netlify.com/post/r-crash-kurs/).
+
+Für die Durchführung dieses Tutorials benötigen Sie nichts weiter als dieses Browserfenster.
+
+## R Grundlagen Wiederbelebung {#Wiederbelebung}
+
+In diesem Abschnitt gucken wir uns zur Wiederholung noch einmal ein paar Grundzüge des Datenmanagements in R an, bevor wir eine multiple Regression durchführen und deren Ergebnisse genauer inspizieren.
+
+### Beispieldatensatz
+
+Der Datensatz, den wir in dieser Sitzung benutzen stammt aus einer Studie von Bull, Schultze & Scheithauer (2009), in der die Effektivität eines Interventionsprogramms zur Bullyingprävention bei Jugendlichen untersucht wurde. Der Datensatz liegt bereits im R-eigenen `.rda`-Format vor, sodass uns ein Import der Daten erspart bleibt. Stattdessen können wir einfach mit `load` arbeiten, um die Daten zu laden:
+
+```{r, eval = FALSE}
+load('fairplayer.rda')
+```
+
+*Hinweis: Wenn Sie mit diesen Daten in einem eigenen R-Skript Dinge ausprobieren möchten, können Sie die Daten mit `data(fairplayer, package = 'PsyMSc1')` laden.*
+
+Verschaffen Sie sich im folgenden Fenster einen Überblick über die Daten. Wie viele und was für Variablen enthält der Datensatz? Von wie vielen Personen liegen Daten vor? Einige Befehle sind schon beispielhaft vorgegeben - Sie können aber auch andere Befehle ergänzen, um mehr Details zu erfahren!
+
+```{r exe, exercise=TRUE}
+head(fairplayer)
+```
+
+
+```{r data_inspection, exercise=TRUE}
+# Namen der Variablen abfragen
+names(fairplayer)
+
+# Anzahl der Zeilen und Spalten
+nrow(fairplayer)
+ncol(fairplayer)
+
+# Struktur des Datensatz - Informationen zur Variablentypen
+str(fairplayer)
+
+# Datensatz ansehen
+fairplayer
+```
+
+
+Der Datensatz, den wir hier betrachten enthält verhaltensbezogene Selbstberichte auf jeweils drei Items zur relationalen Aggression (`ra`), Empathie (`em`) und sozialen Intelligenz (`si`). Diese insgesamt 9 Indikatoren liegen zu drei Messzeitpunkten (`t1`, `t2` und `t3`) vor.
