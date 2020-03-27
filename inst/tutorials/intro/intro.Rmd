@@ -15,7 +15,6 @@ library(learnr)
 library(shiny)
 library(fontawesome)
 library(lavaan)
-library(gradethis)
 
 knitr::opts_chunk$set(exercise.checker = gradethis::grade_learnr)
 
