@@ -15,6 +15,9 @@ library(learnr)
 library(shiny)
 library(fontawesome)
 library(lavaan)
+library(gradethis)
+
+knitr::opts_chunk$set(exercise.checker = gradethis::grade_learnr)
 
 data(fairplayer, package = 'PsyMSc1')
 ```
@@ -89,6 +92,18 @@ fairplayer$emt1 <- ...
 # Soziale Intelligenz
 fairplayer$sit1 <- ...
 ```
+
+<div id="rowMeans_exer-hint">
+**Tipp:** Nutzen Sie die `rowMeans`-Funktion. Sie können die Namen der einzelnen Items mit `names(fairplayer)` in Erfahrung bringen.
+</div>
+
+```{r rowMeans_exer-solution}
+fairplayer$emt1 <- rowMeans(fairplayer[, c('em1t1', 'em2t1', 'em3t1')],
+  na.rm = TRUE)
+fairplayer$sit1 <- rowMeans(fairplayer[, c('si1t1', 'si2t1', 'si3t1')],
+  na.rm = TRUE)
+```
+
 
 ```{r scales, echo = FALSE}
 fairplayer$rat1 <- rowMeans(fairplayer[, c('ra1t1', 'ra2t1', 'ra3t1')],
