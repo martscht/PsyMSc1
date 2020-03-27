@@ -10,5 +10,8 @@ Sitzung_1 <- function() {
   if (!('fontawesome' %in% rownames(installed.packages()))) {
     devtools::install_github("rstudio/fontawesome", upgrade = 'never')
   }
+  if (!('gradethis' %in% rownames(installed.packages()))) {
+    devtools::install_github("rstudio-education/gradethis", upgrade = 'never')
+  }
   learnr::run_tutorial('intro', package = 'PsyMSc1')
 }
