@@ -16,7 +16,7 @@ library(shiny)
 library(fontawesome)
 library(lavaan)
 
-data(fairplayer)
+data(fairplayer, package = 'PsyMSc1')
 ```
 
 ## Einleitung
