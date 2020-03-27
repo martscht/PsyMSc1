@@ -82,7 +82,7 @@ fairplayer$rat1 <- rowMeans(fairplayer[, c('ra1t1', 'ra2t1', 'ra3t1')],
 
 Das Argument `na.rm = TRUE` bewirkt, dass wir den Skalenwert auch dann berechnen, wenn fehlende Werte auf einzelnen Items vorliegen. Erstellen Sie die Skalenwerte für die Empathie und die soziale Intelligenz im folgenden Fenster!
 
-```{r, exercise = TRUE, exercise.eval = FALSE}
+```{r rowMeans_exer, exercise = TRUE, exercise.eval = FALSE}
 # Empathie
 fairplayer$emt1 <- ...
 
