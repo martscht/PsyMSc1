@@ -81,7 +81,7 @@ fairplayer$rat1 <- rowMeans(fairplayer[, c('ra1t1', 'ra2t1', 'ra3t1')],
   na.rm = TRUE)
 ```
 
-Das Argument `na.rm = TRUE` bewirkt, dass wir den Skalenwert auch dann berechnen, wenn fehlende Werte auf einzelnen Items vorliegen. Erstellen Sie die Skalenwerte für die Empathie und die soziale Intelligenz im folgenden Fenster!
+Das Argument `na.rm = TRUE` bewirkt, dass wir den Skalenwert auch dann berechnen, wenn fehlende Werte auf einzelnen Items vorliegen. Erstellen Sie die Skalenwerte für die Empathie und die soziale Intelligenz im folgenden Fenster! Mit dem "Hint" Button erhalten Sie Hinweise, durch die Sie durchblättern können. Der letzte "Hint" ist dann die vollständige Lösung.
 
 ```{r rowMeans_exer, exercise = TRUE, exercise.eval = FALSE}
 # Empathie
@@ -91,9 +91,30 @@ fairplayer$emt1 <- ...
 fairplayer$sit1 <- ...
 ```
 
-<div id="rowMeans_exer-hint">
-**Tipp:** Nutzen Sie die `rowMeans`-Funktion. Sie können die Namen der einzelnen Items mit `names(fairplayer)` in Erfahrung bringen.
-</div>
+<!-- <div id="rowMeans_exer-hint"> -->
+<!-- **Tipp:** Nutzen Sie die `rowMeans`-Funktion. Sie können die Namen der einzelnen Items mit `names(fairplayer)` in Erfahrung bringen. -->
+<!-- </div> -->
+
+```{r rowMeans_exer-hint-1}
+# Nutzen Sie die rowMeans-Funktion
+?rowMeans
+```
+
+```{r rowMeans_exer-hint-2}
+# Die Namen der Items:
+names(fairplayer)
+```
+
+```{r rowMeans_exer-solution}
+# Vollständige Lösung
+
+fairplayer$emt1 <- rowMeans(fairplayer[, c('em1t1', 'em2t1', 'em3t1')],
+  na.rm = TRUE)
+
+fairplayer$sit1 <- rowMeans(fairplayer[, c('si1t1', 'si2t1', 'si3t1')],
+  na.rm = TRUE)
+```
+
 
 ```{r scales, echo = FALSE}
 fairplayer$rat1 <- rowMeans(fairplayer[, c('ra1t1', 'ra2t1', 'ra3t1')],
