@@ -12,6 +12,7 @@ runtime: shiny_prerendered
 
 ```{r setup, include = FALSE}
 library(learnr)
+library(gradethis)
 library(shiny)
 library(fontawesome)
 library(lavaan)
@@ -126,3 +127,44 @@ fairplayer$sit1 <- rowMeans(fairplayer[, c('si1t1', 'si2t1', 'si3t1')],
 ```
 
 ### Deskriptivstatistik
+
+Die drei Skalenwerte aus dem letzten Abschnitt sollten wir uns - zusammen mit ein paar anderen Variablen - mal genauer angucken, um ein Gefühl dafür zu entwickeln, wie die Lage in dieser Erhebung ist. Der Klassiker, um sich einen Überblick zu verschaffen ist die R-eigene `summary` Funktion. Bei dieser handelt es sich um eine generische Funktion, die man auf viele verschiedene Objekte in R anwenden kann. Die Aufbereitung des Ergebnisses hängt dabei immer davon ab, auf was für ein Objekt man sie angewendet hat.
+
+Nehmen wir unsere drei Skalenwerte: bei allen handelt es sich um numerische Variablen (in R: `num`) - in R wird also davon ausgegangen, dass es Variablen mit mindestens Intervallskalenniveau sind (mehr Informationen zu Skalenniveaus in der psychologischen Methodenlehre finden Sie in [Kapitel 5 von "Statistik und Forschungsmethoden"](https://hds.hebis.de/ubffm/Record/HEB366849158)). Für solche Variablen wird in R mit `summary` eine sogenannte Fünf-Punkt-Zusammenfassung ausgegeben:
+
+```{r}
+summary(fairplayer$rat1)
+```
+
+Den Spitzfindigen unter Ihnen fällt auf, dass hier mehr als fünf Informationen ausgegeben werden. Die klassische Fünf-Punkt-Zusammenfassung besteht aus Minimum, Maximum und den drei Quartilen. In R wird zusätzlich noch das arithmetische Mittel und die Anzahl der fehlenden Werte ausgegeben.
+
+Für nominalskalierte Variablen, wie z.B. die Gruppenzugehörigkeit `grp` sieht die Zusammenfassung ein wenig anders aus:
+
+```{r}
+summary(fairplayer$grp)
+```
+
+Weil diese Variable in R als `factor` angelegt ist, wird sie als nominalskaliert behandelt und es werden keine Statistiken berechnet, die für solche Variablen nicht aussagekräftig sind. Stattdessen wird so einfach eine Häufigkeitstabelle erzeugt.
+
+Deskriptivstatistiken können aber auch einzeln erzeugt werden. Versuchen Sie im untenstehenden Feld für den Skalenwert der relationalen Aggression die Standardabweichung mit `sd` zu bestimmen!
+
+*Mit dem Button "Run Code" können Sie das R-Skript ausführen um Dinge auszuprobieren. Wenn Sie auf "Submit Answer" klicken, wird geprüft, ob ihr Skript richtig war.*
+
+```{r sd_exer, exercise = TRUE, exercise.setup = "scales"}
+
+```
+
+```{r sd_exer-check}
+fairplayer$rat1 <- rowMeans(fairplayer[, c('ra1t1', 'ra2t1', 'ra3t1')],
+  na.rm = TRUE)
+res <- sd(fairplayer$rat1, na.rm = TRUE)
+
+grade_result(
+  fail_if(~ is.na(.result), 'Wegen fehlender Werte kann die Standardabweichung nicht bestimmt werden. Finden Sie das geeignete Argument, dass die fehlenden Werte für die Berechnung ausschließt.'),
+  fail_if(~ (!is.na(.result) & !identical(.result, res)), 'Haben Sie die korrekte Variable angesprochen?'),
+  pass_if(~ identical(.result, res)),
+  correct = 'Sehr gut! Der Umgang mit fehlenden Werten muss in vielen R-Funktionen explizit angesprochen werden.',
+  incorrect = 'Leider falsch.',
+  glue_correct = '{.correct}',
+  glue_incorrect = '{.incorrect} {.message}')
+```
