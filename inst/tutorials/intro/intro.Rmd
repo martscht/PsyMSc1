@@ -21,6 +21,32 @@ data(fairplayer, package = 'PsyMSc1')
 knitr::opts_chunk$set(exercise.checker = gradethis::grade_learnr)
 ```
 
+```{r, echo = FALSE}
+abbrev <- function(X, begin = 'Latent Variables', end = NULL, ellipses = 'both', shift = 2, ...) {
+  
+  tmp <- capture.output(lavaan::summary(X,...))
+  
+  if (is.null(begin)) begin <- 1
+  else begin <- grep(begin, tmp, fixed = TRUE)[1]
+  if (is.null(end)) end <- length(tmp)-shift
+  else end <- grep(end, tmp, fixed = TRUE)[grep(end, tmp, fixed = TRUE) > begin][1]-shift
+  
+  if (ellipses == 'both') {
+    cat('[...]\n', paste(tmp[begin:end], collapse = '\n'), '\n[...]\n')
+  }
+  if (ellipses == 'top') {
+    cat('[...]\n', paste(tmp[begin:end], collapse = '\n'))
+  }
+  if (ellipses == 'bottom') {
+    cat(paste(tmp[begin:end], collapse = '\n'), '\n[...]\n')
+  }
+  if (ellipses == 'none') {
+    cat(paste(tmp[begin:end], collapse = '\n'))
+  }
+}
+```
+
+
 ## Einleitung
 
 Im Verlauf dieses Seminars soll neben der Einführung in die Theorie und Hintergründe multivariater Verfahren auch eine Einführung in deren Umsetzung gegeben werden, sodass Sie in der Lage sind, diese Verfahren in Ihrem zukünftigen akademischen und beruflichen Werdegang zu benutzen. Diese Umsetzung möchten wir Ihnen mit `lavaan` zeigen - dem meistverbreiteten Paket für multivariate Verfahren wie z.B. konfirmatorische Faktorenanalyse (CFA), Pfadanalyse oder Strukturgleichungsmodellierung (SEM) in R. Allein im März 2020 wurde `lavaan` über 30 000 mal herunter geladen; es wird in allen Bereichen der psychologischen Forschung genutzt und wurde in über 6 500 sozialwissenschaftflichen Veröffentlichungen zitiert.
@@ -263,7 +289,7 @@ mod <- lm(rat1 ~ sit1 + emt1, fairplayer)
 ```
 
 
-### Regressionergebnisse
+### Regressionergebnisse {#Regressionergebnisse}
 
 Es gibt jetzt eine Vielzahl von Möglichkeiten um die Ergebnissen des Modells zu inspizieren. Mit dem einfachen Aufruf des Modells erhalten wir zunächst nur die Regressiongewichte:
 
@@ -344,7 +370,7 @@ grade_result(
 
 Alle Dinge, die wir in den bisherigen Abschnitten besprochen haben sind Wiederholung von Konzepten aus dem Bachelorstudium oder der vergangenen Semester gewesen. In diesem Semester werden wir hauptsächlich mit dem R Paket `lavaan` arbeiten. Der Name ist dabei ein Akronym für **la**tent **va**riable **an**alysis. Im Rest dieser Sitzung werden wir uns die Kerngedanken des Pakets und das grundsätzliche Vorgehen zur Modellschätzung am Beispiel der multiplen Regression ansehen. Mehr Informationen zu `lavaan` finden Sie unter [lavaan.org](http://lavaan.org/).
 
-### Drei-Schritt Verfahren
+### Drei-Schritt Verfahren {#Schritte}
 
 Der Grundlegende Prozess der Modellierung folgt in `lavaan` drei Schritten. Folgende Abbildung soll das etwas verdeutlichen:
 
@@ -358,10 +384,192 @@ Die Model-Syntax von `lavaan` ist eine grafische Sprache. Das heißt, dass die S
 
 <img src="https://raw.githubusercontent.com/martscht/PsyMSc1/master/inst/tutorials/intro/images/shapes.png" width="65%"/>
 
-Mit diesen fünf sehr grundlegenden Elementen lassen sich erstaunlich viele Modelle darstellen, die in der psychologischen Forschung genutzt werden. Nehmen wir das bisherige Beispiel der Regression, in der wir relationale Aggression zum 1. Zeitpunkt ($RA_1$) durch soziale Intelligenz ($SI_1$) und Empathie ($EM_1$) vorhersagen. In diesem Fall haben wir drei beobachtbare Variablen: die drei Skalenwerte, die wir erzeugt haben. Die Beziehung zwischen $RA_1$ und $SI_1$ ($\beta_1$) bzw. $EM_1$ ($\beta_2$) ist regressiv. Zusätzlich regressieren wir die relationale Aggression auf die Konstante 1, um so eine Schätzung für das Intercept $\alpha$ zu erhalten. Das Residuum - also die Kompoenten von Ausprägung in relationaler Aggression, die nicht durch soziale Intelligenz und Empathie vorhergesagt werden kann - ist eine nicht-beobachtbare Variable. Diese Variable entsteht durch unsere Berechnung, sie existiert ohne das Modell nicht im Datensatz. Das alles in einer Abbildung zusammengefasst:
+Mit diesen fünf sehr grundlegenden Elementen lassen sich erstaunlich viele Modelle darstellen, die in der psychologischen Forschung genutzt werden. Nehmen wir das bisherige Beispiel der Regression, in der wir relationale Aggression zum 1. Zeitpunkt ($RA_1$) durch soziale Intelligenz ($SI_1$) und Empathie ($EM_1$) vorhersagen. In diesem Fall haben wir drei beobachtbare Variablen: die drei Skalenwerte, die wir erzeugt haben. Die Beziehung zwischen $RA_1$ und $SI_1$ ($\beta_1$) bzw. $EM_1$ ($\beta_2$) ist regressiv. Zusätzlich regressieren wir die relationale Aggression auf die Konstante 1, um so eine Schätzung für das Intercept $\alpha$ zu erhalten. Das Residuum - also die Komponenten von Ausprägung in relationaler Aggression, die nicht durch soziale Intelligenz und Empathie vorhergesagt werden kann - ist eine nicht-beobachtbare Variable. Diese Variable entsteht durch unsere Berechnung, sie existiert ohne das Modell nicht im Datensatz. Das alles in einer Abbildung zusammengefasst:
 
-<img src="https://raw.githubusercontent.com/martscht/PsyMSc1/master/inst/tutorials/intro/images/regression.png" width="75%"/>
 
-Häufig wird natürlich auf die detaillierte Beschriftung in solchen Abbildungen verzichtet, sodass eine typische Abbildung dieser Regression so aussehen würde:
+<img src="https://raw.githubusercontent.com/martscht/PsyMSc1/master/inst/tutorials/intro/images/regression.png" width="65%"/>
 
-<img src="https://raw.githubusercontent.com/martscht/PsyMSc1/master/inst/tutorials/intro/images/regression_short.png" width="75%"/>
+In dieser Abbildung wird also die Regression $RA_1 = \alpha + \beta_1 SI_1 + \beta_2EM_1 + \epsilon$ dargestellt. Häufig wird natürlich auf die detaillierte Beschriftung in solchen Abbildungen verzichtet, sodass eine typische Abbildung dieser Regression so aussehen würde:
+
+<img src="https://raw.githubusercontent.com/martscht/PsyMSc1/master/inst/tutorials/intro/images/regression_short.png" width="65%"/>
+
+### Modell-Syntax
+
+Wie oben erwähnt, wird in der Modell-Syntax von `lavaan` das Pfaddiagramm eines Modells beschrieben. In folgender Tabelle sind alle Befehle in `lavaan` Modell-Syntax zusammengetragen.
+
+| Bezeichnung | Befehl | Bedeutung |
+|:-----------:|:------:|:---------:|
+| Regression | `~` | wird vorhergesagt durch |
+| Kovarianz | `~~` | kovariiert mit |
+| Intercept | `~1` | wird auf 1 regressiert |
+| Faktorladung | `=~` | wird gemessen durch |
+| Formative Faktoren | `<~` | wird konstruiert durch |
+| Schwellenparameter | `|t...` | Schwelle Nummer ... |
+
+In `lavaan`, wie in beinahe jeder Statistik-Software, wird bei `~~` nicht die Korrelation, sondern stets die Kovarianz angesprochen. Von diesen sechs Befehlen sind für uns zunächst nur drei relevant: die Regression, die Kovarianz und das Intercept. Wie auch in der [R-internen Formelnotation](#Regression) wird die Tilde genutzt um Regressionen darzustellen. 
+
+Legen Sie im Feld unten das Modell für die Regression in einem Objekt mit dem Namen `mod` an! Vergessen Sie nicht, dass Modelle für `lavaan` als Text angelegt werden - sie müssen also mit Anführungszeichen beginnen und enden. Rufen Sie zum Abschluss das Objekt auf um sich wiedergeben zu lassen, was in dem Objekt an Syntax gespeichert ist!
+
+```{r lav_mod, exercise = TRUE, exercise.setup = 'scales'}
+mod <- ...
+mod
+```
+
+```{r lav_mod-hint-1}
+# Die Reihenfolge der Variablen und Leerzeichen sind irrelevant
+```
+
+```{r lav_mod-hint-2}
+# Sehen Sie sich noch einmal an, wie die Regression für lm() geschrieben wurde
+```
+
+
+```{r lav_mod-solution}
+# Vollständige Lösung
+mod <- 'rat1 ~ 1 + sit1 + emt1'
+```
+
+```{r lav_mod-check}
+res1 <- 'rat1~1+sit1+emt1'
+res2 <- 'rat1~1+emt1+sit1'
+
+grade_result(
+  # fail_if(~ class(try(as.character(.result), silent = TRUE)) == 'try-error', 'Vergessen Sie nicht sich das Modell mit "mod" ausgeben zu lassen.'),
+  # fail_if(~ !(identical(.result, res1) | identical(.result, res2)), ''),
+  fail_if(~ (!grepl('~1', gsub(' ', '', .result))), 'Bedenken Sie, dass auch das Intercept Teil der Regression ist'),
+  pass_if(~ identical(gsub(' ', '', .result), res1)),
+  pass_if(~ identical(gsub(' ', '', .result), res2)),
+  correct = 'Sehr gut! Dieses Modell enthält die Regression, wie sie in lavaan definiert wird.',
+  incorrect = 'Leider falsch.',
+  glue_correct = '{.correct}',
+  glue_incorrect = '{.incorrect} {.message}')
+```
+
+Für den `lm` Befehl reicht es aus die Regression zu definieren um das Modell aufzustellen. In `lavaan` ist das nicht der Fall. Das liegt daran, dass `lavaan` im Gegensatz zu `lm` in der Lage ist mehrere abhängige Variablen und komplexe Beziehungen zwischen diesen gleichzeitig darzustellen. Daher müssen alle Elemente des Pfaddiagramms angesprochen werden, wenn nicht angenommen werden soll, dass die Parameter 0 sind. Aus dem Pfaddiagramm zur multiple Regression fehlt jetzt im Modell noch die latente Variable $\epsilon$. Da wir sie im Modell noch nicht angesprochen haben, existiert diese für `lavaan` auch noch nicht. Um dem Residuum eine Existenz zu verschaffen können wir dessen Varianz anfordern. Weil das Residuum untrennbar mit der abhängigen Variable verbunden ist, erreichen wir das, indem wir die (Residual-)Varianz der relationalen Aggression anfordern: 
+
+```{r}
+mod <- 'rat1 ~ 1 + sit1 + emt1
+  rat1 ~~ rat1'
+```
+```{r, model, echo = FALSE}
+mod <- 'rat1 ~ 1 + sit1 + emt1
+  rat1 ~~ rat1'
+```
+
+Wie oben dargestellt können wir in `lavaan` die `~~` um eine Kovarianz anzufordern. Die Kovarianz einer Variable mit sich selbst ist deren Varianz.
+
+In der Modellsyntax von `lavaan` können wir Zeilenumbrüche nutzen um einzelne Modellabschnitte voneinander abzugrenzen. Wir haben z.B. eine Zeile mit der Regression und dann eine weitere mit der Varianz der Residualvarianz. Wir können nach diesem Schema auch die Regression in ihre Einzelteile zerlegen:
+
+```{r, eval = FALSE}
+mod <- '
+  # Regression
+  rat1 ~ 1
+  rat1 ~ sit1
+  rat1 ~ emt1
+  
+  # Residuum
+  rat1 ~~ rat1
+```
+
+Wie Sie sehen, können wir in `lavaan` Modellen auch weiterhin mit `#` Kommentare beginnen. Diese aufgeschlüsselte Variante ist mit der kürzeren Schreibweise oben identisch. Welche Sie bevorzugen ist ganz allein Ihnen überlassen.
+
+### Modellschätzung
+
+Den ersten der [drei Schritte](#Schritte) bei der Modellierung mit `lavaan` haben wir abgeschlossen. Jetzt wo wir ein Modell haben, müssen wir dieses Modell mit der empirischen Realität (also unseren Daten) konfrontieren. Dafür ist der Kernbefehl des Pakets der `lavaan`-Befehl. Dieser nimmt eine ganze Reihe an Argumenten entgehen, von denen allerdings nur zwei zwingend erforderlich sind:
+
+  - `model`: Das zu schätzende Modell
+  - `data`: Der Datensatz auf den das Modell angepasst werden soll
+  
+Alle anderen Argumente haben - für die meisten Analysen sinnvolle - Voreinstellungen. Weil die Modellschätzung mit `lavaan` sehr viele Ergebnisse und Details zum Schätzverfahren erzeugt, ist es ratsam das angepasste Modell in einem Objekt abzulegen.
+
+```{r}
+fit <- lavaan(mod, fairplayer)
+```
+
+Sofern keine Warn- oder Fehlermeldungen erzeugt werden, war die Schätzung des Modells erfolgreich. Wie auch bei `lm` oder anderen Funktionen aus dem letzten Semester, kann der Datensatz, der an `lavaan` gegeben wird auch Variablen enthalten, die für das Modell irrelevant sind. Alle manifesten Variablen, auf die im Modell bezug genommen wird, sucht sich `lavaan` aus dem Datensatz heraus.
+
+### Ergebnisinspektion
+
+`lavaan` bietet eine ganze Reihe von Möglichkeiten die Ergebnisse von Modellen genauer unter die Lupe zu nehmen. Die naheliegendste ist - wie schon bei `lm` - der allgemeine `summary` Befehl:
+
+```{r}
+summary(fit)
+```
+
+Diese Ausgabe enthält neben Modellergebnissen auch einige Informationen zur Schätzprozedur, auf die wir hier erst einmal noch nicht eingehen werden. Die erste Zahl, mit der wir uns näher auseinandersetzen können ist die `Number of free parameters` in der 3. Zeile der Ausgabe. Hier wird uns gesagt, dass wir vier Paramter schätzen mussten. Wenn wir uns das Pfaddiagramm für diese Regression noch einmal vor Augen führen wird schnell deutlichen welche vier das sind:
+
+  1. Regressionsgewicht $\beta_1$ von $SI_1$
+  2. Regressionsgewicht $\beta_2$ von $EM_1$
+  3. Achsenabschnitt / Intercept $\alpha$
+  4. Varianz der Residuen $\epsilon$
+
+Die nächste für uns relevante Information ist die `Number of observations` die in `Used` und `Total` unterteilt wird. Hier wird uns verraten, dass wir zwar `r nrow(fairplayer)` Personen im Datensatz haben, aber für unsere Analyse aufgrund fehlender Werte nur `r inspect(fit, 'nobs')` davon genutzt werden konnten.
+
+Dann springen wir direkt runter zu den Modellergebnissen, die mit der Zeile `Regressions:` beginnen. Wie diese Überschrift verrät erhalten wir zuerst Informationen über die Regressionsparameter. Hier der relevante Ausschnitt:
+
+```{r, echo = FALSE}
+abbrev(fit, 'Regressions', 'Intercepts')
+```
+
+Dieser Abschnitt beginnt mit der Zeile `rat1 ~`, was uns verdeutlichen soll, dass die folgenden Regressionsergebnisse sich auf eine Regression mit relationaler Aggression als abhängiger Variable beziehen. Die anschließende Tabelle enthält die gleichen vier Spalten, die wir schon bei der [Wiederholung der Regression](#Regressionergebnisse) gesehen haben: das geschätzte Regressionsgewicht (`Estimate`), den Standardfehler (`Std.Err.`), den $z$-Wert (`z-value`) und den daraus resultierenden $p$-Wert (`P(>|z|)`). Wie Ihnen mit Sicherheit sofort aufgefallen ist, arbeitet `lavaan` nicht mit $t$- sondern mit $z$-Werten. Das heißt, dass hier von vornherein eine größere Stichprobe angenommen wird um korrekte inferenzstatistische Schlüsse ziehen zu können. Wir können diese Ergebnisse direkt noch einmal mit den Ergebnissen aus `lm` vergleichen:
+
+```{r, echo = FALSE}
+summary(lm(rat1 ~ sit1 + emt1, fairplayer))$coef
+```
+
+Wie Sie sehen sind die Parameter zwar identisch, die Inferenzstatistik unterscheidet sich zwischen beiden herangehensweisen aber. Woher das kommt, werden wir im Verlauf des Semesters noch genauer untersuchen.
+
+Anders als bei `lm` werden in `lavaan` die Intercepts von den Regressionsgewichten getrennt ausgegeben:
+
+```{r, echo = FALSE}
+abbrev(fit, 'Intercept', 'Variances')
+```
+
+Hier wird das Intercept von `rat1` ausgegeben. Der `.` vor dem Variablennamen verrät uns, dass es sich um einen *bedingten* Mittelwert handelt, die Variable `rat1` also irgendwo im Modell eine abhängige Variable ist. Diese Notation hilft besonders bei sehr komplexen Modellen, auch wenn es in unserem Beispiel noch leicht ist den Überblick zu behalten.
+
+Zu guter Letzt folgt ein Abschnitt mit Varianzen - in unserem Fall nur eine:
+
+```{r, echo = FALSE}
+abbrev(fit, 'Variances', ellipses = 'top', shift = 1)
+```
+
+Auch hier verrät uns der `.`, dass `rat1` irgendwo im Modell eine abhängige Variable ist, sodass es sich bei dieser Varianz um eine *Residual*varianz handelt.
+
+Weil der Output der `summary` Funktion sehr schnell sehr lang wird und es nicht erlaubt einzelne Ergebnisse direkt als Objekte weiterzuverwenden, gibt es für `lavaan` die Funktion `inspect`. Diese nimmt zwei Argumente entgegen:
+
+  - `object`: Das Ergebnisobjekt (bei uns also `fit`)
+  - `what`: Was inspiziert werden soll
+  
+Die Liste mögicher `what`s ist mehrere Seiten lang - Sie finden Sie bei `?inspect`. Eine Sache, die uns schon bei der `lm` Regression interessiert hat war das $R^2$. Hierfür können wir `inspect` nutzen:
+
+```{r}
+inspect(fit, 'rsquare')
+```
+
+Dieser Befehl wird im Verlauf des Semesters noch sehr praktisch, weil wir uns so nicht immer durch den gesamten Output wühlen müssen, sondern uns stets auf das beschränken können, was gerade relevant ist. Sie können im folgenden Feld auch ein paar andere Aspekte der Ergebnisse inspizieren. Probieren Sie gerne aus der [Liste möglicher Angaben](https://rdrr.io/cran/lavaan/man/lavInspect.html) aus, was Ihnen in den Sinn kommt!
+
+
+```{r inspect, exercise = TRUE}
+# Anzahl der Beobachtungen
+inspect(fit, 'nobs')
+
+# Anzahl der Parameter
+inspect(fit, 'npar')
+```
+
+```{r, inspect-setup, echo = FALSE}
+fairplayer$rat1 <- rowMeans(fairplayer[, c('ra1t1', 'ra2t1', 'ra3t1')],
+  na.rm = TRUE)
+fairplayer$emt1 <- rowMeans(fairplayer[, c('em1t1', 'em2t1', 'em3t1')],
+  na.rm = TRUE)
+fairplayer$sit1 <- rowMeans(fairplayer[, c('si1t1', 'si2t1', 'si3t1')],
+  na.rm = TRUE)
+mod <- 'rat1 ~ 1 + sit1 + emt1
+  rat1 ~~ rat1'
+fit <- lavaan(mod, fairplayer)
+```
+
+
+## Übungsaufgaben
+
+**Under Construction**
