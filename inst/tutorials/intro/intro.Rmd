@@ -321,10 +321,11 @@ fairplayer$emt1 <- rowMeans(fairplayer[, c('em1t1', 'em2t1', 'em3t1')],
 fairplayer$sit1 <- rowMeans(fairplayer[, c('si1t1', 'si2t1', 'si3t1')],
   na.rm = TRUE)
 mod <- lm(rat1 ~ sit1 + emt1, fairplayer)
-res <- summary(mod)$r.squared
-
+res1 <- summary(mod)$r.squared
+res2 <- summary(mod)$adj.r.squared
 grade_result(
-  pass_if(~ identical(.result, res)),
+  pass_if(~ identical(.result, res1)),
+  pass_if(~ identical(.result, res2)),
   correct = 'Sehr gut! Diese Form der Extraktion bestimmter Elemente werden wir im Verlauf des Semester öfter verwenden.',
   incorrect = 'Leider falsch. Schauen Sie sich das Vorgehen bei der Koeffiziententabelle noch einmal genauer an.',
   glue_correct = '{.correct}',
@@ -336,3 +337,4 @@ grade_result(
 
 Alle Dinge, die wir in den bisherigen Abschnitten besprochen haben sind Wiederholung von Konzepten aus dem Bachelorstudium oder der vergangenen Semester gewesen. In diesem Semester werden wir hauptsächlich mit dem R Paket `lavaan` arbeiten. Der Name ist dabei ein Akronym für **la**tent **va**riable **an**alysis. Im Rest dieser Sitzung werden wir uns die Kerngedanken des Pakets und das grundsätzliche Vorgehen zur Modellschätzung am Beispiel der multiplen Regression ansehen. Mehr Informationen zu `lavaan` finden Sie unter [lavaan.org](http://lavaan.org/).
 
+![](lavaan.png)
