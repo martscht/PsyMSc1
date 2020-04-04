@@ -108,7 +108,7 @@ fairplayer$rat1 <- rowMeans(fairplayer[, c('ra1t1', 'ra2t1', 'ra3t1')],
   na.rm = TRUE)
 ```
 
-Das Argument `na.rm = TRUE` bewirkt, dass wir den Skalenwert auch dann berechnen, wenn fehlende Werte auf einzelnen Items vorliegen. Erstellen Sie die Skalenwerte für die Empathie und die soziale Intelligenz im folgenden Fenster! Mit dem "Hint" Button erhalten Sie Hinweise, durch die Sie durchblättern können. Der letzte "Hint" ist dann die vollständige Lösung.
+Das Argument `na.rm = TRUE` bewirkt, dass wir den Skalenwert auch dann berechnen, wenn fehlende Werte auf einzelnen Items vorliegen. Erstellen Sie die Skalenwerte für die Empathie und die soziale Intelligenz im folgenden Fenster! Mit dem "Hint" Button erhalten Sie Hinweise, durch die Sie durchblättern können. Der letzte "Hint" ist dann die vollständige Lösung. Keine Sorge falls Sie hier Fehler machen: die Skalenwerte stehen Ihnen in den folgenden Übungen trotzdem zur Verfügung.
 
 ```{r rowMeans_exer, exercise = TRUE, exercise.eval = FALSE}
 # Empathie
@@ -134,13 +134,12 @@ names(fairplayer)
 
 ```{r rowMeans_exer-solution}
 # Vollständige Lösung
-
 fairplayer$emt1 <- rowMeans(fairplayer[, c('em1t1', 'em2t1', 'em3t1')],
   na.rm = TRUE)
-
 fairplayer$sit1 <- rowMeans(fairplayer[, c('si1t1', 'si2t1', 'si3t1')],
   na.rm = TRUE)
 ```
+
 
 
 ```{r scales, echo = FALSE}
@@ -386,11 +385,11 @@ Die Model-Syntax von `lavaan` ist eine grafische Sprache. Das heißt, dass die S
 
 Mit diesen fünf sehr grundlegenden Elementen lassen sich erstaunlich viele Modelle darstellen, die in der psychologischen Forschung genutzt werden. Wir können z.B. eine einfache Regression zur Vorhersagen eines Kriteriums $Y$ durch einen Prädiktor $X$ aufstellen. Wir haben also zwei manifeste Variablen (in Rechtecken) und eine gerichtete Verbindung zwischen den beiden (die Regression). Wie üblich, benennen wir die Regression mit $\beta$:
 
-<img src="https://raw.githubusercontent.com/martscht/PsyMSc1/master/inst/tutorials/intro/images/step1.png" width="65%"/>
+<img src="https://raw.githubusercontent.com/martscht/PsyMSc1/master/inst/tutorials/intro/images/step1.png" width="50%"/>
 
 Was diese Abbildung also darstellt ist $Y = \beta \cdot X$. Für eine vollständige Regressionsgleichung fehlen allerdings noch ein paar Dinge. Als erstes nehmen wir das Intercept hinzu - also der Wert, der für $Y$ bei $X = 0$ vorhergesagt wird. Wie in der Übersicht oben dargestellt, fügen wir Konstanten hinzu, indem wir das Dreieick nutzen:
 
-<img src="https://raw.githubusercontent.com/martscht/PsyMSc1/master/inst/tutorials/intro/images/step2.png" width="65%"/>
+<img src="https://raw.githubusercontent.com/martscht/PsyMSc1/master/inst/tutorials/intro/images/step2.png" width="50%"/>
 
 Wir fügen also eine zweite Regression hinzu (der Pfeil), in der $X$ auf 1 regressiert wird. In der Regressionsgleichung sieht das so aus: $Y = \alpha \cdot 1 + \beta \cdot X$. Wir nutzen hier $\alpha$ und nicht $\beta_0$ für das Intercept, weil das die von `lavaan` verwendete Notation ist. An der Bedeutung ändert sich dadurch aber nichts. Weil $\alpha \cdot 1 = \alpha$ können wir Regressionsgleichung auf $Y = \alpha + \beta \cdot X$ kürzen. Jetzt fehlt noch das Residuum, also die Komponenten in $Y$, die nicht durch $X$ vorhergesagt werden können. Bei diesem Residuum handelt es sich um eine nicht-beobachtbare bzw. latente Variable. Diese Variable entsteht durch unsere Berechnung, sie existiert ohne das Modell nicht im Datensatz. In der Abbildung fügen wir also eine Ellipse hinzu und nutzen diese zur Vorhersage von $Y$:
 
