@@ -384,8 +384,21 @@ Die Model-Syntax von `lavaan` ist eine grafische Sprache. Das heißt, dass die S
 
 <img src="https://raw.githubusercontent.com/martscht/PsyMSc1/master/inst/tutorials/intro/images/shapes.png" width="65%"/>
 
-Mit diesen fünf sehr grundlegenden Elementen lassen sich erstaunlich viele Modelle darstellen, die in der psychologischen Forschung genutzt werden. Nehmen wir das bisherige Beispiel der Regression, in der wir relationale Aggression zum 1. Zeitpunkt ($RA_1$) durch soziale Intelligenz ($SI_1$) und Empathie ($EM_1$) vorhersagen. In diesem Fall haben wir drei beobachtbare Variablen: die drei Skalenwerte, die wir erzeugt haben. Die Beziehung zwischen $RA_1$ und $SI_1$ ($\beta_1$) bzw. $EM_1$ ($\beta_2$) ist regressiv. Zusätzlich regressieren wir die relationale Aggression auf die Konstante 1, um so eine Schätzung für das Intercept $\alpha$ zu erhalten. Das Residuum, also die Komponenten der Ausprägung in relationaler Aggression, die nicht durch soziale Intelligenz und Empathie vorhergesagt werden können, ist eine nicht-beobachtbare bzw. latente Variable. Diese Variable entsteht durch unsere Berechnung, sie existiert ohne das Modell nicht im Datensatz. Das alles kann in einer Abbildung zusammengefasst werden:
+Mit diesen fünf sehr grundlegenden Elementen lassen sich erstaunlich viele Modelle darstellen, die in der psychologischen Forschung genutzt werden. Wir können z.B. eine einfache Regression zur Vorhersagen eines Kriteriums $Y$ durch einen Prädiktor $X$ aufstellen. Wir haben also zwei manifeste Variablen (in Rechtecken) und eine gerichtete Verbindung zwischen den beiden (die Regression). Wie üblich, benennen wir die Regression mit $\beta$:
 
+<img src="https://raw.githubusercontent.com/martscht/PsyMSc1/master/inst/tutorials/intro/images/step1.png" width="65%"/>
+
+Was diese Abbildung also darstellt ist $Y = \beta \cdot X$. Für eine vollständige Regressionsgleichung fehlen allerdings noch ein paar Dinge. Als erstes nehmen wir das Intercept hinzu - also der Wert, der für $Y$ bei $X = 0$ vorhergesagt wird. Wie in der Übersicht oben dargestellt, fügen wir Konstanten hinzu, indem wir das Dreieick nutzen:
+
+<img src="https://raw.githubusercontent.com/martscht/PsyMSc1/master/inst/tutorials/intro/images/step2.png" width="65%"/>
+
+Wir fügen also eine zweite Regression hinzu (der Pfeil), in der $X$ auf 1 regressiert wird. In der Regressionsgleichung sieht das so aus: $Y = \alpha \cdot 1 + \beta \cdot X$. Wir nutzen hier $\alpha$ und nicht $\beta_0$ für das Intercept, weil das die von `lavaan` verwendete Notation ist. An der Bedeutung ändert sich dadurch aber nichts. Weil $\alpha \cdot 1 = \alpha$ können wir Regressionsgleichung auf $Y = \alpha + \beta \cdot X$ kürzen. Jetzt fehlt noch das Residuum, also die Komponenten in $Y$, die nicht durch $X$ vorhergesagt werden können. Bei diesem Residuum handelt es sich um eine nicht-beobachtbare bzw. latente Variable. Diese Variable entsteht durch unsere Berechnung, sie existiert ohne das Modell nicht im Datensatz. In der Abbildung fügen wir also eine Ellipse hinzu und nutzen diese zur Vorhersage von $Y$:
+
+<img src="https://raw.githubusercontent.com/martscht/PsyMSc1/master/inst/tutorials/intro/images/step3.png" width="65%"/>
+
+In der Regressionsgleichung ergibt sich dadurch $Y = \alpha + \beta \cdot X + 1 \cdot \epsilon$. Nach dem gleichen Prinzip wie eben kürzt sich das auf die traditionelle Regressionsgleichung: $Y = \alpha + \beta \cdot X + \epsilon$. 
+
+Nehmen wir das bisherige Beispiel der Regression, in der wir relationale Aggression zum 1. Zeitpunkt ($RA_1$) durch soziale Intelligenz ($SI_1$) und Empathie ($EM_1$) vorhersagen. In diesem Fall haben wir drei beobachtbare Variablen: die drei Skalenwerte, die wir erzeugt haben. Die Beziehung zwischen $RA_1$ und $SI_1$ ($\beta_1$) bzw. $EM_1$ ($\beta_2$) ist regressiv. Zusätzlich regressieren wir die relationale Aggression auf die Konstante 1, um so eine Schätzung für das Intercept $\alpha$ zu erhalten.
 
 <img src="https://raw.githubusercontent.com/martscht/PsyMSc1/master/inst/tutorials/intro/images/regression.png" width="65%"/>
 
@@ -468,7 +481,7 @@ mod <- '
   rat1 ~ emt1
   
   # Residuum
-  rat1 ~~ rat1
+  rat1 ~~ rat1'
 ```
 
 Wie Sie sehen, können wir in `lavaan` Modellen auch weiterhin mit `#` Kommentaren beginnen. Diese aufgeschlüsselte Variante ist mit der kürzeren Schreibweise oben identisch. Welche Sie bevorzugen, ist ganz allein Ihnen überlassen.
