@@ -55,7 +55,9 @@ Dieses Tutorial bietet eine Einführung in `lavaan`. Im Zentrum stehen dabei die
 
 Wir beginnen das Tutorial aber zunächst mit einer [Auffrischung Ihrer R-Fähigkeiten](#Wiederbelebung). Auch wenn Sie im Umgang mit R sehr geübt sind, nehmen Sie sich bitte trotzdem ein paar Minuten, um sich noch einmal intensiv mit den Befehlen auseinanderzusetzen, die für dieses Semester von zentraler Bedeutung sind. Sollten Sie wenig Übung im Umgang mit R haben, oder wenn Sie einfach noch einmal eine etwas detaillierte Einführung in R lesen möchten, finden Sie auf [Pandar](https://pandar.netlify.com/) die [R-Einführung aus dem Bachelorstudiengang](https://pandar.netlify.com/post/r-crash-kurs/).
 
-Für die Durchführung dieses Tutorials benötigen Sie nichts weiter als dieses Browserfenster.
+Für die Durchführung dieses Tutorials benötigen Sie nichts weiter als dieses Browserfenster. Bitte veärndern Sie während Sie die Übung in diesem Browserfenster machen nichts in der R-Sitzung, mit der Sie diese Übung gestartet haben.
+
+Nach dem Ende der Übung finden Sie im [OLAT Kurs ein kurzes Quiz](https://olat-ce.server.uni-frankfurt.de/olat/auth/RepositoryEntry/8136491044/CourseNode/101501774320599) mit Bezug zu den Inhalten dieser Sitzung.
 
 ## R Grundlagen Wiederbelebung {#Wiederbelebung}
 
