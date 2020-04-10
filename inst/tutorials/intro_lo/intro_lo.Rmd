@@ -44,7 +44,7 @@ mod <- 'emt2 ~ 1 + emt1 + sex
   emt2 ~~ emt2'
 
 fit <- lavaan(mod, fairplayer)
-summary(fit)
+lavaan::summary(fit)
 ```
 
 ## Varianzaufklärung
@@ -75,7 +75,7 @@ mod2 <- 'emt2 ~ 1 + emt1 + sex_num
   emt2 ~~ emt2'
 
 fit2 <- lavaan(mod2, fairplayer)
-summary(fit2)
+lavaan::summary(fit2)
 summary(lm_mod)
 ```
 
