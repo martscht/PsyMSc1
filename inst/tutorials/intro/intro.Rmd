@@ -586,4 +586,17 @@ fit <- lavaan(mod, fairplayer)
 
 ## Übungsaufgaben
 
-**Under Construction**
+Die Übungsaufgaben finden Sie als Quiz im [OLAT Kurs](https://olat-ce.server.uni-frankfurt.de/olat/auth/RepositoryEntry/8136491044). Für die Bearbeitung der Aufgaben benötigen Sie den `fairplayer` Datensatz. Um diesen zu laden, nutzen Sie bitte
+
+```{r, eval = FALSE}
+data(fairplayer, package = 'PsyMSc1')
+```
+
+Vergessen Sie außerdem nicht, mit
+
+```{r, eval = FALSE}
+library(lavaan)
+```
+
+lavaan zu laden, bevor Sie loslegen!
+

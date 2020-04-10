@@ -1,10 +1,16 @@
-#' Übungen im PsyMSc 1 Seminar, Sommersemester 2020
+#' @name Sitzungen
+#' @aliases Sitzung_1
+#' @aliases Sitzung_2
+#' 
+#' @title Übungen im PsyMSc 1 Seminar, Sommersemester 2020
 #'
-#' Mit diesen Funktionen können Sie die Übungen zu den einzelnen Sitzungen aufrufen.
+#' Mit diesen Funktionen können Sie die Übungen zu den einzelnen Sitzungen aufrufen. Die Funktionen nehmen keine Argumente entgegen.
 #'
-#' @export
 
 #### Kernfunktionen: Aufruf der einzelnen Sitzungen ####
+
+#' @rdname Sitzungen
+#' @export
 Sitzung_1 <- function() {
   library(learnr)
   if (!('fontawesome' %in% rownames(installed.packages()))) {
