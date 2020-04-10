@@ -6,4 +6,4 @@ library(shiny)
 library(fontawesome)
 library(lavaan)
 
-load('fairplayer.rda')
+data(fairplayer, package = 'PsyMSc1')
