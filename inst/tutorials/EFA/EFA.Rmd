@@ -10,7 +10,7 @@ output:
 runtime: shiny_prerendered
 ---
 
-```{r setup, include = FALSE}
+```{r setup_EFA, include = FALSE}
 library(learnr)       # package to generate interactive HTML
 library(gradethis)    # grade Code from input in HTML
 library(shiny)        # nice appearance in R
@@ -19,11 +19,13 @@ library(corrplot)     # Korrelationsmatrix grafisch darstellen
 library(psych)        # EFA durchführen
 library(GPArotation)  # EFA Lösung rotieren
 
-data(Big5_shortend, package = 'PsyMSc1')
+data(Big5, package = 'PsyMSc1')
 knitr::opts_chunk$set(exercise.checker = gradethis::grade_learnr)
 ```
 
-*Forschungsmethoden und Evaluation II, PsyMSc 1, Sommersemester 2020*
+*Forschungsmethoden und Evaluation II, PsyMSc 1, Sommersemester 2020 --- EFA*
+
+## Einleitung zur exploratorischen Faktorenanalyse (EFA)
 
 Forscher der Psychologie oder anderer Natur-, Sozial- und Geisteswissenschaften interessieren sich häufig dafür, dass sich Daten runterbrechen lassen auf einige wenige entscheidende Faktoren, welche  ein theoretisches Erklärungsmodell für die Variation in einem Datensatz liefern. Die Annahme ist hierbei, dass die beobachtbaren Messungen eine Linearkombination (also eine Summe) aus einem systematischen (wahren) und einem unsystematischen (Fehler-) Anteil bilden. Die dahinterliegenden Faktoren sind nicht messbare (latente) Variablen, auf welche, unter gewissen Annahmen, nur anhand der Kovariation zwischen den beobachtbaren Item geschlossen werden kann. Durch diese Zusammenhänge zwischen den Messungen können schließlich Hypothesen für die latenten Varibalen untersucht werden. Ein theoriegenerierendes Verfahren, das hierzu häufig verwendet wird, ist die **exploratorische Faktorenanalyse (EFA)**. Wir wollen dieses Verfahren zur Auswertung von Beziehungen zwischen Variablen in `R` näher kennenlernen.
 
@@ -37,7 +39,7 @@ library(GPArotation) # EFA Lösung rotieren
 ## Datensatz
 
 Wir wollen uns die Faktorenstruktur der *Big-5* eines entsprechenden Fragebogens ansehen. Der Originaldatensatz ist ein Onlinedatensatz, wird seit 2012 erfasst und ist [hier](https://openpsychometrics.org/_rawdata/) als *.zip* downloadbar. Bisher haben über **19700** Probanden aus der ganzen Welt teilgenommen. Zu jeder der fünf Facetten gibt es 10 Fragen. Der Fragebogen ist [hier](http://personality-testing.info/tests/BIG5.php) einzusehen.
-Um das Ganze etwas übersichtlicher zu gestalten, betrachten wir einen gekürzten Datensatz. Im Datensatz *Big5_shortend.rda* befinden sich 15 Items aus dem Big-5 Persönlichkeits Fragebogen. Hier werden von diesen 10 Items jeweils die ersten drei verwendet. Der Itemwortlaut der verwendeten Items ist
+Um das Ganze etwas übersichtlicher zu gestalten, betrachten wir einen gekürzten Datensatz. Im Datensatz *Big5.rda* befinden sich 15 Items aus dem Big-5 Persönlichkeits Fragebogen. Hier werden von diesen 10 Items jeweils die ersten drei verwendet. Der Itemwortlaut der verwendeten Items ist
 
 ```{r, echo = F}
 library(htmlTable)
@@ -73,10 +75,10 @@ data_full <- data_full[!ind, ] # Wähle nur diejenigen Zeilen, in denen unsere I
 # !ind (Ausrufezeichen vor ind) negiert die Einträge in ind (Prüfe bspw. !FALSE == TRUE, nicht false ist gleich true)
 
 ### Shorten Data Set
-data_shortend_all_countries <- data_full[, c(2:4,7,7+rep(1:3,5)+sort(rep(seq(0,40,10),3)))]
+Big5 <- data_full[, c(2:4,7,7+rep(1:3,5)+sort(rep(seq(0,40,10),3)))]
  # Verwende nur 3 Items pro Skala plus einige demografische Items
-data_shortend_all_countries <- data.frame(data_shortend_all_countries) # Schreibe Datensatz als data.frame
-save(list = c("data_shortend_all_countries"), file = "Big5_shortend.rda")
+Big5 <- data.frame(Big5) # Schreibe Datensatz als data.frame
+save(list = c("Big5"), file = "Big5.rda")
 # Speichere gekürzten Datensatz in .rda file (dem R-internen Datenformat)
 ## --> Das ist auch der Datensatz, den wir weiter verwenden werden!
 ```
@@ -85,8 +87,8 @@ Zusätzlich zu den Persönlichkeitsitems wurden demografische Daten, die möglic
 
 ```{r data}
 # Datensatz laden 
-load("Big5_shortend.rda") # shortend Big 5 Questionnaire Data Set
-head(data_shortend_all_countries, n = 10) # gebe die ersten 10 Zeilen aus
+load("Big5.rda") # shortend Big 5 Questionnaire Data Set
+head(Big5, n = 10) # gebe die ersten 10 Zeilen aus
 ```
 
 Wir sehen, dass in den ersten 4 Spalten die demografischen Daten wie etwa  *Alter ("age")*, *Englisch als Muttersprache ("engant", 1=yes, 2=no, 0=missed)*, *Geschlecht ("gender", 1=Male, 2=Female, 3=Other, 0=missed)* und *Herkunftsland ("country", ISO-kodiert, bspw. "DE" = Deutschland, "FR" = Frankreich, "EM" = Vereinigte Arabische Emirate, "US" = Vereinigten Staaten von Amerika)* eingetragen wurden. In den darauf folgenden Spalten sind die Items der Extraversion (engl. *extraversion*, Items:*E1*, *E2*, *E3*), des Neurotizismus (engl. *neuroticism*, Items: *N1*, *N2*, *N3*), der Verträglichkeit (engl. *agreeableness*, Items: *A1*, *A2*, *A3*), der Gewissenhaftigkeit  (engl. *conscientiousness*, Items: *C1*, *C2*, *C3*) und der Offenheit für Erfahrungen (engl. *openness*, Items: *O1*, *O2*, *O3*) eingetragen. Beispielsweise ist die erste Person des Datensatzes ein 53-jähriger Mann, der Englisch als Muttersprache spricht und in den USA lebt. 
@@ -95,11 +97,11 @@ Wir sehen, dass in den ersten 4 Spalten die demografischen Daten wie etwa  *Alte
 Da wir uns in der Praxis nur sehr selten in der glücklichen Lage befinden, einen solch riesigen Datensatz zu haben, wollen wir uns innerhalb des Datensatzes auf Subgruppen beschränken: wir wollen uns zunächst nur Daten von Personen aus *Frankreich* ansehen. Dazu wählen wir nur diejenigen Spalten aus, in denen `country == "FR"` gilt. Das erreichen wir wie folgt:
 
 ```{r}
-data_France <- data_shortend_all_countries[data_shortend_all_countries$country == "FR", ]
+data_France <- Big5[Big5$country == "FR", ]
 dim(data_France)
 ```
 
-Mit `data_shortend_all_countries$country` haben wir Zugriff auf die "Country"-Spalte im Datensatz und können mit `== FR` prüfen, an welchen Stellen hier  "FR" steht, also Personen, die in Frankreich leben. `dim` gibt die Dimensionen des Datensatzes wieder. `dim_France` enthält also `r dim(data_France)[1]` Zeilen (also Probanden, die in Frankreich leben) und `r dim(data_France)[2]` Spalten (also Variablen). Für die weiteren Analysen brauchen wir die demografischen Variablen in dem Datensatz der in Frankreich lebenden Teilnehmer nicht mehr. Aus diesem Grund speichern wir den Datensatz noch einmal ohne die ersten 4 Spalten ab.
+Mit `Big5$country` haben wir Zugriff auf die "Country"-Spalte im Datensatz und können mit `== FR` prüfen, an welchen Stellen hier  "FR" steht, also Personen, die in Frankreich leben. `dim` gibt die Dimensionen des Datensatzes wieder. `dim_France` enthält also `r dim(data_France)[1]` Zeilen (also Probanden, die in Frankreich leben) und `r dim(data_France)[2]` Spalten (also Variablen). Für die weiteren Analysen brauchen wir die demografischen Variablen in dem Datensatz der in Frankreich lebenden Teilnehmer nicht mehr. Aus diesem Grund speichern wir den Datensatz noch einmal ohne die ersten 4 Spalten ab.
 
 ```{r, fig.height=5}
 dataFR <- data_France[, -c(1:4)] # entferne demografische Daten und speichere als "dataFR"
@@ -270,7 +272,7 @@ Der $\chi^2$-Differenzwert liegt hier bei `r round(anova(two_factor_ML, three_fa
 
 
 
-# ML-EFA für den gesamten (gekürtzten) Datensatz
+## ML-EFA für den gesamten (gekürtzten) Datensatz
 
 Für den vollen Datensatz mit jeweils drei Items pro Persönlichkeitsfacette, nehmen wir zunächst an, dass es 5 Faktoren gibt. Dies wird hier allerdings nicht durch die Parallelanalyse gestüzt. Wir müssen die Funktion `fa.parallel` diesmal auf den vollen (gekürtzten) Datensatz anwenden; namlich auf `dataFR`.
 
@@ -302,7 +304,7 @@ fa(dataFR, nfactors = 5, rotate = "oblimin", fm = "ml")$loadings
 
 
 
-## Modellvergleich: ML-EFA
+### Modellvergleich: ML-EFA
 Wir schauen uns nun die Passung unseres Modells im Vergleich zu einem vier- und einem sechsfaktoriellen Modell an.
 ```{r}
 # Passt auch eines mit 4 Faktor auch?
@@ -337,7 +339,7 @@ Der $\chi^2$-Differenzwert liegt hier bei `r round(anova(five_factor_ML, six_fac
 <mark style="background-color: orange">Da die Zuordnung zwischen Faktoren und Items nicht eindeutig zu interpretieren war, müsste dies in Zukunft weiter untersucht werden. Weitere geziehlte Hypothesen lassen sich beispielsweise mit der **konfirmatorischen Faktoren Analyse (CFA; confirmatory factor analysis)** untersuchen.  </mark>
 
 
-# Appendix
+## Appendix
 
 ## **Appendix A:** Prüfen der Voraussetzungen
 Auf multivariate Normalverteilung können wir beispeilsweise **deskriptiv** prüfen, indem wir die Mahalanobisdistanz (die Distanz vom gemeinsame Zentroiden; dem Mittelwert über alle Variablen; unter Berücksichtigung der Kovariation im Datensatz) plotten und sie mit einer $\chi^2$-Verteilung vergleichen; wobei $df=p$ und $p=$ Anzahl an Variablen (hier $df=p=15$).
@@ -363,5 +365,8 @@ Schließlich zeichnen wir mit `lines` eine Line, welche als x-Argument `x = seq(
 
 
 
-# Literatur
-Eid, M., Gollwitzer, M., & Schmitt, M. (2017). *Statistik und Forschungsmethoden* (5. Auflage, 1. Auflage: 2010). Weinheim: Beltz.
+## Literatur
+[Eid, M., Gollwitzer, M., & Schmitt, M. (2017).](https://hds.hebis.de/ubffm/Record/HEB366849158) *Statistik und Forschungsmethoden* (5. Auflage, 1. Auflage: 2010). Weinheim: Beltz. 
+
+
+* <small> *Blau hinterlegte Autorenangaben führen Sie direkt zur universitätsinternen Ressource.*
