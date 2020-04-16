@@ -23,7 +23,7 @@ Sitzung_1 <- function() {
   learnr::run_tutorial('intro', package = 'PsyMSc1')
 }
 
-
+#' @export
 Sitzung_2 <- function() {
   library(learnr)
   if (!('fontawesome' %in% rownames(installed.packages()))) {
