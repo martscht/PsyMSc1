@@ -9,4 +9,4 @@ library(corrplot)     # Korrelationsmatrix grafisch darstellen
 library(psych)        # EFA durchführen
 library(GPArotation)  # EFA Lösung rotieren
 
-data(Big5_short, package = 'PsyMSc1')
+data(Big5, package = 'PsyMSc1')
