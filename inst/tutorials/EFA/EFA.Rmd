@@ -135,11 +135,11 @@ Hier ist nun deutlich zu sehen, dass die Extraversionsitems und die Neurotizismu
 Unser Ziel ist es, mit den gegebenen Items eine exploratorische Faktorenanalyse durchzuführen. Wir wollen hierbei die Anzahl der Faktoren mittels einer Parallelanalyse bestimmen und anschließend dieses Modell mit dem $\chi^2$-Test (*Likelihood-Quotiententest/ Likelihood-Differenzentest*/ $\chi^2$-*Differenzentest*) gegen konkurrierende Modelle vergleichen. 
 Hierbei wollen wir die oblique rotierte und die orthogonal rotierte Lösung vergleichen und hinsichtlich unserer Daten interpretieren. Das Modell, was wir an unsere Daten anpassen wollen, sieht für 6 Variablen ($V_1,\dots,V_6$) im Allgemeinen erst einmal so aus:
 
-<img src="/Users/JulienMac/PowerFolders/Promotion/Lehre/2020 Sommersemester/F&E II/PC-Übung/EFA/EFA_Modell.png" width=80%"/>
+<img src="<img src="https://raw.githubusercontent.com/martscht/PsyMSc1/master/inst/tutorials/EFA/images/EFA_Modell.png" width=80%"/>
 
 Auf unseren Datensatz angepasst, wollen wir folgendes Modell anpassen.
 
-<img src="/Users/JulienMac/PowerFolders/Promotion/Lehre/2020 Sommersemester/F&E II/PC-Übung/EFA/specific_model.png" width=80%"/>
+<img src="<img src="https://raw.githubusercontent.com/martscht/PsyMSc1/master/inst/tutorials/EFA/images/specific_model.png" width=80%"/>
 
 Natürlich erwarten wir, dass insgesamt 2 Faktoren die Daten am besten beschreiben und dass die konstruktkongruenten Items jeweils auf dem gleichen Faktor am stärksten laden. Aber stützen die Daten diese Hypothese?
 
