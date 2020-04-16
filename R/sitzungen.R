@@ -24,7 +24,8 @@ Sitzung_1 <- function() {
 }
 
 
-
+#' @rdname Sitzungen
+#' @export
 Sitzung_2 <- function() {
   library(learnr)
   if (!('fontawesome' %in% rownames(installed.packages()))) {
