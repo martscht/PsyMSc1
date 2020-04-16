@@ -59,6 +59,8 @@ Für die Durchführung dieses Tutorials benötigen Sie nichts weiter als dieses 
 
 Nach dem Ende der Übung finden Sie im [OLAT Kurs ein kurzes Quiz](https://olat-ce.server.uni-frankfurt.de/olat/auth/RepositoryEntry/8136491044/CourseNode/101501774320599) mit Bezug zu den Inhalten dieser Sitzung.
 
+Den gesamten R-Code, der in dieser Sitzung genutzt wird, können Sie [`r fa('download')` hier herunterladen](https://raw.githubusercontent.com/martscht/PsyMSc1/master/inst/scripts/intro.R).
+
 ## R Grundlagen Wiederbelebung {#Wiederbelebung}
 
 In diesem Abschnitt gucken wir uns zur Wiederholung noch einmal ein paar Grundzüge des Datenmanagements in R an, bevor wir eine multiple Regression durchführen und deren Ergebnisse genauer inspizieren.
@@ -110,14 +112,10 @@ fairplayer$rat1 <- rowMeans(fairplayer[, c('ra1t1', 'ra2t1', 'ra3t1')],
   na.rm = TRUE)
 ```
 
-Das Argument `na.rm = TRUE` bewirkt, dass wir den Skalenwert auch dann berechnen, wenn fehlende Werte auf einzelnen Items vorliegen. Erstellen Sie die Skalenwerte für die Empathie und die soziale Intelligenz im folgenden Fenster! Mit dem "Hint" Button erhalten Sie Hinweise, durch die Sie durchblättern können. Der letzte "Hint" ist dann die vollständige Lösung. Keine Sorge falls Sie hier Fehler machen: die Skalenwerte stehen Ihnen in den folgenden Übungen trotzdem zur Verfügung.
+Das Argument `na.rm = TRUE` bewirkt, dass wir den Skalenwert auch dann berechnen, wenn fehlende Werte auf einzelnen Items vorliegen. Erstellen Sie die Skalenwerte für die Empathie `emt1` und die soziale Intelligenz `sit1` im folgenden Fenster! Mit dem "Hint" Button erhalten Sie Hinweise, durch die Sie durchblättern können. Der letzte "Hint" ist dann die vollständige Lösung. Keine Sorge falls Sie hier Fehler machen: die Skalenwerte stehen Ihnen in den folgenden Übungen trotzdem zur Verfügung.
 
 ```{r rowMeans_exer, exercise = TRUE, exercise.eval = FALSE}
-# Empathie
-fairplayer$emt1 <- ...
 
-# Soziale Intelligenz
-fairplayer$sit1 <- ...
 ```
 
 <!-- <div id="rowMeans_exer-hint"> -->
@@ -125,11 +123,16 @@ fairplayer$sit1 <- ...
 <!-- </div> -->
 
 ```{r rowMeans_exer-hint-1}
+# Weisen Sie die Variablen mit $ dem Datensatz zu!
+# fairplayer$sit1 oder fairplayer$emt1
+```
+
+```{r rowMeans_exer-hint-2}
 # Nutzen Sie die rowMeans-Funktion
 ?rowMeans
 ```
 
-```{r rowMeans_exer-hint-2}
+```{r rowMeans_exer-hint-3}
 # Die Namen der Items:
 names(fairplayer)
 ```
@@ -425,7 +428,7 @@ In `lavaan`, wie in beinahe jeder Statistik-Software, wird bei `~~` nicht die Ko
 Legen Sie im Feld unten das Modell für die Regression in einem Objekt mit dem Namen `mod` an! Vergessen Sie nicht, dass Modelle für `lavaan` als Text angelegt werden - sie müssen also mit Anführungszeichen beginnen und enden. Rufen Sie zum Abschluss das Objekt auf, um sich wiedergeben zu lassen, was in dem Objekt an Syntax gespeichert ist!
 
 ```{r lav_mod, exercise = TRUE, exercise.setup = 'scales'}
-mod <- ...
+mod <- '...'
 mod
 ```
 
