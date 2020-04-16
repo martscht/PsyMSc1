@@ -24,7 +24,6 @@ Sitzung_1 <- function() {
 }
 
 
-#' @export
 Sitzung_2 <- function() {
   library(learnr)
   if (!('fontawesome' %in% rownames(installed.packages()))) {
