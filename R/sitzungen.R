@@ -23,6 +23,7 @@ Sitzung_1 <- function() {
   learnr::run_tutorial('intro', package = 'PsyMSc1')
 }
 
+#' @rdname Sitzungen
 #' @export
 Sitzung_2 <- function() {
   library(learnr)
