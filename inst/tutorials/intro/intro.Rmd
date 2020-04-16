@@ -509,9 +509,13 @@ Sofern keine Warn- oder Fehlermeldungen erzeugt werden, war die Schätzung des M
 
 `lavaan` bietet eine ganze Reihe von Möglichkeiten, die Ergebnisse von Modellen genauer unter die Lupe zu nehmen. Die naheliegendste ist - wie schon bei `lm` - der allgemeine `summary` Befehl:
 
-```{r}
+```{r, eval = FALSE}
 summary(fit)
 ```
+```{r, echo = FALSE}
+lavaan::summary(fit)
+```
+
 
 Diese Ausgabe enthält neben Modellergebnissen auch einige Informationen zur Schätzprozedur, auf die wir hier erst einmal noch nicht eingehen werden. Die erste Zahl, mit der wir uns näher auseinandersetzen können, ist die `Number of free parameters` in der 3. Zeile der Ausgabe. Hier wird uns gesagt, dass wir vier Paramter schätzen mussten. Wenn wir uns das Pfaddiagramm für diese Regression noch einmal vor Augen führen, wird schnell deutlich, welche vier das sind:
 
