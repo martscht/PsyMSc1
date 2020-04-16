@@ -15,3 +15,11 @@ Loesungen_1 <- function(password) {
     learnr::run_tutorial('intro_lo', package = 'PsyMSc1')
   }
 }
+
+Loesungen_2 <- function(password) {
+     if (digest::digest(password) != "6adb4894cab39c7d479b5284a1a907b2") {
+          stop('Leider haben Sie nicht das richtige Passwort eingegeben.', call. = FALSE)
+     }  else {
+          learnr::run_tutorial('EFA_lo', package = 'PsyMSc1')
+     }
+}

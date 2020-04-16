@@ -1,19 +1,21 @@
 ---
-title: "Exploratorische Faktorenanalyse --- Aufgaben und Lösungen"
-author: "Julien P. Irmer und Martin Schultze"
-date: "3/27/2020"
-output: html_document
-header-includes:
-- \usepackage{placeins}
-- \usepackage{caption}
+title: "Sitzung 2: Aufgaben und Lösungen zur EFA"
+output:
+  learnr::tutorial:
+    progressive: true
+    allow_skip: true
+    includes:
+      after_body: footer.html
+      in_header: header.html
+runtime: shiny_prerendered
 ---
-
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
 *Forschungsmethoden und Evaluation II, PsyMSc 1, Sommersemester 2020*
-# Vorbereitung
+
+## Vorbereitung zu den EFA - Aufgaben und Lösungen
 
  Am besten beginnen Sie mit dem Laden der nötigen R-Pakete:
 
@@ -24,7 +26,7 @@ library(GPArotation) # EFA Lösung rotieren
 ```
 
 ## Datensatz
-Im Datensatz *Big5_shortend.rda* befinden sich 15 Items aus dem Big-5 Persönlichkeits Fragebogen. Der Itemwortlaut der verwendeten Items ist
+Im Datensatz *Big5.rda* befinden sich 15 Items aus dem Big-5 Persönlichkeits Fragebogen. Der Itemwortlaut der verwendeten Items ist
 
 ```{r, echo = F}
 library(htmlTable)
@@ -50,17 +52,17 @@ htmlTable(output, header =  paste(c("Item Nr.", "Item")),
 
 Die Kürzung des vollen Datensatzes lässt sich in der zugehörigen Sitzung nachvollziehen.
 
-Nun müssen Sie zunächst die Daten laden. Das machen Sie mit Hilfe des Paketes "PsyMSc1". Mit data("Big5_shortend", package = "PsyMSc1") laden Sie die Daten ein. 
+Nun müssen Sie zunächst die Daten laden. Das machen Sie mit Hilfe des Paketes "PsyMSc1". Mit data("Big5", package = "PsyMSc1") laden Sie die Daten ein. 
 
 ```{r data}
 # Datensatz laden 
-load("Big5_shortend.rda") # shortend Big 5 Questionnaire Data Set
-head(data_shortend_all_countries, n = 10) # gebe die ersten 10 Zeilen aus
+load("Big5.rda") # shortend Big 5 Questionnaire Data Set
+head(Big5, n = 10) # gebe die ersten 10 Zeilen aus
 ```
 
 Um zu prüfen, ob dies geklappt hat, können Sie folgende Zeile ausführen und den Output vergleichen:
 ```{r}
-data_shortend_all_countries[100, ]
+Big5[100, ]
 ```
 18 1 2 US 3 3 4 4 3 4 2 5 2 4 2 5 3 1 5
 
@@ -96,9 +98,9 @@ Deutschland
 
 ```{r}
 ### Erstellen der länderspezifischen Datensätze
-data_France_full <- data_shortend_all_countries[data_shortend_all_countries$country == "FR", -4] # zum Vergleich nochmals einlesen
-data_Emirates_full <- data_shortend_all_countries[data_shortend_all_countries$country == "AE", -4]
-data_Germany_full <- data_shortend_all_countries[data_shortend_all_countries$country == "DE", -4]
+data_France_full <- Big5[Big5$country == "FR", -4] # zum Vergleich nochmals einlesen
+data_Emirates_full <- Big5[Big5$country == "AE", -4]
+data_Germany_full <- Big5[Big5$country == "DE", -4]
 dim(data_Emirates_full)
 dim(data_Germany_full)
 
