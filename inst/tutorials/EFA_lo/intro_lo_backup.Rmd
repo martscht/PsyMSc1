@@ -1,0 +1,81 @@
+---
+title: "Sitzung 1: R Skripte zu den Aufgaben"
+output:
+  learnr::tutorial:
+    progressive: true
+    allow_skip: true
+    includes:
+      after_body: footer.html
+      in_header: header.html
+runtime: shiny_prerendered
+---
+
+```{r setup, include = FALSE}
+library(learnr)
+library(gradethis)
+library(shiny)
+library(lavaan)
+
+data(fairplayer, package = 'PsyMSc1')
+knitr::opts_chunk$set(exercise.checker = gradethis::grade_learnr)
+```
+
+Im Folgenden finden Sie R-Skripte, die zur Lösung der Quiz-Aufgaben in der 1. Sitzung genutzt werden konnten. Bitte bedenken Sie, dass diese Skripte immer nur *unseren* Ansatz darstellen, um die Lösungen zu erzeugen. In R gibt es aber sehr häufig extrem viele unterschiedliche Wege um an das gleiche Ziel zu kommen.
+
+## Skalenwert für Empathie
+
+> Erstellen Sie für die Empathie zum 1. und zum 2. Messzeitpunkt jeweils den Skalenwert. Welchen Mittelwert hat der Skalenwert zum 2. Messzeitpunkt in der Stichprobe?
+
+
+```{r}
+fairplayer$emt1 <- rowMeans(fairplayer[, c('em1t1', 'em2t1', 'em3t1')], na.rm = TRUE)
+fairplayer$emt2 <- rowMeans(fairplayer[, c('em1t2', 'em2t2', 'em3t2')], na.rm = TRUE)
+
+mean(fairplayer$emt2, na.rm = TRUE)
+```
+
+## Multiple Regression
+
+> Schätzen Sie mit lavaan eine multiple Regression in der Sie die Empathie zu t2 durch die Empathie zu t1 (emt1) und das Geschlecht (sex) vorhersagen. Wie lautet das Regressionsgewicht der Empathie zum 1. Zeitpunkt (emt1)?
+
+
+```{r}
+mod <- 'emt2 ~ 1 + emt1 + sex
+  emt2 ~~ emt2'
+
+fit <- lavaan(mod, fairplayer)
+lavaan::summary(fit)
+```
+
+## Varianzaufklärung
+
+> Bestimmen Sie die Varianzaufklärung die in diesem Modell an `emt2` geleistet wird.
+
+```{r}
+inspect(fit, 'rsquare')
+```
+
+## Vergleich `lavaan` und `lm`
+
+> Vergleichen Sie die Ergebnisse dieser Regression mit denen aus einer mit lm() geschätzten Regression. Welche der folgenden Aussagen sind richtig?
+
+```{r}
+lm_mod <- lm(emt2 ~ emt1 + sex, fairplayer)
+summary(lm_mod)
+```
+
+## Angleichen der Ergebnisse
+
+> Welche Schritte müssten Sie vornehmen um mit lavaan die selben Parameterschätzungen ($\alpha$, $\beta_1$, $\beta_2$) zu erhalten, die Sie mit lm() in der letzten Aufgabe erhalten haben?
+
+```{r}
+fairplayer$sex_num <- as.numeric(fairplayer$sex) - 1
+
+mod2 <- 'emt2 ~ 1 + emt1 + sex_num
+  emt2 ~~ emt2'
+
+fit2 <- lavaan(mod2, fairplayer)
+lavaan::summary(fit2)
+summary(lm_mod)
+```
+
