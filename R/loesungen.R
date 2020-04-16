@@ -8,6 +8,8 @@
 #'
 
 #### Kernfunktionen: Aufruf der einzelnen Sitzungen ####
+#' @rdname Lösungen
+#' @export
 Loesungen_1 <- function(password) {
   if (digest::digest(password) != 'c979e33e1fdd5a1b5a3f5d7d0330a362') {
     stop('Leider haben Sie nicht das richtige Passwort eingegeben.', call. = FALSE)
@@ -15,7 +17,8 @@ Loesungen_1 <- function(password) {
     learnr::run_tutorial('intro_lo', package = 'PsyMSc1')
   }
 }
-
+#' @rdname Lösungen
+#' @export
 Loesungen_2 <- function(password) {
      if (digest::digest(password) != "6adb4894cab39c7d479b5284a1a907b2") {
           stop('Leider haben Sie nicht das richtige Passwort eingegeben.', call. = FALSE)
