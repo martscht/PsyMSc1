@@ -1,4 +1,4 @@
-#' @name Lösungen
+#' @name Loesungen
 #' @aliases Lösungen_1
 #' @aliases Lösungen_2
 #' 
@@ -8,6 +8,8 @@
 #'
 
 #### Kernfunktionen: Aufruf der einzelnen Sitzungen ####
+#' @rdname Lösungen
+#' @export
 Loesungen_1 <- function(password) {
   if (digest::digest(password) != 'c979e33e1fdd5a1b5a3f5d7d0330a362') {
     stop('Leider haben Sie nicht das richtige Passwort eingegeben.', call. = FALSE)
