@@ -4,16 +4,18 @@
 \alias{Loesungen}
 \alias{Loesungen_1}
 \alias{Loesungen_2}
-\title{R-Skripte zur Lösung der Aufgaben im PsyMSc 1 Seminar, Sommersemester 2020
-
-Mit diesen Funktionen können Sie die Lösungen zu den Übungen in den einzelnen Sitzungen aufrufen. Die Passwörter werden nach dem Abgabetermin im OLAT bekannt gegeben.}
+\title{R-Skripte zur Lösung der Aufgaben im PsyMSc 1 Seminar, Sommersemester 2020}
 \usage{
 Loesungen_1(password)
 
 Loesungen_2(password)
 }
+\arguments{
+\item{password}{Ein \code{character} mit dem Passwort für die jeweilige Sitzung.}
+}
 \description{
-R-Skripte zur Lösung der Aufgaben im PsyMSc 1 Seminar, Sommersemester 2020
-
 Mit diesen Funktionen können Sie die Lösungen zu den Übungen in den einzelnen Sitzungen aufrufen. Die Passwörter werden nach dem Abgabetermin im OLAT bekannt gegeben.
+}
+\seealso{
+Sitzungen
 }

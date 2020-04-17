@@ -6,7 +6,9 @@
 #'
 #' @description Mit diesen Funktionen können Sie die Übungen zu den einzelnen Sitzungen aufrufen. Die Funktionen nehmen keine Argumente entgegen.
 #'
-#' @details 
+#' @details Durch die verschiedenen Funktionen können unterschiedliche Sitzungen aufgerufen werden. Dabei ist das Suffix _* immer die Nummer der jeweiligen Sitzung (z.B. Sitzung_1 für die 1. Sitzung). Die Inhalte wurden in \code{learnr} umgesetzt und das Kompilieren der Dateien findet anhand dieses Pakets statt.
+#' 
+#' @seealso Loesungen
 
 #### Kernfunktionen: Aufruf der einzelnen Sitzungen ####
 

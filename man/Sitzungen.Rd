@@ -4,16 +4,18 @@
 \alias{Sitzungen}
 \alias{Sitzung_1}
 \alias{Sitzung_2}
-\title{Übungen im PsyMSc 1 Seminar, Sommersemester 2020
-
-Mit diesen Funktionen können Sie die Übungen zu den einzelnen Sitzungen aufrufen. Die Funktionen nehmen keine Argumente entgegen.}
+\title{Übungen im PsyMSc 1 Seminar, Sommersemester 2020}
 \usage{
 Sitzung_1()
 
 Sitzung_2()
 }
 \description{
-Übungen im PsyMSc 1 Seminar, Sommersemester 2020
-
 Mit diesen Funktionen können Sie die Übungen zu den einzelnen Sitzungen aufrufen. Die Funktionen nehmen keine Argumente entgegen.
+}
+\details{
+Durch die verschiedenen Funktionen können unterschiedliche Sitzungen aufgerufen werden. Dabei ist das Suffix _* immer die Nummer der jeweiligen Sitzung (z.B. Sitzung_1 für die 1. Sitzung). Die Inhalte wurden in \code{learnr} umgesetzt und das Kompilieren der Dateien findet anhand dieses Pakets statt.
+}
+\seealso{
+Loesungen
 }
