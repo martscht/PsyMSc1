@@ -23,8 +23,6 @@ data(Big5, package = 'PsyMSc1')
 knitr::opts_chunk$set(exercise.checker = gradethis::grade_learnr)
 ```
 
-*Forschungsmethoden und Evaluation II, PsyMSc 1, Sommersemester 2020 --- EFA*
-
 ## Einleitung zur exploratorischen Faktorenanalyse (EFA)
 
 Forscher der Psychologie oder anderer Natur-, Sozial- und Geisteswissenschaften interessieren sich häufig dafür, dass sich Daten runterbrechen lassen auf einige wenige entscheidende Faktoren, welche  ein theoretisches Erklärungsmodell für die Variation in einem Datensatz liefern. Die Annahme ist hierbei, dass die beobachtbaren Messungen eine Linearkombination (also eine Summe) aus einem systematischen (wahren) und einem unsystematischen (Fehler-) Anteil bilden. Die dahinterliegenden Faktoren sind nicht messbare (latente) Variablen, auf welche, unter gewissen Annahmen, nur anhand der Kovariation zwischen den beobachtbaren Items geschlossen werden kann. Durch diese Zusammenhänge zwischen den Messungen können schließlich Hypothesen für die latenten Varibalen untersucht werden. Ein theoriegenerierendes Verfahren, das hierzu häufig verwendet wird, ist die **exploratorische Faktorenanalyse (EFA)**. Wir wollen dieses Verfahren zur Auswertung von Beziehungen zwischen Variablen in `R` näher kennenlernen.
@@ -124,7 +122,7 @@ data_France <- Big5[Big5$country == "FR", ]
 
 Dem Output sollte zu entnehmen sein, dass `data_France` `r dim(data_France)[1]` Zeilen (also Probanden, die in Frankreich leben) und `r dim(data_France)[2]` Spalten (also Variablen) enthält. Für die weiteren Analysen brauchen wir die demografischen Variablen in dem Datensatz der in Frankreich lebenden Teilnehmer nicht mehr. Aus diesem Grund speichern wir den Datensatz noch einmal ohne die ersten 4 Spalten ab.
 
-```{r exercise_corplot1, exercise = TRUE, exercise.eval = FALSE, fig.height=5}
+```{r exercise_corplot1, exercise = TRUE, exercise.eval = FALSE, fig.height=5, fig.align="center"}
 dataFR <- data_France[, -c(1:4)] # entferne demografische Daten und speichere als "dataFR"
 
 #### Visualisierte Korrelationsmatrix in dataFR
@@ -150,7 +148,7 @@ head(dataFR2)
 
 Visualisieren Sie doch mal die Korrelationsmatrix in unserem gekürzten Datensatz `dataFR2`.
 
-```{r exercise_corplot_FR2, exercise = TRUE, exercise.eval = FALSE}
+```{r exercise_corplot_FR2, exercise = TRUE, exercise.eval = FALSE, fig.align="center"}
 # Visualisierte Korrelationsmatrix
 corrplot(corr = cor(...), # Korrelationsmatrix (Datengrundlage)
          method = "color", # Zeichne die Ausprägung der Korrelation farblich kodiert
@@ -158,7 +156,7 @@ corrplot(corr = cor(...), # Korrelationsmatrix (Datengrundlage)
          number.cex = 1) # Stelle die Schriftgröße der Koeffizienten ein
 ```
 
-```{r exercise_corplot_FR2-solution}
+```{r exercise_corplot_FR2-solution, fig.align="center"}
 # Visualisierte Korrelationsmatrix
 corrplot(corr = cor(dataFR), # Korrelationsmatrix (Datengrundlage)
          method = "color", # Zeichne die Ausprägung der Korrelation farblich kodiert
@@ -173,11 +171,12 @@ Hier ist nun deutlich zu sehen, dass die Extraversionsitems und die Neurotizismu
 Unser Ziel ist es, mit den gegebenen Items eine exploratorische Faktorenanalyse durchzuführen. Wir wollen hierbei die Anzahl der Faktoren mittels einer Parallelanalyse bestimmen und anschließend dieses Modell mit dem $\chi^2$-Test (*Likelihood-Quotiententest/ Likelihood-Differenzentest*/ $\chi^2$-*Differenzentest*) gegen konkurrierende Modelle vergleichen. 
 Hierbei wollen wir die oblique rotierte und die orthogonal rotierte Lösung vergleichen und hinsichtlich unserer Daten interpretieren. Das Modell, was wir an unsere Daten anpassen wollen, sieht für 6 Variablen ($V_1,\dots,V_6$) im Allgemeinen erst einmal so aus:
 
-<img src="https://raw.githubusercontent.com/martscht/PsyMSc1/master/inst/tutorials/EFA/images/EFA_Modell.png" width="100%"/>
+<center> <img src="https://raw.githubusercontent.com/martscht/PsyMSc1/master/inst/tutorials/EFA/images/EFA_Modell.png" width="70%"/> </center>
 
 Auf unseren Datensatz angepasst, wollen wir folgendes Modell anpassen.
 
-<img src="https://raw.githubusercontent.com/martscht/PsyMSc1/master/inst/tutorials/EFA/images/specific_model.png" width="100%"/>
+<center> <img src="https://raw.githubusercontent.com/martscht/PsyMSc1/master/inst/tutorials/EFA/images/specific_model.png" width="70%"/> </center>
+
 
 Natürlich erwarten wir, dass insgesamt 2 Faktoren die Daten am besten beschreiben und dass die konstruktkongruenten Items jeweils auf dem gleichen Faktor am stärksten laden. Aber stützen die Daten diese Hypothese? 
 
@@ -196,12 +195,12 @@ Der wesentliche Unterschied zwischen einer EFA und einer PCA ist, dass bei der E
 
 Mit Hilfe des `fa.parallel` Befehls aus dem `psych`-Paket, welchen wir im Rahmen der PCA bereits kennengelernt hatten, lässt sich ganz einfach der Eigenwerteverlauf inklusive Parallelanalyse grafisch darstellen.
 
-```{r exercise_parallel1, exercise = TRUE, exercise.eval = FALSE, fig.height=6}
+```{r exercise_parallel1, exercise = TRUE, exercise.eval = FALSE, fig.height=6, fig.align="center"}
 fa.parallel(dataFR2)
 ```
 Ohne weitere Einstellungen wird der Eigenwerteverlauf der PCA und der EFA ausgegeben. Deutlich zu sehen ist, dass die Eigenwerte der PCA größer ausfallen als die der EFA. Dies liegt erneut daran, dass die Faktoren der EFA lediglich die systematischen Anteile der Variablen enthalten, während die Komponenten der PCA Kompositionen sind - also Zusammensetzungen aus den Variablen; inklusive der Messfehler.
 
-```{r exercise_parallel2, exercise = TRUE, exercise.eval = FALSE, fig.height=6}
+```{r exercise_parallel2, exercise = TRUE, exercise.eval = FALSE, fig.height=6, fig.align="center"}
 fa.parallel(dataFR2, fa = "fa")
 ```
 Die Grafik zeigt drei Eigenwerteverläufe. *FA Actual Data* ist der Eigenwerteverlauf unseres Datensatzes. *FA Simulated Data* ist der Eigenwerteverlauf basierend auf den 1000 simulierten Datensätzen. *FA Resampled Data* ist der Eigenwerteverlauf von Datensätzen, der durch *Resampling*, also neues Verteilen unseres Datensatzes entsteht. Da beim Resampling die Systematiken unseres Datensatzes verloren gehen, sollte das Resampling einen ähnlichen Eigenwerteverlauf wie die unabhängig gezogenen Datensätze erzeugen.
@@ -324,7 +323,7 @@ Als neue Information entnehmen wir der Korrelationsmatrix der Faktoren, welche w
 
 
 ### Exploratische Maximum-Likelihood-Faktorenanalyse (ML-EFA)
-Wir möchten unsere Analysen nun gegen andere konkurrierende Modelle absichern sowie untersuchen, ob unser zweifaktorielles Modell überhaupt zu den Daten passt. Hierzu müssen wir annehmen, dass unsere Daten multivariat normalverteilt sind. Wie man diese Annahme zumindest deskriptiv untersucht, hatten wir im Zusammenhang mit den Voraussetzungen von statistischen Verfahren kennengelernt (Mahalanobisdistanz sollte approximativ $\chi^2$-verteilt sein, siehe hierzu im [Appenix A](#AppendixA) nach). Mit Hilfe dieser Verteilungsannahme können wir die Maximum-Likelihood-Schätzmethode nutzen, um die Parameter in unserem Modell zu schätzen. Die *Likelihood* ist die Wahrscheinlichkeit unserer Daten gegeben das Modell. Sie hängt somit von den beobachteten Daten ab (den Ausprägungen der Personen auf den Variablen), hat die Gestalt unseres Modells (*hier*: Faktorsstruktur mit normalverteilten Faktoren und Fehlern) und wird parametrisiert durch die Koeffizienten (Parameter) in unserem Modell (*hier*: $\lambda_{..}$ und $\theta_{..}$ im unkorrelierten Modell vor Rotation). Die durch das Modell implizierte Kovarianz oder Korrelationsmatrix wird mit $\Sigma$ betitelt und setzt sich folgendermaßen zusammen:
+Wir möchten unsere Analysen nun gegen andere konkurrierende Modelle absichern sowie untersuchen, ob unser zweifaktorielles Modell überhaupt zu den Daten passt. Hierzu müssen wir annehmen, dass unsere Daten multivariat normalverteilt sind. Wie man diese Annahme zumindest deskriptiv untersucht, hatten wir im Zusammenhang mit den Voraussetzungen von statistischen Verfahren kennengelernt (Mahalanobisdistanz sollte approximativ $\chi^2$-verteilt sein, siehe hierzu im [Appendix](#AppendixA) nach). Mit Hilfe dieser Verteilungsannahme können wir die Maximum-Likelihood-Schätzmethode nutzen, um die Parameter in unserem Modell zu schätzen. Die *Likelihood* ist die Wahrscheinlichkeit unserer Daten gegeben das Modell. Sie hängt somit von den beobachteten Daten ab (den Ausprägungen der Personen auf den Variablen), hat die Gestalt unseres Modells (*hier*: Faktorsstruktur mit normalverteilten Faktoren und Fehlern) und wird parametrisiert durch die Koeffizienten (Parameter) in unserem Modell (*hier*: $\lambda_{..}$ und $\theta_{..}$ im unkorrelierten Modell vor Rotation). Die durch das Modell implizierte Kovarianz oder Korrelationsmatrix wird mit $\Sigma$ betitelt und setzt sich folgendermaßen zusammen:
 
 $$\Sigma := \Lambda \Lambda' + \Theta.$$
 
@@ -462,12 +461,12 @@ Der $\chi^2$-Differenzwert liegt hier bei `r round(anova(two_factor_ML, three_fa
 
 Für den vollen Datensatz mit jeweils drei Items pro Persönlichkeitsfacette, nehmen wir zunächst an, dass es 5 Faktoren gibt. Dies wird hier allerdings nicht durch die Parallelanalyse gestüzt. Wir müssen die Funktion `fa.parallel` diesmal auf den vollen (gekürtzten) Datensatz anwenden; namlich auf `dataFR`.
 
-```{r, exercise_parallel15, exercise = TRUE, exercise.eval = FALSE, fig.height=6}
+```{r, exercise_parallel15, exercise = TRUE, exercise.eval = FALSE, fig.height=6, fig.align="center"}
 
 
 ```
 
-```{r, exercise_parallel15-solution}
+```{r, exercise_parallel15-solution, fig.height=6, fig.align="center"}
 fa.parallel(x = dataFR)
 ```
 Hier scheinen eher 4 Faktoren sinnvoll. Wir prüfen dennoch erstmal unsere inhaltliche Hypothese, dass es 5 Faktoren gibt, mit Hilfe der *oblique* Rotierten ML-EFA.
@@ -587,7 +586,7 @@ Dem sechsfaktoriellen Modell widersprechen die Daten genauso wenig, wie dem Fün
  
 
 ```{r, test_fa6_ML, exercise = TRUE, exercise.eval = FALSE}
-# führen Sie eine anova zwischen dem vier- und dem fünffaktoriellen Modell durch
+# führen Sie eine anova zwischen dem fünf- und dem sechsfaktoriellen Modell durch
 
 
 ```
@@ -607,14 +606,14 @@ grade_result(
   glue_incorrect = '{.incorrect} {.message}')
 ```
 
-Der $\chi^2$-Differenzwert liegt hier bei `r round(anova(five_factor_ML, six_factor_ML)[[4]][2], 3)` mit einen zugehörigen p-Wert `r ifelse(anova(five_factor_ML, six_factor_ML)[[5]][2] < 0.01, "< 0.01", paste(round(anova(five_factor_ML, six_factor_ML)[[5]][2], 4)))` mit $\Delta df$ = `r anova(five_factor_ML, six_factor_ML)[[3]][2]`. <mark style="background-color: orange">Somit wird die Null-Hypothese, dass beide Modell die Daten gleich gut beschreiben, auf dem 5%-Niveau nicht verworfen. Wir entscheiden uns nach dem Sparsamkeitsprinzip für das Modell mit weniger Parametern, also für das restriktive Modell mit fünf Faktoren, welches die Daten nicht signifikant schlechter beschreibt, als das komplexere mit sechs Faktoren. *In der Regel sind Modelle mit weniger Parametern leichter zu interpretieren.*   </mark>
+Der $\chi^2$-Differenzwert liegt hier bei `r round(anova(five_factor_ML, six_factor_ML)[[4]][2], 3)` mit einen zugehörigen p-Wert von `r ifelse(anova(five_factor_ML, six_factor_ML)[[5]][2] < 0.01, "< 0.01", paste(round(anova(five_factor_ML, six_factor_ML)[[5]][2], 4)))` mit $\Delta df$ = `r anova(five_factor_ML, six_factor_ML)[[3]][2]`. <mark style="background-color: orange">Somit wird die Null-Hypothese, dass beide Modelle die Daten gleich gut beschreiben, auf dem 5%-Niveau nicht verworfen. Wir entscheiden uns nach dem Sparsamkeitsprinzip für das Modell mit weniger Parametern, also für das restriktive Modell mit fünf Faktoren, welches die Daten nicht signifikant schlechter beschreibt, als das komplexere mit sechs Faktoren. *In der Regel sind Modelle mit weniger Parametern leichter zu interpretieren.*   </mark>
 
 <mark style="background-color: orange">Da die Zuordnung zwischen Faktoren und Items nicht eindeutig zu interpretieren war, müsste dies in Zukunft weiter untersucht werden. Weitere geziehlte Hypothesen lassen sich beispielsweise mit der **konfirmatorischen Faktoren Analyse (CFA; confirmatory factor analysis)** untersuchen.  </mark>
 
 
 ## Appendix
 
-## **Appendix A:** Prüfen der Voraussetzungen {#AppendixA}
+### Prüfen der Voraussetzungen {#AppendixA}
 Auf multivariate Normalverteilung können wir beispeilsweise **deskriptiv** prüfen, indem wir die Mahalanobisdistanz (die Distanz vom gemeinsame Zentroiden; dem Mittelwert über alle Variablen; unter Berücksichtigung der Kovariation im Datensatz) plotten und sie mit einer $\chi^2$-Verteilung vergleichen; wobei $df=p$ und $p=$ Anzahl an Variablen (hier $df=p=15$).
 ```{r}
 Mahalanobis_Distanz <- mahalanobis(x = dataFR, cov = cov(dataFR), center = apply(X = dataFR, MARGIN = 2, FUN = mean)) # Berechnen der Mahalanobisdistanz
@@ -625,7 +624,7 @@ lines(x = seq(0, max(Mahalanobis_Distanz), 0.01), y = dchisq(x = seq(0, max(Maha
 Das Histogramm scheint nicht perfekt zur $\chi^2$ Verteilung zu passen. Allerdings sind die Abweichungen auch nicht enorm. <mark style="background-color: orange">Wir verwerfen auf Basis des Histogramms die Normalverteilungsannahme nicht, sollten die Ergebnisse aber trotzdem unter Vorbehalt interpretiert werden. </mark>
 
 
-Die Funktion `mahalanobis` berechnet die Mahalanobisdistanz pro Proband. Als Datenargument braucht sie eine Matrix `x`. Die Mahalanobisdistanz ist ein Distanzmaß, welches die korrelative Struktur in den Daten berücksichtig. Wir übergeben daher mit `cov = cov(dataFR)` der Funktion `mahalanobis` die empirische Kovarianzmatrix unserer Daten (`cov(dataFR)`), um diese Struktur mit zuberücksichtigen. Außerdem müssen die Variablen und deren Variation relativ zu einem Zentroiden angegeben werden. Der Zentroid kann dem `center` Argument übergeben werden. Wir brauchen also für jede Variable den Mittelwert. Dies berechnen wir mit `mean` und der `apply`-Funktion (Man könnte dies natürlich auch "zu Fuß" für jede Variable einzeln machen, die Mittelwert in einem Vektor abspeichern und diesen hier angeben). Die Funktion `apply` führt auf die Datenmatrix, welche dem Argument `X` übergeben wird, entweder über die Zeilen `MARGIN = 1` oder über die Spalten `MARGIN = 2` (hier gewählt) die Funktion aus, welche im Argument `FUN` angegeben wird. So wird mit `FUN = mean` der Mittelwert über alle Variablen in *dataFR* berechnet. 
+Die Funktion `mahalanobis` berechnet die Mahalanobisdistanz pro Proband. Als Datenargument braucht sie eine Matrix `x`. Die Mahalanobisdistanz ist ein Distanzmaß, welches die korrelative Struktur in den Daten berücksichtigt. Wir übergeben daher mit `cov = cov(dataFR)` der Funktion `mahalanobis` die empirische Kovarianzmatrix unserer Daten (`cov(dataFR)`), um diese Struktur mit zuberücksichtigen. Außerdem müssen die Variablen und deren Variation relativ zu einem Zentroiden angegeben werden. Der Zentroid wird dem `center` Argument übergeben. Wir brauchen also für jede Variable deren Mittelwert. Dies berechnen wir mit `mean` und der `apply`-Funktion (Man könnte dies natürlich auch "zu Fuß" für jede Variable einzeln machen, die Mittelwert in einem Vektor abspeichern und diesen hier angeben). Die Funktion `apply` führt auf die Datenmatrix, welche dem Argument `X` übergeben wird, entweder über die Zeilen `MARGIN = 1` oder über die Spalten `MARGIN = 2` (hier gewählt) die Funktion aus, welche im Argument `FUN` angegeben wird. So wird mit `FUN = mean` der Mittelwert über alle Variablen in *dataFR* berechnet. 
 
 ```{r}
 apply(X = dataFR, MARGIN = 2, FUN = mean)
@@ -633,7 +632,7 @@ apply(X = dataFR, MARGIN = 2, FUN = mean)
 
 Der `hist` Befehl erzeugt schließlich ein Histogramm der Mahalanobisdistanzen. Mit den Argumenten `col = "skyblue"` und `border = "blue"` setzten wir die Farben des Histogramms fest. Mit `freq = F` sagen wir, dass wir nicht die absoluten sondern die relativen Häufigkeiten angezeigt haben wollen (dies brauchen wir um anschließend die Dichte der $\chi^2$-Verteilung einzuzeichnen). Mit `breaks = 15` beschließen wir, dass insgesamt ca. 15 Balken gezeichnet werden sollen. 
 
-Schließlich zeichnen wir mit `lines` eine Line, welche als x-Argument `x = seq(0, max(Mahalanobis_Distanz), 0.01)` eine Sequenz von Zahlen von 0 bis zur maximalen Mahalanobisdistanz erhält und in 0.01 Schritten wächst. Gegen diese x-Werte zeichnen wir die Dichte der $\chi^2(df=15)$-Verteilung ein: ` y = dchisq(x = seq(0, max(Mahalanobis_Distanz), 0.01), df = 15)`. `col = "darkblue"` und `lwd = 4` setzten jeweils die Linienfarbe und Liniendicke fest. Weitere Informationen zu Verteilungen  und wie man diese in `R` umsetzt, können im [R-Wiki zu Verteilungen](https://en.wikibooks.org/wiki/R_Programming/Probability_Distributions), in [Wikipedia zu Verteilungen und Dichten](https://de.wikipedia.org/wiki/Wahrscheinlichkeitsdichtefunktion) oder in einer [Kurzzusammenfassung auf statethods](https://www.statmethods.net/advgraphs/probability.html) nachgelesen werden. Grundlagen hierzu können außerdem in [Eid et al. (2017)](https://hds.hebis.de/ubffm/Record/HEB366849158) in Kapitel 7 ab Seite 171 gefunden werden.
+Schließlich zeichnen wir mit `lines` eine Line, welche als x-Argument `x = seq(0, max(Mahalanobis_Distanz), 0.01)` eine Sequenz von Zahlen von 0 bis zur maximalen Mahalanobisdistanz erhält und in 0.01 Schritten wächst. Gegen diese x-Werte zeichnen wir die Dichte der $\chi^2(df=15)$-Verteilung ein: ` y = dchisq(x = seq(0, max(Mahalanobis_Distanz), 0.01), df = 15)`. `col = "darkblue"` und `lwd = 4` setzten jeweils die Linienfarbe und Liniendicke fest. Weitere Informationen zu Verteilungen  und wie man diese in `R` umsetzt, können im [R-Wiki zu Verteilungen](https://en.wikibooks.org/wiki/R_Programming/Probability_Distributions), in [Wikipedia zu Verteilungen und Dichten](https://de.wikipedia.org/wiki/Wahrscheinlichkeitsdichtefunktion) oder in einer [Kurzzusammenfassung auf statmethods](https://www.statmethods.net/advgraphs/probability.html) nachgelesen werden. Grundlagen hierzu können außerdem in [Eid et al. (2017)](https://hds.hebis.de/ubffm/Record/HEB366849158) in Kapitel 7 ab Seite 171 gefunden werden.
 
 
 
