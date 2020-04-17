@@ -4,8 +4,9 @@
 #' 
 #' @title Übungen im PsyMSc 1 Seminar, Sommersemester 2020
 #'
-#' Mit diesen Funktionen können Sie die Übungen zu den einzelnen Sitzungen aufrufen. Die Funktionen nehmen keine Argumente entgegen.
+#' @description Mit diesen Funktionen können Sie die Übungen zu den einzelnen Sitzungen aufrufen. Die Funktionen nehmen keine Argumente entgegen.
 #'
+#' @details 
 
 #### Kernfunktionen: Aufruf der einzelnen Sitzungen ####
 
@@ -34,5 +35,6 @@ Sitzung_2 <- function() {
     devtools::install_github('rstudio-education/gradethis', upgrade = 'never')
   }
   library(gradethis)
-  learnr::run_tutorial('EFA', package = 'PsyMSc1')
+  # learnr::run_tutorial('EFA', package = 'PsyMSc1')
+  message('Leider ist die Sitzung noch nicht fertig :(.')
 }
