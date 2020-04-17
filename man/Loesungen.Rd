@@ -4,11 +4,17 @@
 \alias{Loesungen}
 \alias{Loesungen_1}
 \alias{Loesungen_2}
+\alias{Loesungen_3}
+\alias{Loesungen_4}
 \title{R-Skripte zur Lösung der Aufgaben im PsyMSc 1 Seminar, Sommersemester 2020}
 \usage{
 Loesungen_1(password)
 
 Loesungen_2(password)
+
+Loesungen_3(password)
+
+Loesungen_4(password)
 }
 \arguments{
 \item{password}{Ein \code{character} mit dem Passwort für die jeweilige Sitzung.}

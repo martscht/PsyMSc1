@@ -1,6 +1,8 @@
 #' @name Loesungen
 #' @aliases Loesungen_1
 #' @aliases Loesungen_2
+#' @aliases Loesungen_3
+#' @aliases Loesungen_4
 #' 
 #' @title R-Skripte zur Lösung der Aufgaben im PsyMSc 1 Seminar, Sommersemester 2020
 #'
@@ -20,6 +22,7 @@ Loesungen_1 <- function(password) {
     compile('intro_lo')
   }
 }
+
 #' @rdname Loesungen
 #' @export
 Loesungen_2 <- function(password) {
@@ -29,6 +32,19 @@ Loesungen_2 <- function(password) {
        compile('EFA_lo')
      }
 }
+
+#' @rdname Loesungen
+#' @export
+Loesungen_3 <- function(password) {
+  message('Leider ist die Sitzung noch nicht fertig :(.')
+}
+
+#' @rdname Loesungen
+#' @export
+Loesungen_4 <- function(password) {
+  message('Leider ist die Sitzung noch nicht fertig :(.')
+}
+
 
 #### Kompilieren ####
 compile <- function(x) {

@@ -4,11 +4,17 @@
 \alias{Sitzungen}
 \alias{Sitzung_1}
 \alias{Sitzung_2}
+\alias{Sitzung_3}
+\alias{Sitzung_4}
 \title{Übungen im PsyMSc 1 Seminar, Sommersemester 2020}
 \usage{
 Sitzung_1()
 
 Sitzung_2()
+
+Sitzung_3()
+
+Sitzung_4()
 }
 \description{
 Mit diesen Funktionen können Sie die Übungen zu den einzelnen Sitzungen aufrufen. Die Funktionen nehmen keine Argumente entgegen.
