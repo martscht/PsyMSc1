@@ -20,7 +20,7 @@ library(psych)        # EFA durchführen
 library(GPArotation)  # EFA Lösung rotieren
 
 data(Big5, package = 'PsyMSc1')
-knitr::opts_chunk$set(exercise.checker = gradethis::grade_learnr)
+knitr::opts_chunk$set(exercise.check, exercise.setup = "exercise_setup"er = gradethis::grade_learnr)
 ```
 
 
@@ -253,7 +253,7 @@ two_factor <- ...
 ...
 ```
 
-```{r test_fa2_varimax-check}
+```{r test_fa2_varimax-check, exercise.setup = "exercise_setup", exercise.setup = "exercise_setup"}
 two_factor <- fa(dataFR2, nfactors = 2, rotate = "varimax")
 res <- names(two_factor)
 
@@ -288,7 +288,7 @@ names(two_factor) # zeigt, welche Argumente möglich sind!
 ```
 
 
-```{r test_fa2_Structure-check}
+```{r test_fa2_Structure-check, exercise.setup = "exercise_setup"}
 res <- two_factor$Structure 
 
 grade_result(
@@ -312,7 +312,7 @@ two_factor_oblimin <- ...
 two_factor_oblimin
 ```
 
-```{r test_fa2_oblimin-check}
+```{r test_fa2_oblimin-check, exercise.setup = "exercise_setup"}
 two_factor_oblimin <- fa(dataFR2, nfactors = 2, rotate = "oblimin")
 res <- two_factor_oblimin
 
@@ -350,7 +350,7 @@ names(two_factor_oblimin) # zeigt, welche Argumente möglich sind!
 ```
 
 
-```{r test_fa2_oblimin_Phi-check}
+```{r test_fa2_oblimin_Phi-check, exercise.setup = "exercise_setup"}
 res <- two_factor_oblimin$Phi # Korrelationsmatrix der Faktoren
 
 grade_result(
@@ -374,7 +374,7 @@ names(two_factor_oblimin) # zeigt, welche Argumente möglich sind!
 ```
 
 
-```{r test_fa2_oblimin_Structure-check}
+```{r test_fa2_oblimin_Structure-check, exercise.setup = "exercise_setup"}
 res <- two_factor_oblimin$Structure 
 
 grade_result(
@@ -465,7 +465,7 @@ Mit Hilfe des `anova` Befehls, welchen wir schon aus einigen anderen Modellvergl
 
 ```
 
-```{r test_fa1_ML-check}
+```{r test_fa1_ML-check, exercise.setup = "exercise_setup"}
 res <- anova(one_factor_ML, two_factor_ML) # 2 Faktoren passen besser zu den Daten!
 sol2 <- anova(two_factor_ML, one_factor_ML) # 2 Faktoren passen besser zu den Daten!
 
@@ -511,7 +511,7 @@ Das dreifaktorielle Modell beschreibt die Daten perfekt. Das liegt daran, dass e
 ```
 
  
-```{r test_fa2_ML-check}
+```{r test_fa2_ML-check, exercise.setup = "exercise_setup"}
 res <- anova(two_factor_ML, three_factor_ML) # 2 Faktoren passen besser zu den Daten!
 sol2 <- anova(three_factor_ML, two_factor_ML) # 2 Faktoren passen besser zu den Daten!
 
@@ -622,7 +622,7 @@ Das vierfaktorielle Modell wird durch die Daten verworfen ($p<0.05$). Auch der M
 ```
 
  
-```{r test_fa4_ML-check}
+```{r test_fa4_ML-check, exercise.setup = "exercise_setup"}
 res <- anova(four_factor_ML, five_factor_ML) 
 sol2 <- anova(five_factor_ML, four_factor_ML) 
 
@@ -665,7 +665,7 @@ Dem sechsfaktoriellen Modell widersprechen die Daten genauso wenig, wie dem Fün
 ```
 
  
-```{r test_fa6_ML-check}
+```{r test_fa6_ML-check, exercise.setup = "exercise_setup"}
 res <- anova(five_factor_ML, six_factor_ML) 
 sol2 <- anova(six_factor_ML, five_factor_ML) 
 
