@@ -13,19 +13,31 @@ runtime: shiny_prerendered
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-*Forschungsmethoden und Evaluation II, PsyMSc 1, Sommersemester 2020*
+
+```{r setup_EFA, include = FALSE}
+library(learnr)       # package to generate interactive HTML
+library(gradethis)    # grade Code from input in HTML
+library(shiny)        # nice appearance in R
+library(fontawesome)  # nice fonts
+library(corrplot)     # Korrelationsmatrix grafisch darstellen
+library(psych)        # EFA durchführen
+library(GPArotation)  # EFA Lösung rotieren
+
+data(Big5, package = 'PsyMSc1')
+knitr::opts_chunk$set(exercise.checker = gradethis::grade_learnr)
+```
 
 ## Vorbereitung zu den EFA - Aufgaben und Lösungen
 
  Am besten beginnen Sie mit dem Laden der nötigen R-Pakete:
 
-
-```{r}
+```{r, eval = F}
 library(psych) # EFA durchführen
 library(GPArotation) # EFA Lösung rotieren
 ```
 
-## Datensatz
+
+### Datensatz
 Im Datensatz *Big5.rda* befinden sich 15 Items aus dem Big-5 Persönlichkeits Fragebogen. Der Itemwortlaut der verwendeten Items ist
 
 ```{r, echo = F}
@@ -56,7 +68,7 @@ Nun müssen Sie zunächst die Daten laden. Das machen Sie mit Hilfe des Paketes 
 
 ```{r data}
 # Datensatz laden 
-load("Big5.rda") # shortend Big 5 Questionnaire Data Set
+data(Big5, package = 'PsyMSc1') # shortend Big 5 Questionnaire Data Set
 head(Big5, n = 10) # gebe die ersten 10 Zeilen aus
 ```
 
@@ -69,31 +81,16 @@ Big5[100, ]
 Es handelt sich also um eine 18-jährige Person aus den USA.
 
 
-# Einleitung
+### Einleitung
 
-Das Ziel dieser Übung ist es, Daten von Personen (deskriptiv) zu vergleichen die in Deutschland oder in den Vereinigten Emiraten leben und in beiden Ländern eine EFA mit den Persönlichkeitsitems durchzuführen. Die Kürzel hierfür sind "AE" (Emirates) und "DE" (Deutschland). Speichern Sie zwei neue Datensätze ab: data_Emirates_full und data_Germany_full. Entfernen Sie aus diesen Datensätzen die Spalte mit den Länderkürzeln. Es sollten anschließend nur noch drei demografische Informationen über die Personen in Ihrem Datensatz enthalten sein - neben den 15 Persönlichkeitsitems. 
+Das Ziel dieser Übung ist es, Daten von Personen (deskriptiv) zu vergleichen die in Deutschland oder in den Vereinigten Emiraten leben und für beide Ländern eine EFA mit den Persönlichkeitsitems durchzuführen. Die Kürzel hierfür sind "AE" (Emirates) und "DE" (Deutschland). Speichern Sie zwei neue Datensätze ab: *data_Emirates_full* und *data_Germany_full.* Entfernen Sie aus diesen Datensätzen die Spalte mit den Länderkürzeln. Es sollten anschließend nur noch drei demografische Informationen über die Personen in Ihrem Datensatz enthalten sein - neben den 15 Persönlichkeitsitems. 
 
 
-# Aufgabe 1
+## Aufgabe 1
 
 In dieser Aufgabe wollen wir prüfen, ob die Daten richtig eingeladen wurden und ein paar deskriptive Kennwerte zwischen den Stichproben vergleichen.
 
-Wie sehen die Dimensionen Ihrer Datensätze aus?  Der Datensatz data_Emirates_full hat 
-18 Spalten und N = 100 Zeilen. Der Datensatz data_Germany_full hat **18** Spalten und N = **191** Zeilen. Wir wollen ein paar Mitelwerte vergleichen: Der Altersdurchschnitt der arabischen Stichprobe liegt bei **47.51** während der der deutschen Stichprobe bei **27.80** liegt. Unterscheiden sich die Stichproben voraussichtlich im Alter (rein deskriptiv gesehen)? Was erwarten Sie? Antwort (ja/nein): **ja**.
-
- 
-
-Kürzen Sie nun alle demografischen Daten aus den beiden Datensätzen. Dies dient der Vorbereitung für die EFAs. Speichern Sie die neuen Datensätze, welche nur noch die Persönlichkeitsitems enthalten als data_Emirates und data_Germany ab. Prüfen Sie mit dem "head" Befehl, ob Sie die richtigen Datensätze haben. Die ersten Zeilen der beiden Datensätze sollten sein (mit Hilfe von head(..., 1)):
-
-Emirates
-
-1 2 4 5 1 5 5 5 4 4 4 5 1 1 3
-
-Deutschland
-
- 
-1 3 2 4 3 4 1 4 2 4 5 4 4 2 2
-
+Wie sehen die Dimensionen Ihrer Datensätze aus?  
 
 
 ```{r}
@@ -122,10 +119,27 @@ head(data_Emirates, 1)
 head(data_Germany, 1)
 ```
 
-# Aufgabe 2 und Aufgabe 3
-Nachdem Sie nun die Daten eingelesen und als "data_Emirates" und "data_Germany" benannt haben, sollen Sie nun angeben, mit welchen Befehlen Sie eine Auswahl über die mögliche Anzahl an Faktoren in einer EFA treffen können. Mit welchem Code-Schnipsel können Sie die Anzahl an Faktoren für die deutsche Stichprobe untersuchen?
+Der Datensatz *data_Emirates_full* hat 
+18 Spalten und N = 100 Zeilen. Der Datensatz *data_Germany_full* hat **18** Spalten und N = **191** Zeilen. Wir wollen ein paar Mitelwerte vergleichen: Der Altersdurchschnitt der arabischen Stichprobe liegt bei **47.51** während der der deutschen Stichprobe bei **27.80** liegt. Unterscheiden sich die Stichproben voraussichtlich im Alter (rein deskriptiv gesehen)? Was erwarten Sie? Antwort (ja/nein): **ja**.
 
-```{r}
+ 
+
+Kürzen Sie nun alle demografischen Daten aus den beiden Datensätzen. Dies dient der Vorbereitung für die EFAs. Speichern Sie die neuen Datensätze, welche nur noch die Persönlichkeitsitems enthalten als data_Emirates und data_Germany ab. Prüfen Sie mit dem "head" Befehl, ob Sie die richtigen Datensätze haben. Die ersten Zeilen der beiden Datensätze sollten sein (mit Hilfe von head(..., 1)):
+
+Emirates
+
+1 2 4 5 1 5 5 5 4 4 4 5 1 1 3
+
+Deutschland
+
+ 
+1 3 2 4 3 4 1 4 2 4 5 4 4 2 2
+
+
+## Aufgabe 2 und Aufgabe 3
+Nachdem Sie nun die Daten eingelesen und als "*data_Emirates*" und "*data_Germany*" benannt haben, sollen Sie nun angeben, mit welchen Befehlen Sie eine Auswahl über die mögliche Anzahl an Faktoren in einer EFA treffen können. Mit welchem Code-Schnipsel können Sie die Anzahl an Faktoren für die deutsche Stichprobe untersuchen?
+
+```{r, fig.height=6}
 fa.parallel(x = data_France)
 fa.parallel(x = data_Germany)
 fa.parallel(x = data_Emirates)
@@ -134,10 +148,10 @@ fa.parallel(x = data_Emirates)
 Was entnehmen Sie den Prallelanalyseplots? Nach Parallelanalyse sind es **5** Faktoren der Persönlichkeit für die deutsche Stichprobe. Für die arabische Stichprobe sind es **4** Faktoren. 
 
 
-# Aufgabe 4
-Führen Sie unabhängig von der Anzahl an vorgeschlagenen Faktoren eine ML-EFA mit fünf Faktoren und obliquer Rotation durch. Die Argumente, die zum gewünschten Ergebnis führen, lauten `fa = "ml"`, `nfactors = 5` und `rotate = "oblimin"`. 
+## Aufgabe 4
+Führen Sie unabhängig von der Anzahl an vorgeschlagenen Faktoren eine ML-EFA mit fünf Faktoren und obliquer Rotation durch. Die Argumente, die zum gewünschten Ergebnis führen, lauten `fm = "ml"`, `nfactors = 5` und `rotate = "oblimin"`. 
 
-Speichern Sie sich für jedes Land ein eigenes Objekt ab und nennen Sie diese five_factor_ML_Germany  und five_factor_ML_Emirates.
+Speichern Sie sich für jedes Land ein eigenes Objekt ab und nennen Sie diese *five_factor_ML_Germany*  und *five_factor_ML_Emirates.*
 
 
 ```{r}
@@ -149,15 +163,16 @@ five_factor_ML_Emirates
 
 Wenn Sie sich die Outputs dieser Objekte ansehen, wie groß sind die Eigenwerte? Der größte Eigenwert der deutschen Stichprobe ist `r round(five_factor_ML_Germany$Vaccounted[1,1], 2)` und der zweitgrößte Eigenwert liegt bei `r round(five_factor_ML_Germany$Vaccounted[1,2], 2)`. Für die andere Stichprobe ist der größte Eigenwert `r round(five_factor_ML_Emirates$Vaccounted[1,1], 2)` und der zweitgrößte Eigenwert liegt bei `r round(five_factor_ML_Emirates$Vaccounted[1,2], 2)`.
 
-Schauen Sie sich nun die Faktorladungen an. Geben Sie dem ersten Faktor (demjenigen Faktor mit dem größten Eigenwert nach Rotation) in der deutschen Stichprobe einen Namen (falls uneindeutig, schreiben Sie "uneindeutig"): *Extraversion* oder *uneindeutig*. Geben Sie auch dem ersten Faktor in der arabischen Stichprobe einen Namen: *uneindeutig* oder *Neurotizismus*.
-
+Schauen Sie sich nun die Faktorladungen an.
 
 ```{r}
 five_factor_ML_Germany$loadings
 five_factor_ML_Emirates$loadings
 ```
 
-# Aufgabe 5
+Geben Sie dem ersten Faktor (demjenigen Faktor mit dem größten Eigenwert nach Rotation) in der deutschen Stichprobe einen Namen (falls uneindeutig, schreiben Sie "uneindeutig"): *Extraversion* oder *uneindeutig*. Geben Sie auch dem ersten Faktor in der arabischen Stichprobe einen Namen: *uneindeutig* oder *Neurotizismus*.
+
+## Aufgabe 5
 
 Um bei einer EFA zu entscheiden, welche Faktorstruktur (also wie viele Faktoren ausreichen) am besten zu den Daten passt, müssen wir zunächst den Modell-Fit (die Modell-Anpassung zu den Daten) unseres Ausgangsmodells prüfen (hier das fünffaktorielle Modell). Bitte runden Sie im Folgenden auf drei Nachkommastellen. Wir schauen uns den Modell-Fit für beide Stichproben hintereinander an:
 
@@ -182,10 +197,10 @@ Der $\chi^2$-Wert liegt bei `r round(five_factor_ML_Emirates$STATISTIC, 3)`. Der
 
  
 
-# Aufgabe 6, Aufgabe 7 und Aufgabe 8
-Diese Aufgaben werden in OLAT diskutiert.
+## Aufgabe 6, Aufgabe 7 und Aufgabe 8
+Diese Aufgaben werden in [OLAT](https://olat-ce.server.uni-frankfurt.de/olat/auth/RepositoryEntry/8136491044) im Feedback zum zugehörigen Test diskutiert.
 
-# Aufgabe 9
+## Aufgabe 9
 Führen Sie nun Modell-Tests zum Vergleich der Modelle durch. Für welches der folgenden Modelle entscheiden Sie sich in den beiden Datensätzen: vierfaktoriell, fünffaktoriell oder sechsfaktoriell?
 
  
@@ -207,6 +222,8 @@ Der Modell-Test in der deutschen Stichprobe zwischen der fünf- und der vierfakt
 ```{r}
 six_factor_ML_Germany$loadings # Lsg
 ```
+
+Nun zu der arabischen Stichprobe:
 
 ```{r}
 four_factor_ML_Emirates <- fa(data_Emirates, nfactors = 4, rotate = "oblimin", fm = "ml")
