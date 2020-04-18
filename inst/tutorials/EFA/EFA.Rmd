@@ -26,7 +26,6 @@ knitr::opts_chunk$set(exercise.checker = gradethis::grade_learnr)
 
 ```{r exercise_setup, echo = F}
 # For further use in exercises
-data(Big5, package = 'PsyMSc1')
 data_France <- Big5[Big5$country == "FR", ]
 dataFR <- data_France[, -c(1:4)] # entferne demografische Daten und speichere als "dataFR"
 dataFR2 <- dataFR[,1:6] # Zunächst wählen wir die ersten 6 Items: E1 bis E3 und N1 bis N3
@@ -254,7 +253,13 @@ two_factor <- ...
 ...
 ```
 
-```{r test_fa2_varimax-check, exercise.setup = "exercise_setup", exercise.setup = "exercise_setup"}
+```{r test_fa2_varimax-check}
+# Intro into excercise
+data_France <- Big5[Big5$country == "FR", ]
+dataFR <- data_France[, -c(1:4)] # entferne demografische Daten und speichere als "dataFR"
+dataFR2 <- dataFR[,1:6] # Zunächst wählen wir die ersten 6 Items: E1 bis E3 und N1 bis N3
+
+# Begin grading:
 two_factor <- fa(dataFR2, nfactors = 2, rotate = "varimax")
 res <- names(two_factor)
 
@@ -289,7 +294,14 @@ names(two_factor) # zeigt, welche Argumente möglich sind!
 ```
 
 
-```{r test_fa2_Structure-check, exercise.setup = "exercise_setup"}
+```{r test_fa2_Structure-check}
+# Intro into excercise
+data_France <- Big5[Big5$country == "FR", ]
+dataFR <- data_France[, -c(1:4)] # entferne demografische Daten und speichere als "dataFR"
+dataFR2 <- dataFR[,1:6] # Zunächst wählen wir die ersten 6 Items: E1 bis E3 und N1 bis N3
+two_factor <- fa(dataFR2, nfactors = 2, rotate = "varimax")
+
+# Begin grading:
 res <- two_factor$Structure 
 
 grade_result(
@@ -313,7 +325,14 @@ two_factor_oblimin <- ...
 two_factor_oblimin
 ```
 
-```{r test_fa2_oblimin-check, exercise.setup = "exercise_setup"}
+```{r test_fa2_oblimin-check}
+# Intro into excercise
+data_France <- Big5[Big5$country == "FR", ]
+dataFR <- data_France[, -c(1:4)] # entferne demografische Daten und speichere als "dataFR"
+dataFR2 <- dataFR[,1:6] # Zunächst wählen wir die ersten 6 Items: E1 bis E3 und N1 bis N3
+two_factor <- fa(dataFR2, nfactors = 2, rotate = "varimax")
+
+# Begin grading:
 two_factor_oblimin <- fa(dataFR2, nfactors = 2, rotate = "oblimin")
 res <- two_factor_oblimin
 
@@ -351,7 +370,15 @@ names(two_factor_oblimin) # zeigt, welche Argumente möglich sind!
 ```
 
 
-```{r test_fa2_oblimin_Phi-check, exercise.setup = "exercise_setup"}
+```{r test_fa2_oblimin_Phi-check}
+# Intro into excercise
+data_France <- Big5[Big5$country == "FR", ]
+dataFR <- data_France[, -c(1:4)] # entferne demografische Daten und speichere als "dataFR"
+dataFR2 <- dataFR[,1:6] # Zunächst wählen wir die ersten 6 Items: E1 bis E3 und N1 bis N3
+two_factor <- fa(dataFR2, nfactors = 2, rotate = "varimax")
+two_factor_oblimin <- fa(dataFR2, nfactors = 2, rotate = "oblimin")
+
+# Begin grading:
 res <- two_factor_oblimin$Phi # Korrelationsmatrix der Faktoren
 
 grade_result(
@@ -375,7 +402,15 @@ names(two_factor_oblimin) # zeigt, welche Argumente möglich sind!
 ```
 
 
-```{r test_fa2_oblimin_Structure-check, exercise.setup = "exercise_setup"}
+```{r test_fa2_oblimin_Structure-check}
+# Intro into excercise
+data_France <- Big5[Big5$country == "FR", ]
+dataFR <- data_France[, -c(1:4)] # entferne demografische Daten und speichere als "dataFR"
+dataFR2 <- dataFR[,1:6] # Zunächst wählen wir die ersten 6 Items: E1 bis E3 und N1 bis N3
+two_factor <- fa(dataFR2, nfactors = 2, rotate = "varimax")
+two_factor_oblimin <- fa(dataFR2, nfactors = 2, rotate = "oblimin")
+
+# Begin grading:
 res <- two_factor_oblimin$Structure 
 
 grade_result(
@@ -466,7 +501,18 @@ Mit Hilfe des `anova` Befehls, welchen wir schon aus einigen anderen Modellvergl
 
 ```
 
-```{r test_fa1_ML-check, exercise.setup = "exercise_setup"}
+```{r test_fa1_ML-check}
+# Intro into excercise
+data_France <- Big5[Big5$country == "FR", ]
+dataFR <- data_France[, -c(1:4)] # entferne demografische Daten und speichere als "dataFR"
+dataFR2 <- dataFR[,1:6] # Zunächst wählen wir die ersten 6 Items: E1 bis E3 und N1 bis N3
+two_factor <- fa(dataFR2, nfactors = 2, rotate = "varimax")
+two_factor_oblimin <- fa(dataFR2, nfactors = 2, rotate = "oblimin")
+two_factor_ML <- fa(dataFR2, nfactors = 2, rotate = "oblimin", fm = "ml")
+one_factor_ML <- fa(dataFR2, nfactors = 1, rotate = "oblimin", fm = "ml")
+three_factor_ML <- fa(dataFR2, nfactors = 3, rotate = "oblimin", fm = "ml")
+
+# Begin grading:
 res <- anova(one_factor_ML, two_factor_ML) # 2 Faktoren passen besser zu den Daten!
 sol2 <- anova(two_factor_ML, one_factor_ML) # 2 Faktoren passen besser zu den Daten!
 
@@ -512,7 +558,18 @@ Das dreifaktorielle Modell beschreibt die Daten perfekt. Das liegt daran, dass e
 ```
 
  
-```{r test_fa2_ML-check, exercise.setup = "exercise_setup"}
+```{r test_fa2_ML-check}
+# Intro into excercise
+data_France <- Big5[Big5$country == "FR", ]
+dataFR <- data_France[, -c(1:4)] # entferne demografische Daten und speichere als "dataFR"
+dataFR2 <- dataFR[,1:6] # Zunächst wählen wir die ersten 6 Items: E1 bis E3 und N1 bis N3
+two_factor <- fa(dataFR2, nfactors = 2, rotate = "varimax")
+two_factor_oblimin <- fa(dataFR2, nfactors = 2, rotate = "oblimin")
+two_factor_ML <- fa(dataFR2, nfactors = 2, rotate = "oblimin", fm = "ml")
+one_factor_ML <- fa(dataFR2, nfactors = 1, rotate = "oblimin", fm = "ml")
+three_factor_ML <- fa(dataFR2, nfactors = 3, rotate = "oblimin", fm = "ml")
+
+# Begin grading:
 res <- anova(two_factor_ML, three_factor_ML) # 2 Faktoren passen besser zu den Daten!
 sol2 <- anova(three_factor_ML, two_factor_ML) # 2 Faktoren passen besser zu den Daten!
 
@@ -623,7 +680,21 @@ Das vierfaktorielle Modell wird durch die Daten verworfen ($p<0.05$). Auch der M
 ```
 
  
-```{r test_fa4_ML-check, exercise.setup = "exercise_setup"}
+```{r test_fa4_ML-check}
+# Intro into excercise
+data_France <- Big5[Big5$country == "FR", ]
+dataFR <- data_France[, -c(1:4)] # entferne demografische Daten und speichere als "dataFR"
+dataFR2 <- dataFR[,1:6] # Zunächst wählen wir die ersten 6 Items: E1 bis E3 und N1 bis N3
+two_factor <- fa(dataFR2, nfactors = 2, rotate = "varimax")
+two_factor_oblimin <- fa(dataFR2, nfactors = 2, rotate = "oblimin")
+two_factor_ML <- fa(dataFR2, nfactors = 2, rotate = "oblimin", fm = "ml")
+one_factor_ML <- fa(dataFR2, nfactors = 1, rotate = "oblimin", fm = "ml")
+three_factor_ML <- fa(dataFR2, nfactors = 3, rotate = "oblimin", fm = "ml")
+five_factor_ML <- fa(dataFR, nfactors = 5, rotate = "oblimin", fm = "ml")
+four_factor_ML <- fa(dataFR, nfactors = 4, rotate = "oblimin", fm = "ml")
+six_factor_ML <- fa(dataFR, nfactors = 6, rotate = "oblimin", fm = "ml")
+
+# Begin grading:
 res <- anova(four_factor_ML, five_factor_ML) 
 sol2 <- anova(five_factor_ML, four_factor_ML) 
 
@@ -666,7 +737,21 @@ Dem sechsfaktoriellen Modell widersprechen die Daten genauso wenig, wie dem Fün
 ```
 
  
-```{r test_fa6_ML-check, exercise.setup = "exercise_setup"}
+```{r test_fa6_ML-check}
+# Intro into excercise
+data_France <- Big5[Big5$country == "FR", ]
+dataFR <- data_France[, -c(1:4)] # entferne demografische Daten und speichere als "dataFR"
+dataFR2 <- dataFR[,1:6] # Zunächst wählen wir die ersten 6 Items: E1 bis E3 und N1 bis N3
+two_factor <- fa(dataFR2, nfactors = 2, rotate = "varimax")
+two_factor_oblimin <- fa(dataFR2, nfactors = 2, rotate = "oblimin")
+two_factor_ML <- fa(dataFR2, nfactors = 2, rotate = "oblimin", fm = "ml")
+one_factor_ML <- fa(dataFR2, nfactors = 1, rotate = "oblimin", fm = "ml")
+three_factor_ML <- fa(dataFR2, nfactors = 3, rotate = "oblimin", fm = "ml")
+five_factor_ML <- fa(dataFR, nfactors = 5, rotate = "oblimin", fm = "ml")
+four_factor_ML <- fa(dataFR, nfactors = 4, rotate = "oblimin", fm = "ml")
+six_factor_ML <- fa(dataFR, nfactors = 6, rotate = "oblimin", fm = "ml")
+
+# Begin grading:
 res <- anova(five_factor_ML, six_factor_ML) 
 sol2 <- anova(six_factor_ML, five_factor_ML) 
 
