@@ -53,7 +53,7 @@ Im Verlauf dieses Seminars soll neben der Einführung in die Theorie und Hinterg
 
 Dieses Tutorial bietet eine Einführung in `lavaan`. Im Zentrum stehen dabei die Grundgedanken und die typische Weise, in der man in `lavaan` bei Analysen vorgeht. Um diese Ideen und Vorgehensweisen zu erkunden, betrachten wir ein Beispiel aus dem letzten Semester mal aus dieser neuen Perspektive.
 
-Wir beginnen das Tutorial aber zunächst mit einer [Auffrischung Ihrer R-Fähigkeiten](#Wiederbelebung). Auch wenn Sie im Umgang mit R sehr geübt sind, nehmen Sie sich bitte trotzdem ein paar Minuten, um sich noch einmal intensiv mit den Befehlen auseinanderzusetzen, die für dieses Semester von zentraler Bedeutung sind. Sollten Sie wenig Übung im Umgang mit R haben, oder wenn Sie einfach noch einmal eine etwas detaillierte Einführung in R lesen möchten, finden Sie auf [Pandar](https://pandar.netlify.com/) die [R-Einführung aus dem Bachelorstudiengang](https://pandar.netlify.com/post/r-crash-kurs/).
+Wir beginnen das Tutorial aber zunächst mit einer [Auffrischung Ihrer R-Fähigkeiten](#Wiederbelebung). Auch wenn Sie im Umgang mit `R` sehr geübt sind, nehmen Sie sich bitte trotzdem ein paar Minuten, um sich noch einmal intensiv mit den Befehlen auseinanderzusetzen, die für dieses Semester von zentraler Bedeutung sind. Sollten Sie wenig Übung im Umgang mit `R` haben, oder wenn Sie einfach noch einmal eine etwas detaillierte Einführung in `R` lesen möchten, finden Sie auf [Pandar](https://pandar.netlify.com/) die [R-Einführung aus dem Bachelorstudiengang](https://pandar.netlify.com/post/r-crash-kurs/).
 
 Für die Durchführung dieses Tutorials benötigen Sie nichts weiter als dieses Browserfenster. Bitte veärndern Sie während Sie die Übung in diesem Browserfenster machen nichts in der R-Sitzung, mit der Sie diese Übung gestartet haben.
 
@@ -61,9 +61,9 @@ Nach dem Ende der Übung finden Sie im [OLAT Kurs ein kurzes Quiz](https://olat-
 
 Den gesamten R-Code, der in dieser Sitzung genutzt wird, können Sie [`r fa('download')` hier herunterladen](https://raw.githubusercontent.com/martscht/PsyMSc1/master/inst/scripts/intro.R).
 
-## R Grundlagen Wiederbelebung {#Wiederbelebung}
+## `R` Grundlagen Wiederbelebung {#Wiederbelebung}
 
-In diesem Abschnitt gucken wir uns zur Wiederholung noch einmal ein paar Grundzüge des Datenmanagements in R an, bevor wir eine multiple Regression durchführen und deren Ergebnisse genauer inspizieren.
+In diesem Abschnitt gucken wir uns zur Wiederholung noch einmal ein paar Grundzüge des Datenmanagements in `R` an, bevor wir eine multiple Regression durchführen und deren Ergebnisse genauer inspizieren.
 
 ### Beispieldatensatz
 
@@ -166,15 +166,15 @@ fairplayer$sit1 <- rowMeans(fairplayer[, c('si1t1', 'si2t1', 'si3t1')],
 
 ### Deskriptivstatistik
 
-Die drei Skalenwerte aus dem letzten Abschnitt sollten wir uns - zusammen mit ein paar anderen Variablen - mal genauer angucken, um ein Gefühl dafür zu entwickeln, wie die Lage in dieser Erhebung ist. Der Klassiker, um sich einen Überblick zu verschaffen, ist die R-eigene `summary` Funktion. Bei dieser handelt es sich um eine generische Funktion, die man auf viele verschiedene Objekte in R anwenden kann. Die Aufbereitung des Ergebnisses hängt dabei immer davon ab, auf was für ein Objekt man sie angewendet hat.
+Die drei Skalenwerte aus dem letzten Abschnitt sollten wir uns - zusammen mit ein paar anderen Variablen - mal genauer angucken, um ein Gefühl dafür zu entwickeln, wie die Lage in dieser Erhebung ist. Der Klassiker, um sich einen Überblick zu verschaffen, ist die R-eigene `summary` Funktion. Bei dieser handelt es sich um eine generische Funktion, die man auf viele verschiedene Objekte in `R` anwenden kann. Die Aufbereitung des Ergebnisses hängt dabei immer davon ab, auf was für ein Objekt man sie angewendet hat.
 
-Nehmen wir unsere drei Skalenwerte: bei allen handelt es sich um numerische Variablen (in R: `num`) - in R wird also davon ausgegangen, dass es Variablen mit mindestens Intervallskalenniveau sind (mehr Informationen zu Skalenniveaus in der psychologischen Methodenlehre finden Sie in [Eid, Gollwitzer und Schmitt (2017) im Kapitel 5](https://hds.hebis.de/ubffm/Record/HEB366849158)). Für solche Variablen wird in R mit `summary` eine sogenannte Fünf-Punkt-Zusammenfassung ausgegeben:
+Nehmen wir unsere drei Skalenwerte: bei allen handelt es sich um numerische Variablen (in R: `num`) - in `R` wird also davon ausgegangen, dass es Variablen mit mindestens Intervallskalenniveau sind (mehr Informationen zu Skalenniveaus in der psychologischen Methodenlehre finden Sie in [Eid, Gollwitzer und Schmitt (2017) im Kapitel 5](https://hds.hebis.de/ubffm/Record/HEB366849158)). Für solche Variablen wird in `R` mit `summary` eine sogenannte Fünf-Punkt-Zusammenfassung ausgegeben:
 
 ```{r}
 summary(fairplayer$rat1)
 ```
 
-Den Spitzfindigen unter Ihnen fällt auf, dass hier mehr als fünf Informationen ausgegeben werden. Die klassische Fünf-Punkt-Zusammenfassung besteht aus Minimum, Maximum und den drei Quartilen. In R wird zusätzlich noch das arithmetische Mittel und die Anzahl der fehlenden Werte ausgegeben.
+Den Spitzfindigen unter Ihnen fällt auf, dass hier mehr als fünf Informationen ausgegeben werden. Die klassische Fünf-Punkt-Zusammenfassung besteht aus Minimum, Maximum und den drei Quartilen. In `R` wird zusätzlich noch das arithmetische Mittel und die Anzahl der fehlenden Werte ausgegeben.
 
 Für nominalskalierte Variablen, wie z.B. die Gruppenzugehörigkeit `grp`, sieht die Zusammenfassung ein wenig anders aus:
 
@@ -182,7 +182,7 @@ Für nominalskalierte Variablen, wie z.B. die Gruppenzugehörigkeit `grp`, sieht
 summary(fairplayer$grp)
 ```
 
-Weil diese Variable in R als `factor` angelegt ist, wird sie als nominalskaliert behandelt und es werden keine Statistiken berechnet, die für solche Variablen nicht aussagekräftig sind. Stattdessen wird lediglich eine Häufigkeitstabelle erzeugt.
+Weil diese Variable in `R` als `factor` angelegt ist, wird sie als nominalskaliert behandelt und es werden keine Statistiken berechnet, die für solche Variablen nicht aussagekräftig sind. Stattdessen wird lediglich eine Häufigkeitstabelle erzeugt.
 
 Deskriptivstatistiken können aber auch einzeln erzeugt werden - z.B. mit `mean` für Mittelwerte. Versuchen Sie im untenstehenden Feld für den Skalenwert der relationalen Aggression die Standardabweichung mit `sd` zu bestimmen!
 
@@ -210,7 +210,7 @@ grade_result(
 
 ### Kovarianzen und Korrelationen
 
-Neben univariaten Statistiken sind für eine Veranstaltung mit dem Titel "Multivariate Verfahren" natürlich Zusammenhangsmaße von zentraler Bedeutung. Die beiden gängigsten Formen um Zusammenhänge in der Psychologie zu untersuchen, sind Kovarianzen und Korrelationen. Bivariat können wir diese in R sehr einfach über `cov` bzw. `cor` anfordern:
+Neben univariaten Statistiken sind für eine Veranstaltung mit dem Titel "Multivariate Verfahren" natürlich Zusammenhangsmaße von zentraler Bedeutung. Die beiden gängigsten Formen um Zusammenhänge in der Psychologie zu untersuchen, sind Kovarianzen und Korrelationen. Bivariat können wir diese in `R` sehr einfach über `cov` bzw. `cor` anfordern:
 
 ```{r}
 cov(fairplayer$rat1, fairplayer$sit1, use = 'complete')
@@ -245,17 +245,17 @@ Varianzen sind in der Diagonale der Matrix enthalten:
 diag(cov(scales, use = 'complete'))
 ```
 
-Einen Überblick über die Befehle für Matrix-Algebra in R finden Sie auf der [Quick-R Website](https://www.statmethods.net/advstats/matrix.html).
+Einen Überblick über die Befehle für Matrix-Algebra in `R` finden Sie auf der [Quick-R Website](https://www.statmethods.net/advstats/matrix.html).
 
 
 ## Wiederholung: Regression {#Regression}
 
-Im letzten Semester haben Sie die `lm` Funktion kennengelernt, um lineare Modelle in R zu berechnen. Um diese Funktion zu verwenden, müssen meist zwei Argumente an `lm` weitergegeben werden:
+Im letzten Semester haben Sie die `lm` Funktion kennengelernt, um lineare Modelle in `R` zu berechnen. Um diese Funktion zu verwenden, müssen meist zwei Argumente an `lm` weitergegeben werden:
 
   - `formula`: Das Modell in klassischer R-Formelschreibweise
   - `data`: Der Datensatz, auf den dieses Modell angewendet werden soll
   
-Die Formelschreibweise folgt in R einer einfachen Grundstruktur: `Y ~ X`. Gelesen werden kann $Y$ "vorhergesagt durch" $X$. Mehrere unabhängige Variablen, z.B. $X_1$ und $X_2$ können im Wesentlichen durch drei Operatoren verbunden sein:
+Die Formelschreibweise folgt in `R` einer einfachen Grundstruktur: `Y ~ X`. Gelesen werden kann $Y$ "vorhergesagt durch" $X$. Mehrere unabhängige Variablen, z.B. $X_1$ und $X_2$ können im Wesentlichen durch drei Operatoren verbunden sein:
 
   - `X1 + X2`: Für additive Modelle (nur Haupteffekte von $X_1$ und $X_2$)
   - `X1 : X2`: Für Interaktionen (nur der Interaktionseffekt $X_1 \cdot X_2$)
@@ -372,7 +372,7 @@ grade_result(
 
 ## lavaan
 
-Alle Dinge, die wir in den bisherigen Abschnitten besprochen haben, sind eine Wiederholung von Konzepten aus dem Bachelorstudium oder der vergangenen Semester gewesen. In diesem Semester werden wir hauptsächlich mit dem R Paket `lavaan` arbeiten. Der Name ist dabei ein Akronym für **la**tent **va**riable **an**alysis. Im Rest dieser Sitzung werden wir uns die Kerngedanken des Pakets und das grundsätzliche Vorgehen zur Modellschätzung am Beispiel der multiplen Regression ansehen. Mehr Informationen zu `lavaan` finden Sie unter [lavaan.org](http://lavaan.org/).
+Alle Dinge, die wir in den bisherigen Abschnitten besprochen haben, sind eine Wiederholung von Konzepten aus dem Bachelorstudium oder der vergangenen Semester gewesen. In diesem Semester werden wir hauptsächlich mit dem `R` Paket `lavaan` arbeiten. Der Name ist dabei ein Akronym für **la**tent **va**riable **an**alysis. Im Rest dieser Sitzung werden wir uns die Kerngedanken des Pakets und das grundsätzliche Vorgehen zur Modellschätzung am Beispiel der multiplen Regression ansehen. Mehr Informationen zu `lavaan` finden Sie unter [lavaan.org](http://lavaan.org/).
 
 ### Drei-Schritt Verfahren {#Schritte}
 

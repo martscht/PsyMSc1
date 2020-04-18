@@ -509,7 +509,7 @@ Der $\chi^2$-Differenzwert liegt hier bei `r round(anova(two_factor_ML, three_fa
 
 
 
-## ML-EFA für den gesamten (gekürtzten) Datensatz
+## ML-EFA für den gesamten (gekürtzten) Datensatz {#fivefactorML}
 
 Für den vollen Datensatz mit jeweils drei Items pro Persönlichkeitsfacette, nehmen wir zunächst an, dass es 5 Faktoren gibt. Dies wird hier allerdings nicht durch die Parallelanalyse gestüzt. Wir müssen die Funktion `fa.parallel` diesmal auf den vollen (gekürtzten) Datensatz anwenden; namlich auf `dataFR`.
 
@@ -678,7 +678,7 @@ $$\begin{pmatrix}E_1\\E_2\\E_3\\N_1\\N_2\\N_3 \end{pmatrix} = \begin{pmatrix}
 [Im Abschnitt zur Hauptachsenanalyse](#Hauptachsenanalyse) hatten wir erkannt, dass der erste Faktor wahrscheinlich der Extraversion und der zweite wahrscheinlich dem Neurotizismus entspricht. Demnach könnten wir $\xi_1=\xi_\text{Extraversion}$ und $\xi_2=\xi_\text{Neurotizismus}$ nennen. Bennen wir nun die Faktorladungsmatrix als $\Lambda$ und die Korrelationsmatrix der latenten Variablen $\Phi$ (die Diagonaleinträge sind $1$).
 Die Kovarianz zwischen dem ersten Extraversionitem und dem Extraversionfaktor ist folgendermaßen zu berechnen (wir rechnen hier mit Kovarianzen, da dies deutlich einfacher ist, als mit Korrelationen und da hier alle Variablen standardisiert sind es somit Korrelation und Kovarianz identisch sind; über die Rechenregeln und die Beziehungen zwischen Korrelation und Kovarianz können sie in [Eid, et al. (2017)](https://hds.hebis.de/ubffm/Record/HEB366849158) S. 195-196 und folgend in und Kapitel 16.3 nachlesen):
 $$\begin{align}\mathbf{C}ov[E_1, &\xi_1]\\&= \mathbf{C}ov[\lambda_{11}\xi_1 + \lambda_{12}\xi_2+\varepsilon_{E_1}, \xi_1] = \lambda_{11}\mathbf{C}ov[\xi_1, \xi_1] + \lambda_{12}\mathbf{C}ov[\xi_2, \xi_1] +\mathbf{C}ov[\varepsilon_{E_1}, \xi_1] = \lambda_{11}\phi_{11} + \lambda_{12}\phi_{21}\\&= \lambda_{11} + \lambda_{12}\phi_{21}\end{align}$$
-$\mathbf{C}ov[\varepsilon_{E_1}, \xi_1]=0$ gilt, da die Fehler als unabhängig von allen weiteren Variablen im Modell angenommen werden. Außerdem sind $\phi_{11}=1$ und $\phi_{21}=\phi_{12}$ die Varianz von $\xi_1$ und die Kovarianz/Korrelation zwischen $\xi_1$ und $\xi_2$ und entsprechend Einträge von $\Phi$. Aus dieser Rechnung folgt, dass der erste Eintrag in der Strukturmatrix (an der Stelle 1. Zeile, 1. Spalte) $\lambda_{11} + \lambda_{12}\phi_{21}$ sein muss. Hier ist zu erkennen, dass falls die Korrelation zwischen den latenten Variablen als $0$ angenommen wird (im orthogonalen Fall gilt dann $\phi_{21}=\phi_{12}=0$), dann ist die Strukurmatrix gleich der Faktorladungsmatrix und der erste Eintrag lautet $\lambda_{11}$. Wir schauen uns dies empirisch für das orthogonale Modell (bereits geschätzt in `two_factor`) und das oblique Modell (bereits geschätzt in `two_factor_oblimin`) an:
+$\mathbf{C}ov[\varepsilon_{E_1}, \xi_1]=0$ gilt, da die Fehler als unabhängig von allen weiteren Variablen im Modell angenommen werden. Außerdem sind $\phi_{11}=1$ und $\phi_{21}=\phi_{12}$ die Varianz von $\xi_1$ und die Kovarianz/Korrelation zwischen $\xi_1$ und $\xi_2$ und entsprechend Einträge von $\Phi$. Aus dieser Rechnung folgt, dass der erste Eintrag in der Strukturmatrix (an der Stelle 1. Zeile, 1. Spalte) $\lambda_{11} + \lambda_{12}\phi_{21}$ sein muss. Hier ist zu erkennen, dass falls die Korrelation zwischen den latenten Variablen als $0$ angenommen wird (im orthogonalen Fall gilt dann $\phi_{21}=\phi_{12}=0$), dann ist die Strukurmatrix gleich der Faktorladungsmatrix und der erste Eintrag lautet $\lambda_{11}$. Wir schauen uns dies empirisch für das orthogonale Modell (bereits geschätzt in `two_factor`) und das oblique Modell (bereits geschätzt in `two_factor_oblimin`) an.
 Im orthogonalen Fall ist dies etwas unspannend:
 ```{r}
 two_factor$loadings[1, 1] # volle Formel für ersten Eintrag in Strukutrmatrix, da Kovarianz der Faktoren = 0
@@ -691,16 +691,39 @@ two_factor_oblimin$loadings[1, 1] # erste Faktorladung im obliquen Modell (unter
 two_factor_oblimin$loadings[1, 1] + two_factor_oblimin$loadings[1, 2]*two_factor_oblimin$Phi[2, 1] # volle Formel für ersten Eintrag in Strukutrmatrix
 two_factor_oblimin$Structure[1, 1] # erster Eintrag in der Strukturmatrix
 ```
-Hier ist zu sehen, dass sich Faktorladungsmatrix und Strukturmatrix unterscheiden. Der Unterschied ist nicht sehr hoch, da die Korrelation zwischen den beiden Faktoren lediglich bei $\hat{\phi}_{21}$=`r round(two_factor_oblimin$Phi[2, 1], 4)` liegt und somit $\hat{\lambda}_{12}\hat{\phi}_{21}=$ `r round(two_factor_oblimin$loadings[1, 2]*two_factor_oblimin$Phi[2, 1], 4)` keine große Veränderung zu $\hat{\lambda}_{11}$ mit sich bringt. 
+Hier ist zu sehen, dass sich Faktorladungsmatrix und Strukturmatrix unterscheiden. Der Unterschied ist nicht sehr hoch, da die Korrelation zwischen den beiden Faktoren lediglich bei $\hat{\phi}_{21}$=`r round(two_factor_oblimin$Phi[2, 1], 4)` liegt und somit $\hat{\lambda}_{12}\hat{\phi}_{21}=$ `r round(two_factor_oblimin$loadings[1, 2]*two_factor_oblimin$Phi[2, 1], 4)` keine große Veränderung zu $\hat{\lambda}_{11}$ mit sich bringt. In Matrixschreibweise lässt sich die Strukturmatrix unkompliziert bestimmen. Sie wird durch folgenden Ausdruck berechnet:
+$$\Lambda\Phi$$
+Dies können wir in `R` leicht empirisch überprüfen. Einen Überblick über die Befehle für Matrix-Algebra in `R` finden Sie auf der [Quick-R Website](https://www.statmethods.net/advstats/matrix.html), auf welche bereits in der ersten Sitzung aufmerksam gemacht wurde. Wir berechnen nun das Matrixprodukt für den oblique rotieren Fall:
 
+```{r}
+two_factor_oblimin$loadings[1:6, 1:2] %*% two_factor_oblimin$Phi[1:2, 1:2] # Matrixprodukt
+two_factor_oblimin$Structure[1:6, 1:2] # Strukturmatrix
+```
+`%*%` signalisiert `R`, dass ein Matrixprodukt und *keine* komponentenweise Mulitplikation durchzuführen ist. Wir haben hier in die Matrizen rein indiziert, damit auch alle Elemente verwendet und angezeigt werden. 
+
+Das ganze funktioniert selbstverständlich auch für den fünffaktoriellen oblique rotierten ML-EFA Fall, den wir uns später angesehen haben, als es darum ging den [gesamten (gekürzten) Datensatz mit Hilfe der ML-EFA](#fivefactorML) zu untersuchen.
+
+```{r}
+five_factor_ML$loadings[1:15,1:5] %*% five_factor_ML$Phi[1:5,1:5] # Matrixprodukt
+five_factor_ML$Structure[1:15,1:5] # Strukturmatrix
+```
+
+Hier alle Einträge zu untersuchen, ob sie wirklich identisch sind, ist sehr mühsam. Wir können dies auch einfacher als Differenz untersuchen:
+
+```{r exercise_five_factor_structure_equality, exercise = T, exercise.eval = F}
+five_factor_ML$loadings[1:15,1:5] %*% five_factor_ML$Phi[1:5,1:5] - five_factor_ML$Structure[1:15,1:5]
+```
+Da hier nur Nullen herauskommen, scheinen die Ausdrücke identisch zu sein!
 
 ### Appendix B: Prüfen der Voraussetzungen {#AppendixB}
 Auf multivariate Normalverteilung können wir beispeilsweise **deskriptiv** prüfen, indem wir die Mahalanobisdistanz (die Distanz vom gemeinsame Zentroiden; dem Mittelwert über alle Variablen; unter Berücksichtigung der Kovariation im Datensatz) plotten und sie mit einer $\chi^2$-Verteilung vergleichen; wobei $df=p$ und $p=$ Anzahl an Variablen (hier $df=p=15$).
-```{r}
+```{r exercise_Mahalanobis, exercise = T, exercise.eval = F}
 Mahalanobis_Distanz <- mahalanobis(x = dataFR, cov = cov(dataFR), center = apply(X = dataFR, MARGIN = 2, FUN = mean)) # Berechnen der Mahalanobisdistanz
 hist(Mahalanobis_Distanz, col = "skyblue", border = "blue", freq = F, breaks = 15) # Histogramm
 lines(x = seq(0, max(Mahalanobis_Distanz), 0.01), y = dchisq(x = seq(0, max(Mahalanobis_Distanz), 0.01), df = 15), col = "darkblue", lwd = 4) # Einzeichnen der Dichte
 ```
+
+*Sie können ja mal Einstellungen verändern und sich deren Konsequenz für die Grafik ansehen!* 
 
 Das Histogramm scheint nicht perfekt zur $\chi^2$ Verteilung zu passen. Allerdings sind die Abweichungen auch nicht enorm. <mark style="background-color: orange">Wir verwerfen auf Basis des Histogramms die Normalverteilungsannahme nicht, sollten die Ergebnisse aber trotzdem unter Vorbehalt interpretiert werden. </mark>
 
