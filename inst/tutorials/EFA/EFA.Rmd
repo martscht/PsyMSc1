@@ -26,6 +26,7 @@ knitr::opts_chunk$set(exercise.check, exercise.setup = "exercise_setup"er = grad
 
 ```{r exercise_setup, echo = F}
 # For further use in exercises
+data(Big5, package = 'PsyMSc1')
 data_France <- Big5[Big5$country == "FR", ]
 dataFR <- data_France[, -c(1:4)] # entferne demografische Daten und speichere als "dataFR"
 dataFR2 <- dataFR[,1:6] # Zunächst wählen wir die ersten 6 Items: E1 bis E3 und N1 bis N3
