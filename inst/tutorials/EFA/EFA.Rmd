@@ -140,7 +140,7 @@ data_France <- Big5[Big5$country == "FR", ]
 
 Dem Output sollte zu entnehmen sein, dass `data_France` `r dim(data_France)[1]` Zeilen (also Probanden, die in Frankreich leben) und `r dim(data_France)[2]` Spalten (also Variablen) enthält. Für die weiteren Analysen brauchen wir die demografischen Variablen in dem Datensatz der in Frankreich lebenden Teilnehmer nicht mehr. Aus diesem Grund speichern wir den Datensatz noch einmal ohne die ersten 4 Spalten ab.
 
-```{r exercise_corplot1, exercise = TRUE, exercise.setup = "exercise_setup", exercise.eval = FALSE, fig.height=5, fig.align="center"}
+```{r exercise_corplot1, exercise = TRUE, exercise.setup = "exercise_setup", exercise.eval = FALSE, fig.height=8, fig.align="center"}
 dataFR <- data_France[, -c(1:4)] # entferne demografische Daten und speichere als "dataFR"
 
 #### Visualisierte Korrelationsmatrix in dataFR
