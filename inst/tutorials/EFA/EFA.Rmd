@@ -20,7 +20,7 @@ library(psych)        # EFA durchführen
 library(GPArotation)  # EFA Lösung rotieren
 
 data(Big5, package = 'PsyMSc1')
-knitr::opts_chunk$set(exercise.check, exercise.setup = "exercise_setup"er = gradethis::grade_learnr)
+knitr::opts_chunk$set(exercise.checker = gradethis::grade_learnr)
 ```
 
 
