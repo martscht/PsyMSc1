@@ -14,6 +14,26 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
+## Some tests
+
+```{r setup1, echo = F}
+a <- -999
+```
+
+```{r setup2, echo = F}
+b <- 10^2
+```
+
+
+
+```{r excercise_test, exercise = TRUE, exercise.setup = "setup2", exercise.eval = FALSE}
+a
+b
+```
+
+ENDEEEEEEEEEEEEEEEEEEEEEEEEEEEEE:::::::::::::::::::::::::
+
+
 ```{r setup_EFA, include = FALSE}
 library(learnr)       # package to generate interactive HTML
 library(gradethis)    # grade Code from input in HTML
