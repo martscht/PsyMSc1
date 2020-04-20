@@ -546,7 +546,6 @@ two_factor <- fa(dataFR2, nfactors = 2, rotate = "varimax")
 two_factor_oblimin <- fa(dataFR2, nfactors = 2, rotate = "oblimin")
 two_factor_ML <- fa(dataFR2, nfactors = 2, rotate = "oblimin", fm = "ml")
 one_factor_ML <- fa(dataFR2, nfactors = 1, rotate = "oblimin", fm = "ml")
-three_factor_ML <- fa(dataFR2, nfactors = 3, rotate = "oblimin", fm = "ml")
 
 # Begin grading:
 res <- anova(one_factor_ML, two_factor_ML) # 2 Faktoren passen besser zu den Daten!
