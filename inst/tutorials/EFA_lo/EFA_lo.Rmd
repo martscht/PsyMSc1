@@ -16,7 +16,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Some tests
 
-```{r setup1, echo = F}
+```{r setup1, echo = F, envir_result  = "R_GlobalEnv"}
 a <- -999
 ```
 
