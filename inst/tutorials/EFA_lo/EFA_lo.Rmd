@@ -20,7 +20,7 @@ knitr::opts_chunk$set(echo = TRUE)
 a <- -999
 ```
 
-```{r setup2, echo = F}
+```{r setup2}
 b <- 10^2
 ```
 
@@ -28,7 +28,7 @@ b <- 10^2
 
 
 ```{r}
-as
+a
 ls()
 ```
 
