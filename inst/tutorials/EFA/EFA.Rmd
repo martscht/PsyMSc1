@@ -37,7 +37,7 @@ b <- 10^2
 d <- 0
 ```
 
-```{r excercise_test, exercise = TRUE, exercise.setup = setup2, exercise.eval = FALSE}
+```{r excercise_test, exercise = TRUE, exercise.setup = "setup2", exercise.eval = FALSE}
 a
 b
 ```
