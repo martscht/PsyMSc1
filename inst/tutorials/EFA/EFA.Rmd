@@ -36,7 +36,7 @@ library(psych) # EFA durchführen
 library(GPArotation) # EFA Lösung rotieren
 ```
 
-Den gesamten R-Code, der in dieser Sitzung genutzt wird, können Sie [`r fa('download')` hier herunterladen](https://raw.githubusercontent.com/martscht/PsyMSc1/master/inst/scripts/EFA.R).
+Den gesamten R-Code, der in dieser Sitzung genutzt wird, können Sie [`r fa('download')` hier herunterladen](https://raw.githubusercontent.com/martscht/PsyMSc1/Sitzung2/inst/scripts/EFA.R).
 
 ## Datensatz
 
