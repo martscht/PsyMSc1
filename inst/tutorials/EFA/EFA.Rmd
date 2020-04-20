@@ -29,7 +29,7 @@ knitr::opts_chunk$set(exercise.checker = gradethis::grade_learnr)
 a <- -999
 ```
 
-```{r setup2, echo = F}
+```{r setup2, echo = F, setup = "setup1"}
 b <- 10^2
 ```
 
@@ -37,7 +37,7 @@ b <- 10^2
 d <- 0
 ```
 
-```{r excercise_test, exercise = TRUE, exercise.setup = c(setup1, setup2), exercise.eval = FALSE}
+```{r excercise_test, exercise = TRUE, exercise.setup = setup2, exercise.eval = FALSE}
 a
 b
 ```
