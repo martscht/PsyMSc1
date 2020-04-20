@@ -25,6 +25,9 @@ b <- 10^2
 ```
 
 
+```{r}
+ls()
+```
 
 ```{r excercise_test, exercise = TRUE, exercise.setup = "setup2", exercise.eval = FALSE, cache=T}
 a
