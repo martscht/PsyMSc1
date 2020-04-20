@@ -10,7 +10,7 @@ output:
 runtime: shiny_prerendered
 ---
 
-```{r setup_EFA, include = FALSE}
+```{r setup, include = FALSE}
 library(learnr)       # package to generate interactive HTML
 library(gradethis)    # grade Code from input in HTML
 library(shiny)        # nice appearance in R
