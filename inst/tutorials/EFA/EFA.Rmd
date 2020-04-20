@@ -33,7 +33,7 @@ a <- -999
 b <- 10^2
 ```
 
-```{r excercise_test, exercise = TRUE, exercise.setup = "c(setup1, setup2)", exercise.eval = FALSE}
+```{r excercise_test, exercise = TRUE, exercise.setup = "c("setup1", "setup2")", exercise.eval = FALSE}
 a
 b
 ```
