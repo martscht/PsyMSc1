@@ -16,7 +16,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Some tests
 
-```{r setup1, echo = F, envir_result  = "R_GlobalEnv"}
+```{r setup1, echo = F, envir_result  = environmentName(environment())}
 a <- -999
 ```
 
@@ -26,7 +26,7 @@ b <- 10^2
 
 
 
-```{r excercise_test, exercise = TRUE, exercise.setup = "setup2", exercise.eval = FALSE, envir_prep = "R_GlobalEnv"}
+```{r excercise_test, exercise = TRUE, exercise.setup = "setup2", exercise.eval = FALSE, envir_prep = environmentName(environment())}
 a
 b
 ```
