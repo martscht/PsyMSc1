@@ -20,7 +20,7 @@ knitr::opts_chunk$set(echo = TRUE)
 a <- -999
 ```
 
-```{r setup2}
+```{r ab1}
 b <- 10^2
 ```
 
@@ -32,7 +32,7 @@ a
 ls()
 ```
 
-```{r excercise_test, exercise = TRUE, exercise.setup = "setup2", exercise.eval = FALSE}
+```{r excercise_test, exercise = TRUE, exercise.setup = "ab1", exercise.eval = FALSE}
 a
 b
 ```
