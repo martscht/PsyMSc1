@@ -24,22 +24,6 @@ knitr::opts_chunk$set(exercise.checker = gradethis::grade_learnr)
 ```
 
 
-```{r exercise_setup, echo = F}
-# For further use in exercises
-data_France <- Big5[Big5$country == "FR", ]
-dataFR <- data_France[, -c(1:4)] # entferne demografische Daten und speichere als "dataFR"
-dataFR2 <- dataFR[,1:6] # Zunächst wählen wir die ersten 6 Items: E1 bis E3 und N1 bis N3
-two_factor <- fa(dataFR2, nfactors = 2, rotate = "varimax")
-two_factor_oblimin <- fa(dataFR2, nfactors = 2, rotate = "oblimin")
-two_factor_ML <- fa(dataFR2, nfactors = 2, rotate = "oblimin", fm = "ml")
-one_factor_ML <- fa(dataFR2, nfactors = 1, rotate = "oblimin", fm = "ml")
-three_factor_ML <- fa(dataFR2, nfactors = 3, rotate = "oblimin", fm = "ml")
-five_factor_ML <- fa(dataFR, nfactors = 5, rotate = "oblimin", fm = "ml")
-four_factor_ML <- fa(dataFR, nfactors = 4, rotate = "oblimin", fm = "ml")
-six_factor_ML <- fa(dataFR, nfactors = 6, rotate = "oblimin", fm = "ml")
-```
-
-
 ## Einleitung zur exploratorischen Faktorenanalyse (EFA)
 
 Forscher der Psychologie oder anderer Natur-, Sozial- und Geisteswissenschaften interessieren sich häufig dafür, dass sich Daten runterbrechen lassen auf einige wenige entscheidende Faktoren, welche  ein theoretisches Erklärungsmodell für die Variation in einem Datensatz liefern. Die Annahme ist hierbei, dass die beobachtbaren Messungen eine Linearkombination (also eine Summe) aus einem systematischen (wahren) und einem unsystematischen (Fehler-) Anteil bilden. Die dahinterliegenden Faktoren sind nicht messbare (latente) Variablen, auf welche, unter gewissen Annahmen, nur anhand der Kovariation zwischen den beobachtbaren Items geschlossen werden kann. Durch diese Zusammenhänge zwischen den Messungen können schließlich Hypothesen für die latenten Varibalen untersucht werden. Ein theoriegenerierendes Verfahren, das hierzu häufig verwendet wird, ist die **exploratorische Faktorenanalyse (EFA)**. Wir wollen dieses Verfahren zur Auswertung von Beziehungen zwischen Variablen in `R` näher kennenlernen.
@@ -111,7 +95,9 @@ Wir sehen, dass in den ersten 4 Spalten die demografischen Daten wie etwa  *Alte
 
 Da wir uns in der Praxis nur sehr selten in der glücklichen Lage befinden, einen solch riesigen Datensatz zu haben, wollen wir uns innerhalb des Datensatzes auf Subgruppen beschränken: wir wollen uns zunächst nur Daten von Personen aus *Frankreich* ansehen. Dazu wählen wir nur diejenigen Zeilen aus, in denen `country == "FR"` gilt. Das erreichen wir wie folgt: Mit `Big5$country` haben wir Zugriff auf die "Country"-Spalte im Datensatz und können mit `== "FR"` prüfen, an welchen Stellen hier  *"FR"* steht, also Personen, die in Frankreich leben. `dim` gibt die Dimensionen des Datensatzes wieder. Versuchen Sie doch mal den Datensatz zu kürzen und anschließend herauszufinden, wie viele Zeilen und Spalten der Datensatz der in Frankreich lebenden Menschen hat.
 
-```{r exercise_dim_data_France, exercise = TRUE, exercise.setup = "exercise_setup", exercise.setup = "exercise_setup", exercise.eval = FALSE}
+
+
+```{r exercise_dim_data_France, exercise = TRUE, exercise.eval = FALSE}
 data_France <- ...
 ...
 ```
@@ -137,10 +123,14 @@ dim(data_France)
 data_France <- Big5[Big5$country == "FR", ]
 ```
 
+```{r exercise_setup1, echo = F}
+# For further use in exercises
+data_France <- Big5[Big5$country == "FR", ]
+```
 
 Dem Output sollte zu entnehmen sein, dass `data_France` `r dim(data_France)[1]` Zeilen (also Probanden, die in Frankreich leben) und `r dim(data_France)[2]` Spalten (also Variablen) enthält. Für die weiteren Analysen brauchen wir die demografischen Variablen in dem Datensatz der in Frankreich lebenden Teilnehmer nicht mehr. Aus diesem Grund speichern wir den Datensatz noch einmal ohne die ersten 4 Spalten ab.
 
-```{r exercise_corplot1, exercise = TRUE, exercise.setup = "exercise_setup", exercise.eval = FALSE, fig.height=5, fig.align="center"}
+```{r exercise_corplot1, exercise = TRUE, exercise.setup = "exercise_setup1", exercise.eval = FALSE, fig.height=5, fig.align="center"}
 dataFR <- data_France[, -c(1:4)] # entferne demografische Daten und speichere als "dataFR"
 
 #### Visualisierte Korrelationsmatrix in dataFR
@@ -156,6 +146,13 @@ corrplot(corr = cor(dataFR), # Korrelationsmatrix (Datengrundlage)
 dataFR <- data_France[, -c(1:4)] # entferne demografische Daten und speichere als "dataFR"
 ```
 
+```{r exercise_setup2, echo = F}
+# For further use in exercises
+data_France <- Big5[Big5$country == "FR", ]
+dataFR <- data_France[, -c(1:4)] # entferne demografische Daten und speichere als "dataFR"
+dataFR2 <- dataFR[,1:6] # Zunächst wählen wir die ersten 6 Items: E1 bis E3 und N1 bis N3
+```
+
 Auf den ersten Blick scheinen die Items der gleichen Skala stärker (betragsmäßig höher) miteinander zu korrelieren. Allerdings sind hier sehr viele Korrelationen abgetragen. Wir wollen uns zunächst nur auf Extraversion und Neurotizismus beschränken. 
 
 
@@ -166,7 +163,7 @@ head(dataFR2)
 
 Visualisieren Sie doch mal die Korrelationsmatrix in unserem gekürzten Datensatz `dataFR2`.
 
-```{r exercise_corplot_FR2, exercise = TRUE, exercise.setup = "exercise_setup", exercise.eval = FALSE, fig.align="center"}
+```{r exercise_corplot_FR2, exercise = TRUE, exercise.setup = "exercise_setup2", exercise.eval = FALSE, fig.align="center"}
 # Visualisierte Korrelationsmatrix
 corrplot(corr = cor(...), # Korrelationsmatrix (Datengrundlage)
          method = "color", # Zeichne die Ausprägung der Korrelation farblich kodiert
@@ -213,12 +210,12 @@ Der wesentliche Unterschied zwischen einer EFA und einer PCA ist, dass bei der E
 
 Mit Hilfe des `fa.parallel` Befehls aus dem `psych`-Paket, welchen wir im Rahmen der PCA bereits kennengelernt hatten, lässt sich ganz einfach der Eigenwerteverlauf inklusive Parallelanalyse grafisch darstellen.
 
-```{r exercise_parallel1, exercise = TRUE, exercise.setup = "exercise_setup", exercise.eval = FALSE, fig.height=6, fig.align="center"}
+```{r exercise_parallel1, exercise = TRUE, exercise.setup = "exercise_setup2", exercise.eval = FALSE, fig.height=6, fig.align="center"}
 fa.parallel(dataFR2)
 ```
 Ohne weitere Einstellungen wird der Eigenwerteverlauf der PCA und der EFA ausgegeben. Deutlich zu sehen ist, dass die Eigenwerte der PCA größer ausfallen als die der EFA. Dies liegt erneut daran, dass die Faktoren der EFA lediglich die systematischen Anteile der Variablen enthalten, während die Komponenten der PCA Kompositionen sind - also Zusammensetzungen aus den Variablen; inklusive der Messfehler.
 
-```{r exercise_parallel2, exercise = TRUE, exercise.setup = "exercise_setup", exercise.eval = FALSE, fig.height=6, fig.align="center"}
+```{r exercise_parallel2, exercise = TRUE, exercise.setup = "exercise_setup2", exercise.eval = FALSE, fig.height=6, fig.align="center"}
 fa.parallel(dataFR2, fa = "fa")
 ```
 Die Grafik zeigt drei Eigenwerteverläufe. *FA Actual Data* ist der Eigenwerteverlauf unseres Datensatzes. *FA Simulated Data* ist der Eigenwerteverlauf basierend auf den 1000 simulierten Datensätzen. *FA Resampled Data* ist der Eigenwerteverlauf von Datensätzen, der durch *Resampling*, also neues Verteilen unseres Datensatzes entsteht. Da beim Resampling die Systematiken unseres Datensatzes verloren gehen, sollte das Resampling einen ähnlichen Eigenwerteverlauf wie die unabhängig gezogenen Datensätze erzeugen.
@@ -229,7 +226,7 @@ Der Parallelanalyse der EFA ist zu entnehmen, dass voraussichtlich 2 Faktoren ge
 
 Da unsere Auswahlkriterien einstimmig für 2 Faktoren sprechen und dies auch unsere Hypothese war, modellieren wir zunächst eine orthogonale Hauptachsenanalyse. Dazu nutzen wir den `fa` (Factor Analysis) Befehl des `psych` Paketes. Mit Hilfe der Argumente `nfactors` und `rotate` lässt sich die Anzahl an Faktoren sowie die Rotation auswählen. Wir wollen hier orthogonal varianzmaximierend (also *varimax*) rotieren.
 
-```{r exercise_fa2_varimax, exercise = TRUE, exercise.setup = "exercise_setup", exercise.eval = FALSE}
+```{r exercise_fa2_varimax, exercise = TRUE, exercise.setup = "exercise_setup2", exercise.eval = FALSE}
 fa(dataFR2, ...)
 ```
 
@@ -248,7 +245,7 @@ Im Output ganz oben erkennen wir die Schätzmethode (hier: `minres`, also Minimi
 Da durch diesen Befehl sehr viele Informationen ausgegeben werden, speichern wir uns diese Analyse als ein Objekt ab, welchem wir dann gezielt Informationen mit Hilfe von `...$...` entlocken können. Welche Argumente entlockt werden können, kann beispielsweise mit `names` herausgefunden werden. Speichern Sie das Objekt unter dem Namen *two_factor* ab und wenden die Funktion `names` darauf an.
 
 
-```{r test_fa2_varimax, exercise = TRUE, exercise.setup = "exercise_setup", exercise.eval = FALSE}
+```{r test_fa2_varimax, exercise = TRUE, exercise.setup = "exercise_setup2", exercise.eval = FALSE}
 two_factor <- ...
 ...
 ```
@@ -277,6 +274,15 @@ grade_result(
 two_factor <- fa(dataFR2, nfactors = 2, rotate = "varimax")
 ```
 
+
+```{r exercise_setup3, echo = F}
+# For further use in exercises
+data_France <- Big5[Big5$country == "FR", ]
+dataFR <- data_France[, -c(1:4)] # entferne demografische Daten und speichere als "dataFR"
+dataFR2 <- dataFR[,1:6] # Zunächst wählen wir die ersten 6 Items: E1 bis E3 und N1 bis N3
+two_factor <- fa(dataFR2, nfactors = 2, rotate = "varimax")
+```
+
 Beispielsweise erhalten wir mit `$loadings` die Faktorladungsmatrix sowie Informationen über die Eigenwerte.
 
 ```{r}
@@ -285,7 +291,7 @@ two_factor$loadings
 
 Hier ist relativ deutlich die Zuordnung zu den jeweiligen Faktoren zu sehen. Faktor 1 (*MR1*) entspräche demnach der Extraversion, während der zweite Faktor (*MR2*) dem Neurotizismus entspräche. Die *Strukturmatrix* enthält Informationen über die Korrelation der Items mit den jeweiligen Faktoren. Versuchen Sie diese über `...$...` auszugeben.
 
-```{r test_fa2_Structure, exercise = TRUE, exercise.setup = "exercise_setup", exercise.eval = FALSE}
+```{r test_fa2_Structure, exercise = TRUE, exercise.setup = "exercise_setup3", exercise.eval = FALSE}
 
 ```
 
@@ -320,7 +326,7 @@ Da wir nicht davon ausgehen können, dass die Faktoren unkorreliert sind, wollen
 
 
 
-```{r test_fa2_oblimin, exercise = TRUE, exercise.setup = "exercise_setup", exercise.eval = FALSE}
+```{r test_fa2_oblimin, exercise = TRUE, exercise.setup = "exercise_setup3", exercise.eval = FALSE}
 two_factor_oblimin <- ...
 two_factor_oblimin
 ```
@@ -351,6 +357,15 @@ two_factor_oblimin <- fa(dataFR2, nfactors = 2, rotate = "oblimin")
 ```
 
 
+```{r exercise_setup4, echo = F}
+# For further use in exercises
+data_France <- Big5[Big5$country == "FR", ]
+dataFR <- data_France[, -c(1:4)] # entferne demografische Daten und speichere als "dataFR"
+dataFR2 <- dataFR[,1:6] # Zunächst wählen wir die ersten 6 Items: E1 bis E3 und N1 bis N3
+two_factor <- fa(dataFR2, nfactors = 2, rotate = "varimax")
+two_factor_oblimin <- fa(dataFR2, nfactors = 2, rotate = "oblimin")
+```
+
 Die einzig wirklich neue Information können wir unter `With factor correlations of` ablesen: die Korrelation zwischen den Faktoren. Durch die andere Rotation ist zu sehen, dass sich die Kommunalitäten nicht ändern. Wir können also nicht mehr Variation im Datensatz erklären. Die Varianz wird nur umverteilt, wie den veränderten Eigenwerten neben `SS loadings` zu entnehmen ist. Hier hat der erste Faktor einen etwas größeren Eigenwert als im orthogonalen Fall (entsprechend ist der 2. Eigenwert kleiner, da nicht mehr Variation erklärt wird):  
 
 
@@ -361,7 +376,7 @@ Der Ladungsmatrix ist auch zu entnehmen, dass der erste Faktor die Extraversion 
 
 Entlocken Sie doch mal dem Objekt `two_factor_oblimin` die latente Kovarianzmatrix, also die Kovarianzmatrix der latenten Variablen. Tipp, der griechische Buchstabe in diesem Zusammenhang ist häufig $\Phi$.
 
-```{r test_fa2_oblimin_Phi, exercise = TRUE, exercise.setup = "exercise_setup", exercise.eval = FALSE}
+```{r test_fa2_oblimin_Phi, exercise = TRUE, exercise.setup = "exercise_setup4", exercise.eval = FALSE}
 
 ```
 
@@ -393,7 +408,7 @@ grade_result(
 
 Als neue Information entnehmen wir der Korrelationsmatrix der Faktoren, dass die beiden Faktoren negativ korreliert sind zu `r round(two_factor_oblimin$Phi[2], 2)`. Nun wollen wir nachschauen, ob sich tatsächlich die Strukurmatrix im oblique-rotierten Fall von der Faktorladungsmatrix unterscheidet: 
 
-```{r test_fa2_oblimin_Structure, exercise = TRUE, exercise.setup = "exercise_setup", exercise.eval = FALSE}
+```{r test_fa2_oblimin_Structure, exercise = TRUE, exercise.setup = "exercise_setup4", exercise.eval = FALSE}
 
 ```
 
@@ -436,7 +451,7 @@ $$\Sigma := \Lambda \Lambda' + \Theta.$$
 Da die Normalveteilung bereits durch die Kovarianzmatrix sowie die Mittelwerte eindeutig zu bestimmen ist, reicht es die Kovarianzmatrix mit Hilfe unserer Modellparameter so anzupassen, dass sie möglichst nah an der Kovarianzmatrix der Daten liegt; die Likelihood ist hier dann maximal. Die Parameter, die die Likelihood maximieren, werden Maxmimum-Liklihood-Schätzer genannt. Sie sind die Schätzung der Parameter, die am wahrscheinlichsten eine solche Datenkonstellation hervorrufen; gegeben das Modell. 
 
 Um mit Hilfe von `fa` eine ML-EFA durchzuführen, muss dem Argument `fm` die entsprechende Bezeichnung `"ml"` übergeben werden. `$STATISTIC` und `$PVAL` entlocken der Analyse (abgespeichert als Objekt) den $\chi^2$ Wert und den zugehörigen p-Wert bei `r fa(dataFR2, nfactors = 2, rotate = "oblimin", fm = "ml")$dof` Freiheitsgraden.
-```{r exercise_fa2_ML, exercise = TRUE, exercise.setup = "exercise_setup", exercise.eval = FALSE}
+```{r exercise_fa2_ML, exercise = TRUE, exercise.setup = "exercise_setup4", exercise.eval = FALSE}
 ### ML
 two_factor_ML <- fa(dataFR2, nfactors = 2, rotate = "oblimin", ...)
 two_factor_ML
@@ -454,10 +469,20 @@ two_factor_ML
 two_factor_ML <- fa(dataFR2, nfactors = 2, rotate = "oblimin", fm = "ml")
 ```
 
+```{r exercise_setup5, echo = F}
+# For further use in exercises
+data_France <- Big5[Big5$country == "FR", ]
+dataFR <- data_France[, -c(1:4)] # entferne demografische Daten und speichere als "dataFR"
+dataFR2 <- dataFR[,1:6] # Zunächst wählen wir die ersten 6 Items: E1 bis E3 und N1 bis N3
+two_factor <- fa(dataFR2, nfactors = 2, rotate = "varimax")
+two_factor_oblimin <- fa(dataFR2, nfactors = 2, rotate = "oblimin")
+two_factor_ML <- fa(dataFR2, nfactors = 2, rotate = "oblimin", fm = "ml")
+```
+
 Wir sehen, dass diesmal die Schätzmethode "ml" ist. Auch die Faktoren heißen nun *ML1* und *ML2*. Die Faktorladungen im ML-EFA Modell mit *obliquer* Rotation sehen den Faktorladungen aus unserer zuvorigen Analyse sehr ähnlich. Uns interessiert nun die Modellpassung. Der `Likelihood Chi Square` ist der richtige. Diesen entlocken wir nun dem `two_factor_ML` Objekt:
 
 
-```{r, exercise_fa2_ML_chi_p, exercise = TRUE, exercise.setup = "exercise_setup", exercise.eval = FALSE}
+```{r, exercise_fa2_ML_chi_p, exercise = TRUE, exercise.setup = "exercise_setup5", exercise.eval = FALSE}
 two_factor_ML$... # Likelihood basierter Chi^2-Wert
 two_factor_ML$... # p-Wert
 ```
@@ -471,7 +496,7 @@ Dem ist zu entnehmen, dass auf dem Signifikanzniveau von 5% die Hypothese auf Pa
 
 ### Modellvergleich: ML-EFA
 
-```{r, exercise_fa1_ML, exercise = TRUE, exercise.setup = "exercise_setup", exercise.eval = FALSE}
+```{r, exercise_fa1_ML, exercise = TRUE, exercise.setup = "exercise_setup5", exercise.eval = FALSE}
 # Passt auch eines mit 1 Faktor?
 one_factor_ML <- fa(dataFR2, ...)
 one_factor_ML$... # Chi-Quadratwert 
@@ -490,6 +515,16 @@ one_factor_ML$PVAL # p-Wert
 one_factor_ML <- fa(dataFR2, nfactors = 1, rotate = "oblimin", fm = "ml")
 ```
 
+```{r exercise_setup6, echo = F}
+# For further use in exercises
+data_France <- Big5[Big5$country == "FR", ]
+dataFR <- data_France[, -c(1:4)] # entferne demografische Daten und speichere als "dataFR"
+dataFR2 <- dataFR[,1:6] # Zunächst wählen wir die ersten 6 Items: E1 bis E3 und N1 bis N3
+two_factor <- fa(dataFR2, nfactors = 2, rotate = "varimax")
+two_factor_oblimin <- fa(dataFR2, nfactors = 2, rotate = "oblimin")
+two_factor_ML <- fa(dataFR2, nfactors = 2, rotate = "oblimin", fm = "ml")
+one_factor_ML <- fa(dataFR2, nfactors = 1, rotate = "oblimin", fm = "ml")
+```
 
 
 
@@ -497,7 +532,7 @@ Das einfaktorielle Modell scheint nicht zu den Daten zu passen (*Mit einer Irrtu
 
 Mit Hilfe des `anova` Befehls, welchen wir schon aus einigen anderen Modellvergleichen im Rahmen der Regression, der logistischen Regression sowie der Multi-Level Modelle kennengelernt haben, lässt sich nun das einfaktorielle mit dem zweifaktoriellen Modell vergleichen.
 
-```{r, test_fa1_ML, exercise = TRUE, exercise.setup = "exercise_setup", exercise.eval = FALSE}
+```{r, test_fa1_ML, exercise = TRUE, exercise.setup = "exercise_setup6", exercise.eval = FALSE}
 
 ```
 
@@ -531,7 +566,7 @@ grade_result(
 Im Output des `anova` Befehls müssen wir im Bereich des *Chisq-Tests* und nicht beim *Emp Chisq* (eine Nährung des $\chi^2$ Wertes, wenn Annahmen verletzt sind) nachsehen. Der $\chi^2$-Differenzwert liegt bei `r round(anova(one_factor_ML, two_factor_ML)[[4]][2], 3)` mit einen zugehörigen p-Wert von de facto `r round(anova(one_factor_ML, two_factor_ML)[[5]][2], 7)` (`e-13` bedeutet $*10^{-13}$; also eine Zahl, bei welcher die Dezimalstelle um 13 Stellen nach links verschoben wird, z.B. `1.234e-13`$=1*10^{-13}=0.0000000000001234$ - eine sehr kleine Zahl!). *Delta Df* (häufig $\Delta df$) gibt die Anzahl an Freiheitsgraden an (hier: df = `r anova(one_factor_ML, two_factor_ML)[[3]][2]`). Somit wird die Null-Hypothese, dass beide Modell die Daten gleich gut beschreiben verworfen. Wir entscheiden uns somit für das Modell mit mehr Parametern, das weniger restriktive Modell, welches die Daten besser beschreibt: hier das zweifaktorielle Modell. Nun ist die Frage, ob wir das Modell noch weiter verbessern können, indem wir drei anstatt zwei Faktoren verwenden, um die Kovariation zwischen den Variablen zu beschreiben.  
 
 
-```{r, exercise_fa3_ML, exercise = TRUE, exercise.setup = "exercise_setup", exercise.eval = FALSE}
+```{r, exercise_fa3_ML, exercise = TRUE, exercise.setup = "exercise_setup6", exercise.eval = FALSE}
 # Passt auch eines mit 3 Faktor?
 three_factor_ML <- fa(dataFR2, ...)
 three_factor_ML$... # Chi-Quadratwert 
@@ -550,9 +585,22 @@ three_factor_ML$PVAL # p-Wert
 three_factor_ML <- fa(dataFR2, nfactors = 3, rotate = "oblimin", fm = "ml")
 ```
 
+```{r exercise_setup7, echo = F}
+# For further use in exercises
+data_France <- Big5[Big5$country == "FR", ]
+dataFR <- data_France[, -c(1:4)] # entferne demografische Daten und speichere als "dataFR"
+dataFR2 <- dataFR[,1:6] # Zunächst wählen wir die ersten 6 Items: E1 bis E3 und N1 bis N3
+two_factor <- fa(dataFR2, nfactors = 2, rotate = "varimax")
+two_factor_oblimin <- fa(dataFR2, nfactors = 2, rotate = "oblimin")
+two_factor_ML <- fa(dataFR2, nfactors = 2, rotate = "oblimin", fm = "ml")
+one_factor_ML <- fa(dataFR2, nfactors = 1, rotate = "oblimin", fm = "ml")
+three_factor_ML <- fa(dataFR2, nfactors = 3, rotate = "oblimin", fm = "ml")
+```
+
+
 Das dreifaktorielle Modell beschreibt die Daten perfekt. Das liegt daran, dass es im dreifaktoriellen Modell genauso viele Parameter gibt, wie es empirische Informationen im Datensatz gibt. Demnach lässt sich die empirische Korrelationsmatrix perfekt durch die modelltheoretische Korrelationsmatrix (diejenige Korrelationsmatrix, die sich ergibt, wenn nur die Beziehungen zwischen den Variablen bestehen, die durch das Modell angenommen werden) darstellen. Ein Test auf Modellpassung ist in diesem Fall nicht möglich und auch nicht nötig (deshalb wird beim `$PVAL` nichts bzw. `NA` ausgegeben). Nun vergleichen wir die beiden Modelle:
 
-```{r, test_fa2_ML, exercise = TRUE, exercise.setup = "exercise_setup", exercise.eval = FALSE}
+```{r, test_fa2_ML, exercise = TRUE, exercise.setup = "exercise_setup7", exercise.eval = FALSE}
 
 
 ```
@@ -591,7 +639,7 @@ Der $\chi^2$-Differenzwert liegt hier bei `r round(anova(two_factor_ML, three_fa
 
 Für den vollen Datensatz mit jeweils drei Items pro Persönlichkeitsfacette, nehmen wir zunächst an, dass es 5 Faktoren gibt. Dies wird hier allerdings nicht durch die Parallelanalyse gestüzt. Wir müssen die Funktion `fa.parallel` diesmal auf den vollen (gekürtzten) Datensatz anwenden; namlich auf `dataFR`.
 
-```{r, exercise_parallel15, exercise = TRUE, exercise.setup = "exercise_setup", exercise.eval = FALSE, fig.height=6, fig.align="center"}
+```{r, exercise_parallel15, exercise = TRUE, exercise.setup = "exercise_setup7", exercise.eval = FALSE, fig.height=6, fig.align="center"}
 
 
 ```
@@ -601,7 +649,7 @@ fa.parallel(x = dataFR)
 ```
 Hier scheinen eher 4 Faktoren sinnvoll. Wir prüfen dennoch erstmal unsere inhaltliche Hypothese, dass es 5 Faktoren gibt, mit Hilfe der *oblique* Rotierten ML-EFA.
 
-```{r, exercise_fa_ML5, exercise = TRUE, exercise.setup = "exercise_setup", exercise.eval = FALSE}
+```{r, exercise_fa_ML5, exercise = TRUE, exercise.setup = "exercise_setup7", exercise.eval = FALSE}
 ### ML
 five_factor_ML <- ...
 five_factor_ML$STATISTIC
@@ -617,6 +665,19 @@ five_factor_ML$PVAL # Modell wird durch die Daten nicht verworfen
 
 ```{r, echo=F}
 ### ML
+five_factor_ML <- fa(dataFR, nfactors = 5, rotate = "oblimin", fm = "ml")
+```
+
+```{r exercise_setup8, echo = F}
+# For further use in exercises
+data_France <- Big5[Big5$country == "FR", ]
+dataFR <- data_France[, -c(1:4)] # entferne demografische Daten und speichere als "dataFR"
+dataFR2 <- dataFR[,1:6] # Zunächst wählen wir die ersten 6 Items: E1 bis E3 und N1 bis N3
+two_factor <- fa(dataFR2, nfactors = 2, rotate = "varimax")
+two_factor_oblimin <- fa(dataFR2, nfactors = 2, rotate = "oblimin")
+two_factor_ML <- fa(dataFR2, nfactors = 2, rotate = "oblimin", fm = "ml")
+one_factor_ML <- fa(dataFR2, nfactors = 1, rotate = "oblimin", fm = "ml")
+three_factor_ML <- fa(dataFR2, nfactors = 3, rotate = "oblimin", fm = "ml")
 five_factor_ML <- fa(dataFR, nfactors = 5, rotate = "oblimin", fm = "ml")
 ```
 
@@ -652,7 +713,7 @@ diag(5) # Einheitsmatrix der Dimension 5x5.
 ### Modellvergleich: ML-EFA
 Wir schauen uns nun die Passung unseres Modells im Vergleich zu einem vier- und einem sechsfaktoriellen Modell an.
 
-```{r, exercise_fa_ML4, exercise = TRUE, exercise.setup = "exercise_setup", exercise.eval = FALSE}
+```{r, exercise_fa_ML4, exercise = TRUE, exercise.setup = "exercise_setup8", exercise.eval = FALSE}
 # Passt auch eines mit 4 Faktor?
 four_factor_ML <- ...
 four_factor_ML$STATISTIC
@@ -670,10 +731,26 @@ four_factor_ML$PVAL
 ### ML
 four_factor_ML <- fa(dataFR, nfactors = 4, rotate = "oblimin", fm = "ml")
 ```
+
+```{r exercise_setup9, echo = F}
+# For further use in exercises
+data_France <- Big5[Big5$country == "FR", ]
+dataFR <- data_France[, -c(1:4)] # entferne demografische Daten und speichere als "dataFR"
+dataFR2 <- dataFR[,1:6] # Zunächst wählen wir die ersten 6 Items: E1 bis E3 und N1 bis N3
+two_factor <- fa(dataFR2, nfactors = 2, rotate = "varimax")
+two_factor_oblimin <- fa(dataFR2, nfactors = 2, rotate = "oblimin")
+two_factor_ML <- fa(dataFR2, nfactors = 2, rotate = "oblimin", fm = "ml")
+one_factor_ML <- fa(dataFR2, nfactors = 1, rotate = "oblimin", fm = "ml")
+three_factor_ML <- fa(dataFR2, nfactors = 3, rotate = "oblimin", fm = "ml")
+five_factor_ML <- fa(dataFR, nfactors = 5, rotate = "oblimin", fm = "ml")
+four_factor_ML <- fa(dataFR, nfactors = 4, rotate = "oblimin", fm = "ml")
+```
+
+
 Das vierfaktorielle Modell wird durch die Daten verworfen ($p<0.05$). Auch der Modellvergleich 
 
 
-```{r, test_fa4_ML, exercise = TRUE, exercise.setup = "exercise_setup", exercise.eval = FALSE}
+```{r, test_fa4_ML, exercise = TRUE, exercise.setup = "exercise_setup9", exercise.eval = FALSE}
 # führen Sie eine anova zwischen dem vier- und dem fünffaktoriellen Modell durch
 
 
@@ -709,7 +786,8 @@ grade_result(
 ```
 zeigt, dass die beiden Modell nicht gleich gut zu den Daten passen $p<0.01$. Damit entscheiden wir uns für das komplexere Modell mit mehr Parametern (und somit mehr Faktoren): das *fünffaktorielle* Modell. 
 
-```{r, exercise_fa_ML6, exercise = TRUE, exercise.setup = "exercise_setup", exercise.eval = FALSE}
+
+```{r, exercise_fa_ML6, exercise = TRUE, exercise.setup = "exercise_setup9", exercise.eval = FALSE}
 # Passt auch eines mit 6 Faktor?
 six_factor_ML <- ...
 six_factor_ML$STATISTIC
@@ -727,10 +805,26 @@ six_factor_ML$PVAL # Modell wird durch die Daten nicht verworfen
 ### ML
 six_factor_ML <- fa(dataFR, nfactors = 6, rotate = "oblimin", fm = "ml")
 ```
+
+```{r exercise_setup10, echo = F}
+# For further use in exercises
+data_France <- Big5[Big5$country == "FR", ]
+dataFR <- data_France[, -c(1:4)] # entferne demografische Daten und speichere als "dataFR"
+dataFR2 <- dataFR[,1:6] # Zunächst wählen wir die ersten 6 Items: E1 bis E3 und N1 bis N3
+two_factor <- fa(dataFR2, nfactors = 2, rotate = "varimax")
+two_factor_oblimin <- fa(dataFR2, nfactors = 2, rotate = "oblimin")
+two_factor_ML <- fa(dataFR2, nfactors = 2, rotate = "oblimin", fm = "ml")
+one_factor_ML <- fa(dataFR2, nfactors = 1, rotate = "oblimin", fm = "ml")
+three_factor_ML <- fa(dataFR2, nfactors = 3, rotate = "oblimin", fm = "ml")
+five_factor_ML <- fa(dataFR, nfactors = 5, rotate = "oblimin", fm = "ml")
+four_factor_ML <- fa(dataFR, nfactors = 4, rotate = "oblimin", fm = "ml")
+six_factor_ML <- fa(dataFR, nfactors = 6, rotate = "oblimin", fm = "ml")
+```
+
 Dem sechsfaktoriellen Modell widersprechen die Daten genauso wenig, wie dem Fünffakoriellen (beide $p>0.05$). <mark style="background-color: orange"> Dies war zu erwarten, da wir durch Hinzunahme des sechsten Faktors die Komplexität das Modell erhöht haben, was den Modellfit nur verbessern kann. </mark> 
  
 
-```{r, test_fa6_ML, exercise = TRUE, exercise.setup = "exercise_setup", exercise.eval = FALSE}
+```{r, test_fa6_ML, exercise = TRUE, exercise.setup = "exercise_setup10", exercise.eval = FALSE}
 # führen Sie eine anova zwischen dem fünf- und dem sechsfaktoriellen Modell durch
 
 
@@ -817,14 +911,14 @@ five_factor_ML$Structure[1:15,1:5] # Strukturmatrix
 
 Hier alle Einträge auf Gleichheit zu untersuchen, ist sehr mühsam. Wir können dies viel einfacher mit einer Differenz tun:
 
-```{r exercise_five_factor_structure_equality, exercise = T, exercise.eval = F}
+```{r exercise_five_factor_structure_equality, exercise = T, exercise.eval = F, exercise.setup = "exercise_setup10"}
 five_factor_ML$loadings[1:15,1:5] %*% five_factor_ML$Phi[1:5,1:5] - five_factor_ML$Structure[1:15,1:5]
 ```
 Da hier nur Nullen herauskommen, scheinen die Ausdrücke identisch zu sein!
 
 ### Appendix B: Prüfen der Voraussetzungen {#AppendixB}
 Auf multivariate Normalverteilung können wir beispeilsweise **deskriptiv** prüfen, indem wir die Mahalanobisdistanz (die Distanz vom gemeinsame Zentroiden; dem Mittelwert über alle Variablen; unter Berücksichtigung der Kovariation im Datensatz) plotten und sie mit einer $\chi^2$-Verteilung vergleichen; wobei $df=p$ und $p=$ Anzahl an Variablen (hier $df=p=15$).
-```{r exercise_Mahalanobis, exercise = T, exercise.eval = F}
+```{r exercise_Mahalanobis, exercise = T, exercise.eval = F, exercise.setup = "exercise_setup10"}
 Mahalanobis_Distanz <- mahalanobis(x = dataFR, cov = cov(dataFR), center = apply(X = dataFR, MARGIN = 2, FUN = mean)) # Berechnen der Mahalanobisdistanz
 hist(Mahalanobis_Distanz, col = "skyblue", border = "blue", freq = F, breaks = 15) # Histogramm
 lines(x = seq(0, max(Mahalanobis_Distanz), 0.01), y = dchisq(x = seq(0, max(Mahalanobis_Distanz), 0.01), df = 15), col = "darkblue", lwd = 4) # Einzeichnen der Dichte
