@@ -33,7 +33,7 @@ a <- -999
 b <- 10^2
 ```
 
-```{r excercise_test, exercise = TRUE, exercise.setup = list("setup1", "setup2"), exercise.eval = FALSE}
+```{r excercise_test, exercise = TRUE, exercise.setup = ("setup1" & "setup2"), exercise.eval = FALSE}
 a
 b
 ```
@@ -763,7 +763,7 @@ four_factor_ML <- fa(dataFR, nfactors = 4, rotate = "oblimin", fm = "ml")
 ```
 
 
-Das vierfaktorielle Modell wird durch die Daten verworfen ($p<0.05$). Auch der Modellvergleich 
+Das vierfaktorielle Modell wird durch die Daten verworfen ($p<0.05$). Nun zum Modellvergleich:
 
 
 ```{r, test_fa4_ML, exercise = TRUE, exercise.setup = "exercise_setup9", exercise.eval = FALSE}
@@ -800,8 +800,18 @@ grade_result(
   glue_correct = '{.correct}',
   glue_incorrect = '{.incorrect} {.message}')
 ```
-zeigt, dass die beiden Modell nicht gleich gut zu den Daten passen $p<0.01$. Damit entscheiden wir uns für das komplexere Modell mit mehr Parametern (und somit mehr Faktoren): das *fünffaktorielle* Modell. 
 
+```{r letter-a, echo=FALSE}
+question("Für welches Modell entscheiden Sie sich und warum?",
+  answer("Modell mit 5 Faktoren, da wir annehmen, dass der Big-5 Fragebogen  aus 5 Persönlichkeitsfaktoren besteht."),
+  answer("Modell mit 5 Faktoren, weil es das weniger sparsame Modell ist."),
+  answer("Modell mit 4 Faktoren, weil es das sparsamere Modell ist. "),
+  answer("Modell mit 5 Faktoren, weil der p-Wert (p < 0.05) anzeigt, dass die Null-Hypothese, dass beide Modell gleich gut zu den Daten passen verworfen wird. Wir entscheiden uns daher für das weniger restriktive Modell mit mehr Parametern.", correct = TRUE),
+  answer("Modell mit 4 Faktoren, weil der p-Wert (p < 0.05) anzeigt, dass die Null-Hypothese, dass beide Modell gleich gut zu den Daten passen verworfen wird. Wir entscheiden uns daher für das restriktivere Modell mit weniger Parametern.")
+)
+```
+
+Nun wollen wir uns das fünffaktoirelle Modell noch im Vergleich zum sechsfaktoriellen Modell ansehen.
 
 ```{r, exercise_fa_ML6, exercise = TRUE, exercise.setup = "exercise_setup9", exercise.eval = FALSE}
 # Passt auch eines mit 6 Faktor?
