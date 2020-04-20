@@ -23,6 +23,22 @@ data(Big5, package = 'PsyMSc1')
 knitr::opts_chunk$set(exercise.checker = gradethis::grade_learnr)
 ```
 
+## Some tests
+
+```{r setup1, echo = F}
+a <- -999
+```
+
+```{r setup2, echo = F}
+b <- 10^2
+```
+
+```{r excercise_test, exercise = TRUE, exercise.setup = c("setup1", "setup2"), exercise.eval = FALSE}
+a
+b
+```
+
+ENDEEEEEEEEEEEEEEEEEEEEEEEEEEEEE:::::::::::::::::::::::::
 
 ## Einleitung zur exploratorischen Faktorenanalyse (EFA)
 
@@ -173,7 +189,7 @@ corrplot(corr = cor(...), # Korrelationsmatrix (Datengrundlage)
 
 ```{r exercise_corplot_FR2-solution, fig.align="center"}
 # Visualisierte Korrelationsmatrix
-corrplot(corr = cor(dataFR), # Korrelationsmatrix (Datengrundlage)
+corrplot(corr = cor(dataFR2), # Korrelationsmatrix (Datengrundlage)
          method = "color", # Zeichne die Ausprägung der Korrelation farblich kodiert
          addCoef.col = "black", # schreibe die Korrelationskoeffizienten in schwarz in die Grafik
          number.cex = 1) # Stelle die Schriftgröße der Koeffizienten ein
