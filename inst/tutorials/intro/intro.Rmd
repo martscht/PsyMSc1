@@ -59,7 +59,7 @@ Für die Durchführung dieses Tutorials benötigen Sie nichts weiter als dieses 
 
 Nach dem Ende der Übung finden Sie im [OLAT Kurs ein kurzes Quiz](https://olat-ce.server.uni-frankfurt.de/olat/auth/RepositoryEntry/8136491044/CourseNode/101501774320599) mit Bezug zu den Inhalten dieser Sitzung.
 
-Den gesamten R-Code, der in dieser Sitzung genutzt wird, können Sie [ hier herunterladen](https://raw.githubusercontent.com/martscht/PsyMSc1/master/inst/scripts/intro.R).
+Den gesamten R-Code, der in dieser Sitzung genutzt wird, können Sie [`r fa('download')` hier herunterladen](https://raw.githubusercontent.com/martscht/PsyMSc1/master/inst/scripts/intro.R).
 
 ## `R` Grundlagen Wiederbelebung {#Wiederbelebung}
 
