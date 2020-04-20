@@ -16,7 +16,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Some tests
 
-```{r setup1, echo = F, cache=TRUE}
+```{r setup1, echo = F}
 a <- -999
 ```
 
@@ -29,7 +29,7 @@ b <- 10^2
 ls()
 ```
 
-```{r excercise_test, exercise = TRUE, exercise.setup = "setup2", exercise.eval = FALSE, cache=T}
+```{r excercise_test, exercise = TRUE, exercise.setup = "setup2", exercise.eval = FALSE}
 a
 b
 ```
