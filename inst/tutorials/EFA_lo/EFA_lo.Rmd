@@ -26,7 +26,7 @@ b <- 10^2
 
 
 
-```{r excercise_test, exercise = TRUE, exercise.setup = "setup2", exercise.eval = FALSE, envir_prep = "global"}
+```{r excercise_test, exercise = TRUE, exercise.setup = "setup2", exercise.eval = FALSE, envir_prep = "R_GlobalEnv"}
 a
 b
 ```
