@@ -36,6 +36,8 @@ library(psych) # EFA durchführen
 library(GPArotation) # EFA Lösung rotieren
 ```
 
+Den gesamten R-Code, der in dieser Sitzung genutzt wird, können Sie [`r fa('download')` hier herunterladen](https://raw.githubusercontent.com/martscht/PsyMSc1/master/inst/scripts/EFA.R).
+
 ## Datensatz
 
 Wir wollen uns die Faktorenstruktur der *Big-5* eines entsprechenden Fragebogens ansehen. Der Originaldatensatz ist ein Onlinedatensatz, wird seit 2012 erfasst und ist auf [openpsychometrics.org](https://openpsychometrics.org/_rawdata/) als *.zip* downloadbar. Bisher haben über **19700** Probanden aus der ganzen Welt teilgenommen. Zu jeder der fünf Facetten gibt es 10 Fragen. Der Fragebogen ist auf [personality-testing.info](http://personality-testing.info/tests/BIG5.php) einzusehen.
