@@ -879,9 +879,8 @@ Der $\chi^2$-Differenzwert liegt hier bei `r round(anova(five_factor_ML, six_fac
 <mark style="background-color: orange">Da die Zuordnung zwischen Faktoren und Items nicht eindeutig zu interpretieren war, müsste dies in Zukunft weiter untersucht werden. Weitere geziehlte Hypothesen lassen sich beispielsweise mit der **konfirmatorischen Faktoren Analyse (CFA; confirmatory factor analysis)** untersuchen.  </mark>
 
 
-## Appendix
 
-### Appendix A: Faktorladungsmatrix vs. Strukturmatrix {#AppendixA}
+## Appendix A: Faktorladungsmatrix vs. Strukturmatrix {#AppendixA}
 Um die Beziehung zwischen der Faktorladungsmatrix und der Strukturmatrix genauer zu verstehen, schauen wir uns das zweifaktorielle Modell für den (*standardisierten*) Datensatz `dataFR2` genauer an (*standardisiert* ist hier wichtig, da dies bedeutet, dass die Mittelwerte alle $0$ sind und wir somit diese ignorieren können):
 $$\begin{pmatrix}E_1\\E_2\\E_3\\N_1\\N_2\\N_3 \end{pmatrix} = \begin{pmatrix}
 \lambda_{11} & \lambda_{12}\\
@@ -931,7 +930,7 @@ five_factor_ML$loadings[1:15,1:5] %*% five_factor_ML$Phi[1:5,1:5] - five_factor_
 ```
 Da hier nur Nullen herauskommen, scheinen die Ausdrücke identisch zu sein!
 
-### Appendix B: Prüfen der Voraussetzungen {#AppendixB}
+## Appendix B: Prüfen der Voraussetzungen {#AppendixB}
 Auf multivariate Normalverteilung können wir beispeilsweise **deskriptiv** prüfen, indem wir die Mahalanobisdistanz (die Distanz vom gemeinsame Zentroiden; dem Mittelwert über alle Variablen; unter Berücksichtigung der Kovariation im Datensatz) plotten und sie mit einer $\chi^2$-Verteilung vergleichen; wobei $df=p$ und $p=$ Anzahl an Variablen (hier $df=p=15$).
 ```{r exercise_Mahalanobis, exercise = T, exercise.eval = F, exercise.setup = "exercise_setup10"}
 Mahalanobis_Distanz <- mahalanobis(x = dataFR, cov = cov(dataFR), center = apply(X = dataFR, MARGIN = 2, FUN = mean)) # Berechnen der Mahalanobisdistanz
