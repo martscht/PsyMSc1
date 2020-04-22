@@ -441,7 +441,7 @@ grade_result(
   glue_incorrect = '{.incorrect} {.message}')
 ```
 
-Sie sehen, dass sich nun die Strukturmatrix von der Faktorladungsmatrix unterscheidet. Die Unterschiede sind allerdings nicht sehr groß, da die Korrelation zwischen den beiden Faktoren mit `r round(two_factor_oblimin$Phi[2], 2)` betragsmäßig nicht sonderlich groß ausfällt. Weitere Informationen und wie die beiden Matrizen in einander überführbar sind, erfahren Sie im [Appendix A](#AppendixA).
+Sie sehen, dass sich nun die Strukturmatrix von der Faktorladungsmatrix unterscheidet. Die Unterschiede sind allerdings nicht sehr groß, da die Korrelation zwischen den beiden Faktoren mit `r round(two_factor_oblimin$Phi[2], 2)` betragsmäßig nicht sonderlich groß ausfällt. Weitere Informationen und wie die beiden Matrizen ineinander überführbar sind, erfahren Sie im [Appendix A](#AppendixA).
 
 Die Frage ist nun, ob unser Modell überhaupt zu den Daten passt.
 
@@ -531,9 +531,9 @@ one_factor_ML <- fa(dataFR2, nfactors = 1, rotate = "oblimin", fm = "ml")
 
 
 
-Das einfaktorielle Modell scheint nicht zu den Daten zu passen (*Mit einer Irrtumswahrscheinlichkeit von 5% ist davon auszugehen, dass in der Population die Differenz zwischen der Populationskovarianzmatrix und der modellimplizierten Kovarianzmatrix nicht 0 ist.*). Dennoch wollen wir dies genau wissen und testen mit die beiden geschachtelten (die Modell lassen sich auseinander gewinnen: das zweifaktorielle Modell lässt sich aus dem restrikiveren, einfaktoriellen Modell durch freisetzen der Faktorladungen auf dem 2. Faktor sowie durch Freisetzung der Kovarianz zwischen den Faktoren gewinnen). 
+Das einfaktorielle Modell scheint nicht zu den Daten zu passen (*Mit einer Irrtumswahrscheinlichkeit von 5% ist davon auszugehen, dass in der Population die Differenz zwischen der Populationskovarianzmatrix und der modellimplizierten Kovarianzmatrix nicht 0 ist.*). Dennoch wollen wir dies genau wissen und testen mit die beiden geschachtelten (die Modell lassen sich auseinander gewinnen: das zweifaktorielle Modell lässt sich aus dem restrikiveren, einfaktoriellen Modell durch Freisetzen der Faktorladungen auf dem 2. Faktor sowie durch Freisetzung der Kovarianz zwischen den Faktoren gewinnen). 
 
-Mit Hilfe des `anova` Befehls, welchen wir schon aus einigen anderen Modellvergleichen im Rahmen der Regression, der logistischen Regression sowie der Multi-Level Modelle kennengelernt haben, lässt sich nun das einfaktorielle mit dem zweifaktoriellen Modell vergleichen.
+Mit Hilfe des `anova` Befehls, welchen wir schon bei einigen anderen Modellvergleichen im Rahmen der Regression, der logistischen Regression sowie der Multi-Level Modelle kennengelernt haben, lässt sich nun das einfaktorielle mit dem zweifaktoriellen Modell vergleichen.
 
 ```{r, test_fa1_ML, exercise = TRUE, exercise.setup = "exercise_setup6", exercise.eval = FALSE}
 
