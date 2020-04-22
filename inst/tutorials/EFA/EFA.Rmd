@@ -555,9 +555,9 @@ sol2 <- anova(two_factor_ML, one_factor_ML) # 2 Faktoren passen besser zu den Da
 
 grade_result(
   fail_if(~ (!identical(.result, res) & !identical(.result, sol2)), 'Der Befehl anova muss in diesem Zusammenhang zwei Argumente entgegennehmen: die zwei Objekte der ML-EFAs mit jeweils 1 und 2 Faktoren, welche wir zuvor erstellt haben! Achten Sie entsprechend darauf, dass Sie auch wirklich die ML-EFA-Objekte verwenden.'),
-    fail_if(~ (identical(.result, sol2)), 'Das ist an sich RICHTIG, allerdings sollte dem anova-Befehl immer das "kleinere" Modell zuerst übergeben werden. Hier: one_factor_ML, da sonst die df negativ sein können und auch der Chi^2-Wert negativ sein könnte!'),
+    fail_if(~ (identical(.result, sol2)), 'Das ist an sich RICHTIG, allerdings sollte dem anova-Befehl immer das "kleinere" (restriktivere) Modell zuerst übergeben werden. Hier: one_factor_ML, da sonst die df negativ sein können und auch der Chi^2-Wert negativ sein könnte!'),
   pass_if(~ identical(.result, res)),
-  correct = 'Sehr gut! Dies ist der Modellvergleich des ein- und zweifaktoriellen Modells. Hier sollte dem anova-Befehl immer das "kleinere" Modell zuerst übergeben werden; also: one_factor_ML, da sonst die df negativ sein können und auch der Chi^2-Wert negativ sein könnte!',
+  correct = 'Sehr gut! Dies ist der Modellvergleich des ein- und zweifaktoriellen Modells. Hier sollte dem anova-Befehl immer das "kleinere" (restriktivere) Modell zuerst übergeben werden; also: one_factor_ML, da sonst die df negativ sein können und auch der Chi^2-Wert negativ sein könnte!',
   incorrect = 'Leider falsch.',
   glue_correct = '{.correct}',
   glue_incorrect = '{.incorrect} {.message}')
@@ -625,9 +625,9 @@ sol2 <- anova(three_factor_ML, two_factor_ML) # 2 Faktoren passen besser zu den 
 
 grade_result(
   fail_if(~ (!identical(.result, res) & !identical(.result, sol2)), 'Der Befehl anova muss in diesem Zusammenhang zwei Argumente entgegennehmen: die zwei Objekte der ML-EFAs mit jeweils 2 und 3 Faktoren, welche wir zuvor erstellt haben! Achten Sie entsprechend darauf, dass Sie auch wirklich die ML-EFA-Objekte verwenden.'),
-    fail_if(~ (identical(.result, sol2)), 'Das ist an sich RICHTIG, allerdings sollte dem anova-Befehl immer das "kleinere" Modell zuerst übergeben werden. Hier: two_factor_ML, da sonst die df negativ sein können und auch der Chi^2-Wert negativ sein könnte!'),
+    fail_if(~ (identical(.result, sol2)), 'Das ist an sich RICHTIG, allerdings sollte dem anova-Befehl immer das "kleinere" (restriktivere) Modell zuerst übergeben werden. Hier: two_factor_ML, da sonst die df negativ sein können und auch der Chi^2-Wert negativ sein könnte!'),
   pass_if(~ identical(.result, res)),
-  correct = 'Sehr gut! Dies ist der Modellvergleich des zwei- und dreifaktoriellen Modells. Hier sollte dem anova-Befehl immer das "kleinere" Modell zuerst übergeben werden; also: two_factor_ML, da sonst die df negativ sein können und auch der Chi^2-Wert negativ sein könnte!',
+  correct = 'Sehr gut! Dies ist der Modellvergleich des zwei- und dreifaktoriellen Modells. Hier sollte dem anova-Befehl immer das "kleinere" (restriktivere) Modell zuerst übergeben werden; also: two_factor_ML, da sonst die df negativ sein können und auch der Chi^2-Wert negativ sein könnte!',
   incorrect = 'Leider falsch.',
   glue_correct = '{.correct}',
   glue_incorrect = '{.incorrect} {.message}')
@@ -779,9 +779,9 @@ sol2 <- anova(five_factor_ML, four_factor_ML)
 
 grade_result(
   fail_if(~ (!identical(.result, res) & !identical(.result, sol2)), 'Der Befehl anova muss in diesem Zusammenhang zwei Argumente entgegennehmen: die zwei Objekte der ML-EFAs mit jeweils 4 und 5 Faktoren, welche wir zuvor erstellt haben! Achten Sie entsprechend darauf, dass Sie auch wirklich die ML-EFA-Objekte verwenden.'),
-    fail_if(~ (identical(.result, sol2)), 'Das ist an sich RICHTIG, allerdings sollte dem anova-Befehl immer das "kleinere" Modell zuerst übergeben werden. Hier: four_factor_ML, da sonst die df negativ sein können und auch der Chi^2-Wert negativ sein könnte!'),
+    fail_if(~ (identical(.result, sol2)), 'Das ist an sich RICHTIG, allerdings sollte dem anova-Befehl immer das "kleinere" (restriktivere) Modell zuerst übergeben werden. Hier: four_factor_ML, da sonst die df negativ sein können und auch der Chi^2-Wert negativ sein könnte!'),
   pass_if(~ identical(.result, res)),
-  correct = 'Sehr gut! Dies ist der Modellvergleich des vier- und fünffaktoriellen Modells. Hier sollte dem anova-Befehl immer das "kleinere" Modell zuerst übergeben werden; also: four_factor_ML, da sonst die df negativ sein können und auch der Chi^2-Wert negativ sein könnte!',
+  correct = 'Sehr gut! Dies ist der Modellvergleich des vier- und fünffaktoriellen Modells. Hier sollte dem anova-Befehl immer das "kleinere" (restriktivere) Modell zuerst übergeben werden; also: four_factor_ML, da sonst die df negativ sein können und auch der Chi^2-Wert negativ sein könnte!',
   incorrect = 'Leider falsch.',
   glue_correct = '{.correct}',
   glue_incorrect = '{.incorrect} {.message}')
@@ -866,9 +866,9 @@ sol2 <- anova(six_factor_ML, five_factor_ML)
 
 grade_result(
   fail_if(~ (!identical(.result, res) & !identical(.result, sol2)), 'Der Befehl anova muss in diesem Zusammenhang zwei Argumente entgegennehmen: die zwei Objekte der ML-EFAs mit jeweils 5 und 6 Faktoren, welche wir zuvor erstellt haben! Achten Sie entsprechend darauf, dass Sie auch wirklich die ML-EFA-Objekte verwenden.'),
-    fail_if(~ (identical(.result, sol2)), 'Das ist an sich RICHTIG, allerdings sollte dem anova-Befehl immer das "kleinere" Modell zuerst übergeben werden. Hier: five_factor_ML, da sonst die df negativ sein können und auch der Chi^2-Wert negativ sein könnte!'),
+    fail_if(~ (identical(.result, sol2)), 'Das ist an sich RICHTIG, allerdings sollte dem anova-Befehl immer das "kleinere" (restriktivere) Modell zuerst übergeben werden. Hier: five_factor_ML, da sonst die df negativ sein können und auch der Chi^2-Wert negativ sein könnte!'),
   pass_if(~ identical(.result, res)),
-  correct = 'Sehr gut! Dies ist der Modellvergleich des fünf- und sechsfaktoriellen Modells. Hier sollte dem anova-Befehl immer das "kleinere" Modell zuerst übergeben werden; also: five_factor_ML, da sonst die df negativ sein können und auch der Chi^2-Wert negativ sein könnte!',
+  correct = 'Sehr gut! Dies ist der Modellvergleich des fünf- und sechsfaktoriellen Modells. Hier sollte dem anova-Befehl immer das "kleinere" (restriktivere) Modell zuerst übergeben werden; also: five_factor_ML, da sonst die df negativ sein können und auch der Chi^2-Wert negativ sein könnte!',
   incorrect = 'Leider falsch.',
   glue_correct = '{.correct}',
   glue_incorrect = '{.incorrect} {.message}')
