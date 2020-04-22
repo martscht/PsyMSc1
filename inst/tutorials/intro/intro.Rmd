@@ -607,6 +607,13 @@ library(lavaan)
 
 lavaan zu laden, bevor Sie loslegen!
 
+Falls Sie die Quiz-Aufgaben lieber im Browser bearbeiten möchten oder diese Sitzung über [Shinyapps.io](https://www.shinyapps.io/) beziehen, können Sie das untenstehende `R`-Fenster benutzen, um den Code für die Übungen zu schreiben und auszuführen.
+
+```{r quiz, exercise = TRUE, exercise.lines = 25}
+
+```
+
+
 ## Literatur
 [Eid, M., Gollwitzer, M., & Schmitt, M. (2017).](https://hds.hebis.de/ubffm/Record/HEB366849158) *Statistik und Forschungsmethoden* (5. Auflage, 1. Auflage: 2010). Weinheim: Beltz. 
 
