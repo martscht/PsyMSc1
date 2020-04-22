@@ -509,7 +509,7 @@ one_factor_ML$... # p-Wert
 ```{r, exercise_fa1_ML-solution}
 # Passt auch eines mit 1 Faktor?
 one_factor_ML <- fa(dataFR2, nfactors = 1, rotate = "oblimin", fm = "ml")
-one_factor_ML$chi # Chi-Quadratwert 
+one_factor_ML$STATISTIC # Chi-Quadratwert 
 one_factor_ML$PVAL # p-Wert
 ```
 
@@ -565,7 +565,7 @@ grade_result(
 
 
 
-Im Output des `anova` Befehls müssen wir im Bereich des *Chisq-Tests* und nicht beim *Emp Chisq* (eine Nährung des $\chi^2$ Wertes, wenn Annahmen verletzt sind) nachsehen. Der $\chi^2$-Differenzwert liegt bei `r round(anova(one_factor_ML, two_factor_ML)[[4]][2], 3)` mit einen zugehörigen p-Wert von de facto `r round(anova(one_factor_ML, two_factor_ML)[[5]][2], 7)` (`e-13` bedeutet $*10^{-13}$; also eine Zahl, bei welcher die Dezimalstelle um 13 Stellen nach links verschoben wird, z.B. `1.234e-13`$=1*10^{-13}=0.0000000000001234$ - eine sehr kleine Zahl!). *Delta Df* (häufig $\Delta df$) gibt die Anzahl an Freiheitsgraden an (hier: df = `r anova(one_factor_ML, two_factor_ML)[[3]][2]`). Somit wird die Null-Hypothese, dass beide Modell die Daten gleich gut beschreiben verworfen. Wir entscheiden uns somit für das Modell mit mehr Parametern, das weniger restriktive Modell, welches die Daten besser beschreibt: hier das zweifaktorielle Modell. Nun ist die Frage, ob wir das Modell noch weiter verbessern können, indem wir drei anstatt zwei Faktoren verwenden, um die Kovariation zwischen den Variablen zu beschreiben.  
+Im Output des `anova` Befehls müssen wir im Bereich des *Chisq-Tests* und nicht beim *Emp Chisq* (eine Nährung des $\chi^2$ Wertes, wenn Annahmen verletzt sind) nachsehen. Der $\chi^2$-Differenzwert liegt bei `r round(anova(one_factor_ML, two_factor_ML)[[4]][2], 3)` mit einen zugehörigen p-Wert von de facto `r round(anova(one_factor_ML, two_factor_ML)[[5]][2], 7)` (`e-13` bedeutet $*10^{-13}$; also eine Zahl, bei welcher die Dezimalstelle um 13 Stellen nach links verschoben wird, z.B. `1.234e-13`$=1*10^{-13}=0.0000000000001234$ - eine sehr kleine Zahl!). *Delta Df* (häufig $\Delta df$) gibt die Anzahl an Freiheitsgraden an (hier: df = `r anova(one_factor_ML, two_factor_ML)[[2]][2]`). Somit wird die Null-Hypothese, dass beide Modell die Daten gleich gut beschreiben verworfen. Wir entscheiden uns somit für das Modell mit mehr Parametern, das weniger restriktive Modell, welches die Daten besser beschreibt: hier das zweifaktorielle Modell. Nun ist die Frage, ob wir das Modell noch weiter verbessern können, indem wir drei anstatt zwei Faktoren verwenden, um die Kovariation zwischen den Variablen zu beschreiben.  
 
 
 ```{r, exercise_fa3_ML, exercise = TRUE, exercise.setup = "exercise_setup6", exercise.eval = FALSE}
@@ -578,7 +578,7 @@ three_factor_ML$... # p-Wert
 ```{r, exercise_fa3_ML-solution}
 # Passt auch eines mit 3 Faktor?
 three_factor_ML <- fa(dataFR2, nfactors = 3, rotate = "oblimin", fm = "ml")
-three_factor_ML$chi # Chi-Quadratwert 
+three_factor_ML$STATISTIC # Chi-Quadratwert 
 three_factor_ML$PVAL # p-Wert
 ```
 
@@ -874,7 +874,7 @@ grade_result(
   glue_incorrect = '{.incorrect} {.message}')
 ```
 
-Der $\chi^2$-Differenzwert liegt hier bei `r round(anova(five_factor_ML, six_factor_ML)[[4]][2], 3)` mit einen zugehörigen p-Wert von `r ifelse(anova(five_factor_ML, six_factor_ML)[[5]][2] < 0.01, "< 0.01", paste(round(anova(five_factor_ML, six_factor_ML)[[5]][2], 4)))` mit $\Delta df$ = `r anova(five_factor_ML, six_factor_ML)[[3]][2]`. <mark style="background-color: orange">Somit wird die Null-Hypothese, dass beide Modelle die Daten gleich gut beschreiben, auf dem 5%-Niveau nicht verworfen. Wir entscheiden uns nach dem Sparsamkeitsprinzip für das Modell mit weniger Parametern, also für das restriktive Modell mit fünf Faktoren, welches die Daten nicht signifikant schlechter beschreibt, als das komplexere mit sechs Faktoren. *In der Regel sind Modelle mit weniger Parametern leichter zu interpretieren.*   </mark>
+Der $\chi^2$-Differenzwert liegt hier bei `r round(anova(five_factor_ML, six_factor_ML)[[4]][2], 3)` mit einen zugehörigen p-Wert von `r ifelse(anova(five_factor_ML, six_factor_ML)[[5]][2] < 0.01, "< 0.01", paste(round(anova(five_factor_ML, six_factor_ML)[[5]][2], 4)))` mit $\Delta df$ = `r anova(five_factor_ML, six_factor_ML)[[2]][2]`. <mark style="background-color: orange">Somit wird die Null-Hypothese, dass beide Modelle die Daten gleich gut beschreiben, auf dem 5%-Niveau nicht verworfen. Wir entscheiden uns nach dem Sparsamkeitsprinzip für das Modell mit weniger Parametern, also für das restriktive Modell mit fünf Faktoren, welches die Daten nicht signifikant schlechter beschreibt, als das komplexere mit sechs Faktoren. *In der Regel sind Modelle mit weniger Parametern leichter zu interpretieren.*   </mark>
 
 <mark style="background-color: orange">Da die Zuordnung zwischen Faktoren und Items nicht eindeutig zu interpretieren war, müsste dies in Zukunft weiter untersucht werden. Weitere geziehlte Hypothesen lassen sich beispielsweise mit der **konfirmatorischen Faktoren Analyse (CFA; confirmatory factor analysis)** untersuchen.  </mark>
 
