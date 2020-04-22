@@ -633,7 +633,7 @@ grade_result(
   glue_incorrect = '{.incorrect} {.message}')
 ```
 
-Der $\chi^2$-Differenzwert liegt hier bei `r round(anova(two_factor_ML, three_factor_ML)[[4]][2], 3)` mit einen zugehörigen p-Wert von `r round(anova(two_factor_ML, three_factor_ML)[[5]][2], 3)`. *Delta Df* liegt bei `r anova(two_factor_ML, three_factor_ML)[[3]][2]` ($\Delta df$ =  `r anova(two_factor_ML, three_factor_ML)[[3]][2]`). Somit wird die Null-Hypothese, dass beide Modell die Daten gleich gut beschreiben nicht verworfen. Aus diesem Grund entscheiden wir uns für das sparsamere Modell, also jenes, welches weniger Parameter enthält und somit restriktiver ist, hier: das *zweifaktorielle* Modell.  
+Der $\chi^2$-Differenzwert liegt hier bei `r round(anova(two_factor_ML, three_factor_ML)[[4]][2], 3)` mit einen zugehörigen p-Wert von `r round(anova(two_factor_ML, three_factor_ML)[[5]][2], 3)`. *Delta Df* liegt bei `r anova(two_factor_ML, three_factor_ML)[[2]][2]` ($\Delta df$ =  `r anova(two_factor_ML, three_factor_ML)[[2]][2]`). Somit wird die Null-Hypothese, dass beide Modell die Daten gleich gut beschreiben nicht verworfen. Aus diesem Grund entscheiden wir uns für das sparsamere Modell, also jenes, welches weniger Parameter enthält und somit restriktiver ist, hier: das *zweifaktorielle* Modell.  
 
 
 
