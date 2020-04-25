@@ -292,7 +292,7 @@ Beispielsweise erhalten wir mit `$loadings` die Faktorladungsmatrix sowie Inform
 two_factor$loadings
 ```
 
-Hier ist relativ deutlich die Zuordnung zu den jeweiligen Faktoren zu sehen. Faktor 1 (*MR1*) entspräche demnach der Extraversion, während der zweite Faktor (*MR2*) dem Neurotizismus entspräche. Die *Strukturmatrix* enthält Informationen über die Korrelation der Items mit den jeweiligen Faktoren. Versuchen Sie diese über `...$...` auszugeben.
+Hier ist relativ deutlich die Zuordnung zu den jeweiligen Faktoren zu sehen. Faktor 1 (*MR1*) entspräche demnach der Extraversion, während der zweite Faktor (*MR2*) dem Neurotizismus entspräche. Die Faktorladungsmatrix wird auch manchmal *Mustermatrix* genannt. Die *Strukturmatrix* enthält Informationen über die Korrelation der Items mit den jeweiligen Faktoren. Versuchen Sie diese über `...$...` auszugeben.
 
 ```{r test_fa2_Structure, exercise = TRUE, exercise.setup = "exercise_setup3", exercise.eval = FALSE}
 
