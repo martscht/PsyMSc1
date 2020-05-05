@@ -1,0 +1,107 @@
+---
+title: "Sitzung 3: Konfirmatorische Faktorenanalyse"
+output:
+  learnr::tutorial:
+    progressive: true
+    allow_skip: true
+    includes:
+      after_body: footer.html
+      in_header: header.html
+runtime: shiny_prerendered
+---
+
+```{r setup, include = FALSE}
+library(learnr)
+library(gradethis)
+library(shiny)
+library(fontawesome)
+library(lavaan)
+
+data(conspiracy, package = 'PsyMSc1')
+knitr::opts_chunk$set(exercise.checker = gradethis::grade_learnr)
+```
+
+```{r, echo = FALSE}
+abbrev <- function(X, begin = 'Latent Variables', end = NULL, ellipses = 'both', shift = 2, ...) {
+
+  tmp <- capture.output(lavaan::summary(X,...))
+
+  if (is.null(begin)) begin <- 1
+  else begin <- grep(begin, tmp, fixed = TRUE)[1]
+  if (is.null(end)) end <- length(tmp)-shift
+  else end <- grep(end, tmp, fixed = TRUE)[grep(end, tmp, fixed = TRUE) > begin][1]-shift
+
+  if (ellipses == 'both') {
+    cat('[...]\n', paste(tmp[begin:end], collapse = '\n'), '\n[...]\n')
+  }
+  if (ellipses == 'top') {
+    cat('[...]\n', paste(tmp[begin:end], collapse = '\n'))
+  }
+  if (ellipses == 'bottom') {
+    cat(paste(tmp[begin:end], collapse = '\n'), '\n[...]\n')
+  }
+  if (ellipses == 'none') {
+    cat(paste(tmp[begin:end], collapse = '\n'))
+  }
+}
+```
+
+
+## Einleitung
+
+In der letzten Sitzung wurden faktoranalytische Verfahren für Datenexploration behandelt. Die Ergebnisse der EFA sind datengesteuert: welche Items welchen Faktoren zugeordnet werden, wie viele Faktoren genutzt werden, wie stark der Zusammenhang zwischen Item und Faktor ist, das alles sind Dinge, die aus den Daten heraus entschieden werden. In dieser Sitzung betrachten wir das Vorgehen, wenn in der Faktorenanalysen von einem konkreten, theoretisch fundierten Modell ausgegangen wird und dieses anhand empirischer Daten geprüft werden soll. Ganz im Popper'schen Sinn lässt sich nur durch ein solches Vorgehen wissenschaftlich Erkenntnis gewinnen.
+
+Für die Umsetzung der CFA nutzen wir erneut `lavaan` - gucken Sie gerne noch einmal in die Unterlagen aus der 1. Sitzung um sich zu vergegenwärtigen, wie hier die Modellierung erfolgt. Grob gesagt gehen wir in `lavaan` in drei Schritten vor:
+
+  1. Modellsyntax schreiben und in einem Objekt ablegen
+  2. Modell schätzen und Ergebnisse in Objekt ablegen
+  3. Ergebnisse im Objekt aus Schritt 2 inspizieren
+
+In der ersten Sitzung hatten wir gesehen, dass in `lavaan` anhand weniger Begriffe das Pfadmodell in Syntax übersetzt wird, um unser Modell schätzbar zu machen. Diese Begriffe waren
+
+| Bezeichnung | Befehl | Bedeutung |
+|:-----------:|:------:|:---------:|
+| Regression | `~` | wird vorhergesagt durch |
+| Kovarianz | `~~` | kovariiert mit |
+| Intercept | `~1` | wird auf 1 regressiert |
+| Faktorladung | `=~` | wird gemessen durch |
+| Formative Faktoren | `<~` | wird konstruiert durch |
+| Schwellenparameter | `|t...` | Schwelle Nummer ... |
+
+Bisher haben wir nur mit `~`, `~1` und `~~` für Regressionen, Intercepts und Residualvarianzen gearbeitet. Heute kommen Faktorladungen dazu.
+
+Wie schon für letzten beiden Sitzungen, können Sie das komplette R-Skript [`r fontawesome::fa("download")` hier herunterladen](https://raw.githubusercontent.com/martscht/PsyMSc1/master/inst/scripts/cfa.R).
+
+## Datensatz
+
+Konkret wird es in dieser Sitzung um die Faktorstruktur verschwörungstheoretischer Überzeugungen gehen. Dafür nutzen wir Daten aus der Erhebung zur Validierung der *Generic Conspiracist Beliefs Scale* (GCBS; Brotherton, French, & Pickering, 2013). Die Daten finden Sie öffentlich zugänglich auf der [Open Psychometrics Website](http://openpsychometrics.org/_rawdata/GCBS.zip). Natürlich können Sie dort den [Fragebogen auch selbst ausfüllen](https://openpsychometrics.org/tests/GCBS/), wenn Sie möchten. Der Fragebogen besteht aus insgesamt 15 Aussagen, die Probanden jeweils von 1 ("definitely not true") bis 5 ("definitely true") hinsichtlich ihres Wahrheitsgehalts einschätzen sollen.
+
+| Nr. | Itemformulierung |
+|:-:| ---------------------- |
+| 1 | The government is involved in the murder of innocent citizens and/or well-known public figures, and keeps this a secret |
+| 2 | The power held by heads of state is second to that of small unknown groups who really control world politics |
+| 3 | Secret organizations communicate with extraterrestrials, but keep this fact from the public |
+| 4 | The spread of certain viruses and/or diseases is the result of the deliberate, concealed efforts of some organization |
+| 5 | Groups of scientists manipulate, fabricate, or suppress evidence in order to deceive the public |
+| 6 | The government permits or perpetrates acts of terrorism on its own soil, disguising its involvement |
+| 7 | A small, secret group of people is responsible for making all major world decisions, such as going to war |
+| 8 | Evidence of alien contact is being concealed from the public |
+| 9 | Technology with mind-control capacities is used on people without their knowledge |
+| 10 | New and advanced technology which would harm current industry is being suppressed |
+| 11 | The government uses people as patsies to hide its involvement in criminal activity |
+| 12 | Certain significant events have been the result of the activity of a small group who secretly manipulate world events |
+| 13 | Some UFO sightings and rumors are planned or staged in order to distract the public from real alien contact |
+| 14 | Experiments involving new drugs or technologies are routinely carried out on the public without their knowledge or consent |
+| 15 | A lot of important information is deliberately concealed from the public out of self-interest |
+
+
+
+## `lavaan` Wiederholung {#Wiederholung}
+
+
+## Literatur
+[Eid, M., Gollwitzer, M., & Schmitt, M. (2017).](https://hds.hebis.de/ubffm/Record/HEB366849158) *Statistik und Forschungsmethoden* (5. Auflage, 1. Auflage: 2010). Weinheim: Beltz.
+
+[Brotherton, R., French, C. C., & Pickering, A. D. (2013)](https://www.frontiersin.org/articles/10.3389/fpsyg.2013.00279/full). Measuring belief in conspiracy theories: the generic conspiracist beliefs scale. *Frontiers in Psychology*, 4, 279, DOI: 10.3389/fpsyg.2013.00279
+
+* <small> *Blau hinterlegte Autorenangaben führen Sie direkt zur universitätsinternen Ressource.*
