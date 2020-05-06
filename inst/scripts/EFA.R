@@ -141,8 +141,7 @@ anova(five_factor_ML, six_factor_ML)
 
 
 
-
-#### Appendix A -----------
+#### Appendix B -----------
 # Orthogonaler Fall
 two_factor$loadings[1, 1] # volle Formel für ersten Eintrag in Strukutrmatrix, da Kovarianz der Faktoren = 0
 two_factor$Structure[1, 1] # erster Eintrag in der Strukturmatrix
@@ -168,7 +167,7 @@ five_factor_ML$loadings[1:15,1:5] %*% five_factor_ML$Phi[1:5,1:5] - five_factor_
 
 
 
-#### Appendix B -----------
+#### Appendix C -----------
 # Mahalanobisdistanz
 Mahalanobis_Distanz <- mahalanobis(x = dataFR, cov = cov(dataFR), center = apply(X = dataFR, MARGIN = 2, FUN = mean)) # Berechnen der Mahalanobisdistanz
 hist(Mahalanobis_Distanz, col = "skyblue", border = "blue", freq = F, breaks = 15) # Histogramm
