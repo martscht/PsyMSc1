@@ -613,7 +613,7 @@ grade_result(
   glue_incorrect = '{.incorrect} {.message}')
 ```
 
-Der $\chi^2$-Differenzwert liegt hier bei `r round(anova(two_factor_ML, three_factor_ML)[[4]][2], 3)` mit einen zugehörigen p-Wert von `r round(anova(two_factor_ML, three_factor_ML)[[5]][2], 3)`. *Delta Df* liegt bei `r anova(two_factor_ML, three_factor_ML)[[2]][2]` ($\Delta df$ =  `r anova(two_factor_ML, three_factor_ML)[[2]][2]`). Somit wird die Null-Hypothese, dass beide Modell die Daten gleich gut beschreiben nicht verworfen. Aus diesem Grund entscheiden wir uns für das sparsamere Modell, also jenes, welches weniger Parameter enthält und somit restriktiver ist, hier: das *zweifaktorielle* Modell.  
+Der $\chi^2$-Differenzwert liegt hier bei `r round(anova(two_factor_ML, three_factor_ML)[[4]][2], 3)` mit einen zugehörigen p-Wert von `r round(anova(two_factor_ML, three_factor_ML)[[5]][2], 3)`. *Delta Df* liegt bei `r anova(two_factor_ML, three_factor_ML)[[2]][2]` ($\Delta df$ =  `r anova(two_factor_ML, three_factor_ML)[[2]][2]`). Somit wird die Null-Hypothese, dass beide Modell die Daten gleich gut beschreiben, bzw. dass das sparsamere Modell die Daten genauso gut beschreiben kann, wie das komplexere Modell ($H_0:\Sigma_{3-Fakt.} = \Sigma_{2-Fakt.}$), nicht verworfen. Aus diesem Grund entscheiden wir uns - Ockhams Rasiermesser folgend (siehe [Eid et al., 2017, p. 787](https://hds.hebis.de/ubffm/Record/HEB366849158)) - für das sparsamere Modell, also jenes, welches weniger Parameter enthält und somit restriktiver ist, hier: das *zweifaktorielle* Modell.  
 
 
 
@@ -816,7 +816,7 @@ four_factor_ML <- fa(dataFR, nfactors = 4, rotate = "oblimin", fm = "ml")
 six_factor_ML <- fa(dataFR, nfactors = 6, rotate = "oblimin", fm = "ml")
 ```
 
-Dem sechsfaktoriellen Modell widersprechen die Daten genauso wenig, wie dem Fünffakoriellen (beide $p>0.05$). Dies war zu erwarten, da wir durch Hinzunahme des sechsten Faktors die Komplexität des Modell erhöht haben, wodurch sich das Modell stärker der konkreten Datenlage annähern kann. *Wie in den Folien zur PCA gesehen, bedeuten mehr Faktoren eine detailgetreuere Abbildung der ursprünglichen Datenlage (siehe auch [Eid et al., 2017, Kapitel 25](https://hds.hebis.de/ubffm/Record/HEB366849158)).*
+Dem sechsfaktoriellen Modell widersprechen die Daten genauso wenig, wie dem Fünffakoriellen (beide $p>0.05$). Dies war zu erwarten, da wir durch Hinzunahme des sechsten Faktors die Komplexität des Modell erhöht haben, wodurch sich das Modell stärker der konkreten Datenlage annähern kann. *Wie in den Folien zur PCA und EFA gesehen, bedeuten mehr Faktoren eine detailgetreuere Abbildung der ursprünglichen Datenlage (siehe auch [Eid et al., 2017, Kapitel 25](https://hds.hebis.de/ubffm/Record/HEB366849158)).*
  
 
 ```{r, test_fa6_ML, exercise = TRUE, exercise.setup = "exercise_setup10", exercise.eval = FALSE}
