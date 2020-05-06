@@ -111,7 +111,7 @@ data(conspiracy, package = 'PsyMSc1')
 ```
 
 Wir können den Datensatz einfach direkt aufrufen um uns einen Überblick zu verschaffen:
-  
+
 ```{r}
 conspiracy
 ```
@@ -155,9 +155,206 @@ In der Konzeption der verschwörungstheoretischen Überzeugungen nach Brotherton
 
 Es wird also behauptet, dass es eine grundlegende Eigenschaft von Personen gibt, die das Ausmaß bestimmt in dem Personen diese Aussagen als wahr einschätzen. Mithilfe der CFA können wir versuchen, diese Behauptung zu prüfen.
 
-Als Pfadmodell dargestellt, sieht das so aus:
+Als Pfadmodell dargestellt, sieht das zunächst so aus:
 
-<img src="https://raw.githubusercontent.com/martscht/PsyMSc1/master/inst/tutorials/cfa/images/cfa1.png" width="65%"/>
+<img src="https://raw.githubusercontent.com/martscht/PsyMSc1/Sitzung3/inst/tutorials/CFA/images/cfa1.png" width="33%"/>
+
+### Modellsyntax
+
+Wie wir es in der ersten Sitzung für die Regression gesehen haben, können wir dieses Pfaddiagramm in `lavaan` Modellsyntax übersetzen. Zunächst haben wir eine latente Variable, die wir nach Belieben benennen können. Weil es sich sinnvoll anbietet, nenne ich sie hier `GC` für "global conspiracy". Diese latente Variable lädt auf drei manifeste Variablen. Bei diesen Variablen habe ich nicht die gleichen Freiheiten in der Benennung, weil es sich hier um manifeste Variablen handelt, die im Datensatz bereits existieren. Daher muss ich hier die auch die Namen verwenden, die im Datensatz für die Variablen genutzt werden. Mit dem `=~` wird die Beziehung zwischen einer latenten Variable (links) und beliebig vielen manifesten Variablen (rechts) dargestellt. Diese Beziehung wird allgemein als Faktorladung bezeichnet. Mehrere manifeste Variablen, die der gleichen latenten Variable zugeordnet werden, können mit einem `+` verbunden werden. Für die Faktorladungen sieht der Modellsyntax-Abschnitt also so aus:
+
+```{r, eval = FALSE}
+'GC =~ Q2 + Q7 + Q12'
+```
+
+Wie schon in der Sitzung zur Regression müssen wir außerdem explizit Residualvarianzen anfordern, weil das Modell sonst behaupten würde, dass die latente Variable eine Varianzaufklärung von 100% an unseren manifesten Variablen leistet. Obwohl das zwar außerordentlich schön für die Entwickler des Fragebogens wäre, wenn dem so wäre, ist beinahe jede manifeste Variable in der psychologischen Forschung mit einem gewissen Maß an Messfehler behaftet. Dieser wird in der CFA als Residualvarianz abgebildet. Daher erweitert sich unser Modell um die folgenden drei Zeilen:
+
+```{r, eval = FALSE}
+'# Faktorladungen
+GC =~ Q2 + Q7 + Q12
+
+# Residualvarianzen
+Q2 ~~ Q2
+Q7 ~~ Q7
+Q12 ~~ Q12'
+```
+
+Um das Modell ein wenig zu gliedern, habe ich außerdem mit dem `#` Kommentare in die Modellsyntax eingefügt, die die einzelnen Abschnitte voneinander abgrenzen. Auch dieses Modell ist noch nicht ganz vollständig. Weil die Varianz der latenten Variable `GC` nicht explizit angesprochen wird, wird - wie schon bei den Residuen - per Voreinstellung davon ausgegangen, dass diese Varianz 0 ist. Um Varianz auf der latenten Variable zuzulassen, müssen wir also auch diese explizit in das Modell aufnehmen:
+
+```{r, eval = FALSE}
+'# Faktorladungen
+GC =~ Q2 + Q7 + Q12
+
+# Residualvarianzen
+Q2 ~~ Q2
+Q7 ~~ Q7
+Q12 ~~ Q12
+
+# Latente Varianz
+GC ~~ GC'
+```
+
+Dieses Modell müssen wir erneut einem Objekt zuweisen, damit wir es gleich in der `lavaan`-Funktion ansprechen können. In einer glorreichen Demonstration meines Einfallsreichtums, habe ich dieses Objekt `mod1` benannt - Modell 1.
+
+```{r model1}
+mod1 <- '# Faktorladungen
+GC =~ Q2 + Q7 + Q12
+
+# Residualvarianzen
+Q2 ~~ Q2
+Q7 ~~ Q7
+Q12 ~~ Q12
+
+# Latente Varianz
+GC ~~ GC'
+```
+
+### Modellschätzung und -ergebnisse
+
+Sobald wir das Modell erstellt haben folgen alle weiteren Schritte dem gleichen Prinzip, das wir in der ersten Sitzung für Regressionen gesehen haben. Zunächst wenden wir das Modell mit dem `lavaan`-Befehl auf den Datensatz an. Dieser Datensatz muss dabei alle Variablen enthalten, die wir als manifeste Variablen in unserem Modell angesprochen haben.
+
+```{r fit1}
+fit1 <- lavaan(mod1, conspiracy)
+```
+
+Die entstehende Warnung stellt ein ernstzunehmendes Problem dar und wird Ihnen wahrscheinlich häufiger begegnen, wenn Sie Dinge mit `lavaan` ausprobieren. Die Warnung gibt Ihnen zunächst darüber Auskunft wo das Problem aufgetreten ist - in diesem Fall in einer `lavaan`-internen Funktion namens `lav_model_vcov` - was aber nicht wirklich von Relevanz ist. Viel wichtiger sind die drei Informationen, die im Text der Warnmeldung enthalten sind:
+
+  1. `Could not compute standard errors!` Es konnten keine Standardfehler bestimmt werden, was bedeutet, dass Sie keinerlei Inferenzstatistik betreiben können.
+  2. `The information matrix could not be inverted.` Der technische Grund, aus dem keine Standardfehler bestimmt werden konnten.
+  3. `This may be a symptom that the model is not identified.` Die wahrscheinliche Ursache, an der Sie ansetzen sollten um dieses Problem zu beheben.
+
+Wir können uns die entstandenen Ergebnisse angucken, um herauszufinden worin genau das Problem liegen könnte:
+
+```{r}
+summary(fit1)
+```
+
+Die folgende Zeile des Outputs zeigt uns, dass `lavaan` mit seiner Einschätzung vollkommen Recht hatte:
+
+```{r, echo = FALSE}
+abbrev(fit1, 'Degrees of freedom', 'P-value', shift = 1)
+```
+
+In diesem Fall sind die Freiheitsgrade negativ - das Modell ist also *global unteridentifiziert*. Bevor Sie jetzt auf den *Continue* Knopf drücken um herauszufinden, wie man dieses Problem behebt, überlegen Sie kurz anhand Ihres Wissens aus dem Theorie-Teil was genau das Problem sein könnte und wie Sie es beheben würden, wenn die Sitzung hier einfach vorbei wäre.
+
+### Modellidentifikation
+
+Sie wissen inzwischen bestimmt, wo sich das Problem in diesem Fall verbirgt. Aber haben Sie trotzdem etwas Geduld - wir werden uns hier ein generelles Vorgehen in `lavaan` ansehen, mit dem man solche Probleme auch in komplizierteren Situationen lösen kann.
+
+Zunächst wissen Sie aus der Theorie-Sitzung, dass die Anzahl bekannter Informationen sich mit folgender Gleichung berechnen lässt:
+
+$n_{info} = \frac{p(p + 1)}{2}$
+
+wobei $p$ die Anzahl von manifesten Variablen im Modell ist. In unserem Fall also
+
+```{r}
+3 * (3 + 1) / 2
+```
+
+Wir können uns auch genau angucken, welche `r 3 * (3 + 1) / 2` Informationen wir haben, indem wir uns die Kovarianzmatrix aus unseren Daten (*sample statistics*) ansehen:
+
+```{r}
+inspect(fit1, 'sampstat')
+```
+
+Hier können wir einfach durchzählen:
+
+```{r, echo = FALSE}
+tmp <- inspect(fit1, 'sampstat')
+tmp$cov[lower.tri(tmp$cov, diag = TRUE)] <- 1:6
+tmp
+```
+
+Die zu schätzenden Parameter ($n_{par}$) können wir im Pfaddiagramm abzählen:
+
+<img src="https://raw.githubusercontent.com/martscht/PsyMSc1/Sitzung3/inst/tutorials/CFA/images/cfa2.png" width="33%"/>
+
+Wenn wir uns nicht damit abmühen möchten die Parameter selbst zu zählen, können wir die Anzahl natürlich auch einfach von `lavaan` bekommen:
+
+```{r}
+inspect(fit1, 'npar')
+```
+
+Welche Parameter das genau sind, die hier geschätzt werden, können wir auch mit `inspect` erfahren:
+
+```{r}
+inspect(fit1, 'free')
+```
+
+Hier sehen wir, wie in `lavaan` die Modell Matrizen dargestellt werden:
+
+  - `$lambda`: die Matrix der Faktorladungen ($\Lambda$)
+  - `$theta`: die Residualkovarianzmatrix ($\Theta$)
+  - `$psi`: die latente Kovarianzmatrix ($\Psi$)
+
+Das Ergebnis von `inspect` ist hier eine Liste dieser drei Matrizen. Wenn wir diese Liste in einem Objekt ablegen, können wir die Matrizen mit dem `$` auch einzeln inspizieren:
+
+```{r}
+free <- inspect(fit1, 'free')
+free$theta
+```
+
+In `theta` ist also die Residualvarianz von Q7 der insgesamt 5. Parameter des Modells.
+
+Im Theorie-Abschnitt haben Sie gehört, dass in Modellen mit latenten Variablen immer entweder eine Faktorladung oder die latente Varianz fixiert werden muss, um der latenten Variable eine Skala zu geben. Entweder wird eine Faktorladung auf 1 gesetzt um so die Skala der manifesten Variable auf die latente Variable anzuwenden, oder die latente Varianz wird auf 1 fixiert, um die latente Variable in $z$-Werten interpretierbar zu machen. In der EFA ist diese zweite Variante extrem verbreitet. In der CFA wird Ihnen die erste Variante häufiger begegnen.
+
+Um die erste Faktorladung auf 1 zu fixieren, können wir das `lavaan`-Modell wie folgt ergänzen:
+
+```{r}
+mod1 <- '# Faktorladungen
+GC =~ 1*Q2 + Q7 + Q12
+
+# Residualvarianzen
+Q2 ~~ Q2
+Q7 ~~ Q7
+Q12 ~~ Q12
+
+# Latente Varianz
+GC ~~ GC'
+```
+
+Mit `1*` legen wir den konkreten Wert der Faktorladung fest. Das gleiche Prinzip gilt in `lavaan` für alle Modellparameter. Probieren Sie unten aus, das Modell so zu schreiben, dass die Faktorladungen frei sind, aber die latente Varianz auf 1 fixiert ist!
+
+```{r std_lv, exercise = TRUE, exercise.eval = FALSE}
+mod1b <- '# Faktorladungen
+GC =~ Q2 + Q7 + Q12
+
+# Residualvarianzen
+Q2 ~~ Q2
+Q7 ~~ Q7
+Q12 ~~ Q12
+
+# Latente Varianz
+GC ~~ GC'
+
+mod1b
+```
+
+```{r std_lv-check}
+tmp <- '# Faktorladungen
+GC =~ Q2 + Q7 + Q12
+
+# Residualvarianzen
+Q2 ~~ Q2
+Q7 ~~ Q7
+Q12 ~~ Q12
+
+# Latente Varianz
+GC ~~ 1*GC'
+
+grade_result(
+  fail_if(~ (!grepl('~~1*Q', gsub(' ', '', .result))), 'Die Residualvarianz brauchen Sie nicht zu fixieren. Diese können ruhig geschätzt werden.'),
+  fail_if(~ (!grepl('=~1*Q', gsub(' ', '', .result))), 'Wenn Sie die latente Varianz fixieren brauchen Sie nicht gleichzeitig die Faktorladung zu fixieren. Eins von beiden ist ausreichend.'),
+  pass_if(~ identical(gsub(' ', '', .result), gsub(' ', '', tmp))),
+  correct = 'Sehr gut! In diesem Fall wird die latente Variable z-standardisiert.',
+  incorrect = 'Leider falsch.',
+  glue_correct = '{.correct}',
+  glue_incorrect = '{.incorrect} {.message}')
+```
+
+### Modellschätzung und Ergebnisse - Zweiter Versuch
+
+
 
 ## Literatur
 [Eid, M., Gollwitzer, M., & Schmitt, M. (2017).](https://hds.hebis.de/ubffm/Record/HEB366849158) *Statistik und Forschungsmethoden* (5. Auflage, 1. Auflage: 2010). Weinheim: Beltz.
