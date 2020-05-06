@@ -111,7 +111,7 @@ data(conspiracy, package = 'PsyMSc1')
 ```
 
 Wir können den Datensatz einfach direkt aufrufen um uns einen Überblick zu verschaffen:
-
+  
 ```{r}
 conspiracy
 ```
@@ -143,11 +143,25 @@ ncol(conspiracy)
 head(conspiracy)
 ```
 
+## Einfaktorielles Modell
 
+In der Konzeption der verschwörungstheoretischen Überzeugungen nach Brotherton, French und Pickering (2013) wird behauptet, dass die Items 2, 7 und 12 ein gemeinsames Konstrukt - nämlich "Malevolent global conspiracies" - erheben. Hier noch einmal die genaue Formulierung der drei Aussagen:
+
+| Nr. | Itemformulierung |
+|:-:| ---------------------- |
+| 2 | The power held by heads of state is second to that of small unknown groups who really control world politics |
+| 7 | A small, secret group of people is responsible for making all major world decisions, such as going to war |
+| 12 | Certain significant events have been the result of the activity of a small group who secretly manipulate world events |
+
+Es wird also behauptet, dass es eine grundlegende Eigenschaft von Personen gibt, die das Ausmaß bestimmt in dem Personen diese Aussagen als wahr einschätzen. Mithilfe der CFA können wir versuchen, diese Behauptung zu prüfen.
+
+Als Pfadmodell dargestellt, sieht das so aus:
+
+<img src="https://raw.githubusercontent.com/martscht/PsyMSc1/master/inst/tutorials/cfa/images/cfa1.png" width="65%"/>
 
 ## Literatur
 [Eid, M., Gollwitzer, M., & Schmitt, M. (2017).](https://hds.hebis.de/ubffm/Record/HEB366849158) *Statistik und Forschungsmethoden* (5. Auflage, 1. Auflage: 2010). Weinheim: Beltz.
 
-[Brotherton, R., French, C. C., & Pickering, A. D. (2013)](https://www.frontiersin.org/articles/10.3389/fpsyg.2013.00279/full). Measuring belief in conspiracy theories: the generic conspiracist beliefs scale. *Frontiers in Psychology*, 4, 279, DOI: 10.3389/fpsyg.2013.00279
+[Brotherton, R., French, C. C., & Pickering, A. D. (2013)](https://www.frontiersin.org/articles/10.3389/fpsyg.2013.00279/full). Measuring belief in conspiracy theories: the generic conspiracist beliefs scale. *Frontiers in Psychology*, 4, 279, DOI: 10.3389/fpsyg.2013.00279.
 
-* <small> *Blau hinterlegte Autorenangaben führen Sie direkt zur universitätsinternen Ressource.*
+<small> *Blau hinterlegte Autorenangaben führen Sie direkt zur Ressource.*
