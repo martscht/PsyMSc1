@@ -39,7 +39,7 @@ Sitzung_2 <- function() {
     devtools::install_github('rstudio-education/gradethis', upgrade = 'never')
   }
   library(gradethis)
-  message('Leider ist die Sitzung noch nicht fertig :(.')
+  compile('EFA')
 }
 
 #' @rdname Sitzungen
