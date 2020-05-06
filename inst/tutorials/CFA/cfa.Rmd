@@ -76,27 +76,73 @@ Wie schon für letzten beiden Sitzungen, können Sie das komplette R-Skript [`r 
 
 Konkret wird es in dieser Sitzung um die Faktorstruktur verschwörungstheoretischer Überzeugungen gehen. Dafür nutzen wir Daten aus der Erhebung zur Validierung der *Generic Conspiracist Beliefs Scale* (GCBS; Brotherton, French, & Pickering, 2013). Die Daten finden Sie öffentlich zugänglich auf der [Open Psychometrics Website](http://openpsychometrics.org/_rawdata/GCBS.zip). Natürlich können Sie dort den [Fragebogen auch selbst ausfüllen](https://openpsychometrics.org/tests/GCBS/), wenn Sie möchten. Der Fragebogen besteht aus insgesamt 15 Aussagen, die Probanden jeweils von 1 ("definitely not true") bis 5 ("definitely true") hinsichtlich ihres Wahrheitsgehalts einschätzen sollen.
 
-| Nr. | Itemformulierung |
-|:-:| ---------------------- |
-| 1 | The government is involved in the murder of innocent citizens and/or well-known public figures, and keeps this a secret |
-| 2 | The power held by heads of state is second to that of small unknown groups who really control world politics |
-| 3 | Secret organizations communicate with extraterrestrials, but keep this fact from the public |
-| 4 | The spread of certain viruses and/or diseases is the result of the deliberate, concealed efforts of some organization |
-| 5 | Groups of scientists manipulate, fabricate, or suppress evidence in order to deceive the public |
-| 6 | The government permits or perpetrates acts of terrorism on its own soil, disguising its involvement |
-| 7 | A small, secret group of people is responsible for making all major world decisions, such as going to war |
-| 8 | Evidence of alien contact is being concealed from the public |
-| 9 | Technology with mind-control capacities is used on people without their knowledge |
-| 10 | New and advanced technology which would harm current industry is being suppressed |
-| 11 | The government uses people as patsies to hide its involvement in criminal activity |
-| 12 | Certain significant events have been the result of the activity of a small group who secretly manipulate world events |
-| 13 | Some UFO sightings and rumors are planned or staged in order to distract the public from real alien contact |
-| 14 | Experiments involving new drugs or technologies are routinely carried out on the public without their knowledge or consent |
-| 15 | A lot of important information is deliberately concealed from the public out of self-interest |
+| Nr. | Facette | Itemformulierung |
+|:-:| --- | ---------------------- |
+| 1 | GM | The government is involved in the murder of innocent citizens and/or well-known public figures, and keeps this a secret |
+| 2 | GC | The power held by heads of state is second to that of small unknown groups who really control world politics |
+| 3 | EC | Secret organizations communicate with extraterrestrials, but keep this fact from the public |
+| 4 | PW | The spread of certain viruses and/or diseases is the result of the deliberate, concealed efforts of some organization |
+| 5 | CI | Groups of scientists manipulate, fabricate, or suppress evidence in order to deceive the public |
+| 6 | GM | The government permits or perpetrates acts of terrorism on its own soil, disguising its involvement |
+| 7 | GC | A small, secret group of people is responsible for making all major world decisions, such as going to war |
+| 8 | EC | Evidence of alien contact is being concealed from the public |
+| 9 | PW | Technology with mind-control capacities is used on people without their knowledge |
+| 10 | CI | New and advanced technology which would harm current industry is being suppressed |
+| 11 | GM | The government uses people as patsies to hide its involvement in criminal activity |
+| 12 | GC | Certain significant events have been the result of the activity of a small group who secretly manipulate world events |
+| 13 | EC | Some UFO sightings and rumors are planned or staged in order to distract the public from real alien contact |
+| 14 | PW | Experiments involving new drugs or technologies are routinely carried out on the public without their knowledge or consent |
+| 15 | CI | A lot of important information is deliberately concealed from the public out of self-interest |
 
+Die 15 Aussagen können auf theoretischer Grundlage fünf verschiedenen Facetten zugeordnet werden, die in der Tabelle mit ihren jeweiligen Abkürzungen eingetragen sind:
 
+  - GM: Government malfeasance
+  - GC: Malevolent global conspiracies
+  - EC: Extraterrestrial cover-up
+  - PW: Personal Well-Being
+  - CI: Control of Information
 
-## `lavaan` Wiederholung {#Wiederholung}
+In dieser Sitzung werden wir untersuchen inwiefern diese theoretische Zuordnung einer empirischen Prüfung standhält.
+
+Zunächst können wir den Datensatz laden und ein bisschen genauer betrachten. Wir haben den Datensatz in diesem Paket integriert, sodass Sie ihn über die `data`-Funktion aufrufen können:
+
+```{r, eval = FALSE}
+data(conspiracy, package = 'PsyMSc1')
+```
+
+Wir können den Datensatz einfach direkt aufrufen um uns einen Überblick zu verschaffen:
+
+```{r}
+conspiracy
+```
+
+Der Datensatz ist allerdings etwas groß um so einen wirklich guten Überblick zu erhalten. Im Folgenden `R`-Abschnitt können Sie die üblichen Funktionen nutzen, um ein paar generelle Eigenschaften des Datensatzes in Erfahrung zu bringen - z.B. generelle Struktur, Namen der Variablen, Anzahl der Personen. Falls Sie ein paar Vorschläge bezüglich der Funktionen benötigen, nutzen Sie einfach den *`r fontawesome::fa('lightbulb')` Hints* Button!
+
+```{r data_overview, exercise = TRUE, exercise.eval = FALSE}
+
+```
+
+```{r data_overview-hint-1}
+# Allgemeine Struktur des Datensatzes
+str(conspiracy)
+```
+
+```{r data_overview-hint-2}
+# Namen aller Variable im Datensatz
+names(conspiracy)
+```
+
+```{r data_overview-hint-3}
+# Anzahl der Zeilen (Personen) und Spalten (Variablen)
+nrow(conspiracy)
+ncol(conspiracy)
+```
+
+```{r data_overview-hint-4}
+# Die ersten 6 Zeilen ansehen
+head(conspiracy)
+```
+
 
 
 ## Literatur
