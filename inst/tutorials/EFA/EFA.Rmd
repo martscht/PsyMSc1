@@ -433,7 +433,7 @@ $$\Sigma := \Lambda \Lambda' + \Theta.$$
 
 Da die Normalveteilung bereits durch die Kovarianzmatrix sowie die Mittelwerte eindeutig zu bestimmen ist, reicht es, die Kovarianzmatrix mit Hilfe unserer Modellparameter so anzupassen, dass sie möglichst nah an der Kovarianzmatrix der Daten liegt; die Likelihood ist hier dann maximal. Die Parameter, die die Likelihood maximieren, werden Maxmimum-Likelihood-Schätzer genannt. Sie sind die Schätzung der Parameter, die am wahrscheinlichsten eine solche Datenkonstellation hervorrufen; gegeben das Modell. 
 
-Um mit Hilfe von `fa` eine ML-EFA durchzuführen, muss dem Argument `fm` die entsprechende Bezeichnung `"ml"` übergeben werden. `$STATISTIC` und `$PVAL` entlocken der Analyse (abgespeichert als Objekt) den $\chi^2$ Wert und den zugehörigen p-Wert bei `r fa(dataFR2, nfactors = 2, rotate = "oblimin", fm = "ml")$dof` Freiheitsgraden.
+Um mit Hilfe von `fa` eine ML-EFA durchzuführen, muss dem Argument `fm` die entsprechende Bezeichnung `"ml"` übergeben werden. `$STATISTIC` (nicht `$chi`, was den empirisch und nicht likelihoodbasierten $\chi^2$-Wert ausgibt; sinnvoll wenn Modellvoraussetzungen nicht erfüllt sind) und `$PVAL` entlocken der Analyse (abgespeichert als Objekt) den $\chi^2$ Wert und den zugehörigen p-Wert bei `r fa(dataFR2, nfactors = 2, rotate = "oblimin", fm = "ml")$dof` Freiheitsgraden.
 ```{r exercise_fa2_ML, exercise = TRUE, exercise.setup = "exercise_setup4", exercise.eval = FALSE}
 ### ML
 two_factor_ML <- fa(dataFR2, nfactors = 2, rotate = "oblimin", ...)
@@ -511,7 +511,7 @@ one_factor_ML <- fa(dataFR2, nfactors = 1, rotate = "oblimin", fm = "ml")
 
 
 
-Das einfaktorielle Modell scheint nicht zu den Daten zu passen (*Mit einer Irrtumswahrscheinlichkeit von 5% ist davon auszugehen, dass in der Population die Differenz zwischen der Populationskovarianzmatrix und der modellimplizierten Kovarianzmatrix nicht 0 ist.*). Dennoch wollen wir dies genau wissen und testen mit die beiden geschachtelten (die Modell lassen sich auseinander gewinnen: das zweifaktorielle Modell lässt sich aus dem restrikiveren, einfaktoriellen Modell durch Freisetzen der Faktorladungen auf dem 2. Faktor sowie durch Freisetzung der Kovarianz zwischen den Faktoren gewinnen). 
+Das einfaktorielle Modell scheint nicht zu den Daten zu passen (*Mit einer Irrtumswahrscheinlichkeit von 5% ist davon auszugehen, dass in der Population die Differenz zwischen der Populationskovarianzmatrix und der modellimplizierten Kovarianzmatrix, bzw. der daraus folgenden Likelihoods, nicht 0 ist.*). Dennoch wollen wir dies genau wissen und testen die beiden geschachtelten (die Modell lassen sich auseinander gewinnen: das zweifaktorielle Modell lässt sich aus dem restrikiveren, einfaktoriellen Modell durch Freisetzen der Faktorladungen auf dem 2. Faktor sowie durch Freisetzung der Kovarianz zwischen den Faktoren gewinnen). 
 
 Mit Hilfe des `anova` Befehls, welchen wir schon bei einigen anderen Modellvergleichen im Rahmen der Regression, der logistischen Regression sowie der Multi-Level Modelle kennengelernt haben, lässt sich nun das einfaktorielle mit dem zweifaktoriellen Modell vergleichen.
 
