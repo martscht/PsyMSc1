@@ -45,8 +45,3 @@ Loesungen_4 <- function(password) {
   message('Leider ist die Sitzung noch nicht fertig :(.')
 }
 
-
-#### Kompilieren ####
-compile <- function(x) {
-  learnr::run_tutorial(x, package = 'PsyMSc1')
-}
