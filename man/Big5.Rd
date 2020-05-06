@@ -4,7 +4,9 @@
 \name{Big5}
 \alias{Big5}
 \title{Big5 Daten (2014)}
-\format{An object of class \code{data.frame} with 19711 rows and 19 columns.}
+\format{
+An object of class \code{data.frame} with 19711 rows and 19 columns.
+}
 \source{
 Der Originaldatensatz ist ein Onlinedatensatz, wird seit 2012 erfasst und ist auf [openpsychometrics.org](https://openpsychometrics.org/_rawdata/) als *.zip* downloadbar.
 }
