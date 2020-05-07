@@ -16,34 +16,11 @@ library(gradethis)
 library(shiny)
 library(fontawesome)
 library(lavaan)
+library(ggplot2)
 
 data(conspiracy, package = 'PsyMSc1')
 knitr::opts_chunk$set(exercise.checker = gradethis::grade_learnr)
-```
-
-```{r, echo = FALSE}
-abbrev <- function(X, begin = 'Latent Variables', end = NULL, ellipses = 'both', shift = 2, ...) {
-
-  tmp <- capture.output(lavaan::summary(X,...))
-
-  if (is.null(begin)) begin <- 1
-  else begin <- grep(begin, tmp, fixed = TRUE)[1]
-  if (is.null(end)) end <- length(tmp)-shift
-  else end <- grep(end, tmp, fixed = TRUE)[grep(end, tmp, fixed = TRUE) > begin][1]-shift
-
-  if (ellipses == 'both') {
-    cat('[...]\n', paste(tmp[begin:end], collapse = '\n'), '\n[...]\n')
-  }
-  if (ellipses == 'top') {
-    cat('[...]\n', paste(tmp[begin:end], collapse = '\n'))
-  }
-  if (ellipses == 'bottom') {
-    cat(paste(tmp[begin:end], collapse = '\n'), '\n[...]\n')
-  }
-  if (ellipses == 'none') {
-    cat(paste(tmp[begin:end], collapse = '\n'))
-  }
-}
+source('startup.R')
 ```
 
 
@@ -99,8 +76,8 @@ Die 15 Aussagen können auf theoretischer Grundlage fünf verschiedenen Facetten
   - GM: Government malfeasance
   - GC: Malevolent global conspiracies
   - EC: Extraterrestrial cover-up
-  - PW: Personal Well-Being
-  - CI: Control of Information
+  - PW: Personal well-being
+  - CI: Control of information
 
 In dieser Sitzung werden wir untersuchen inwiefern diese theoretische Zuordnung einer empirischen Prüfung standhält.
 
@@ -313,7 +290,7 @@ Q12 ~~ Q12
 GC ~~ GC'
 ```
 
-Mit `1*` legen wir den konkreten Wert der Faktorladung fest. Das gleiche Prinzip gilt in `lavaan` für alle Modellparameter. Probieren Sie unten aus, das Modell so zu schreiben, dass die Faktorladungen frei sind, aber die latente Varianz auf 1 fixiert ist!
+Mit `1*` legen wir den konkreten Wert der Faktorladung fest. Zum Beispiel mit `2*` könnten wir diese Ladung auf den Wert 2 fixieren. Das gleiche Prinzip gilt in `lavaan` für alle Modellparameter. Probieren Sie unten aus, das Modell so zu schreiben, dass die Faktorladungen frei sind, aber die latente Varianz auf 1 fixiert ist!
 
 ```{r std_lv, exercise = TRUE, exercise.eval = FALSE}
 mod1b <- '# Faktorladungen
@@ -352,9 +329,314 @@ grade_result(
   glue_incorrect = '{.incorrect} {.message}')
 ```
 
-### Modellschätzung und Ergebnisse - Zweiter Versuch
+### Modellschätzung und Ergebnisse - Zweiter Versuch {#ErgebnisseZwei}
+
+Das Modell mit der eingeführten Restriktion, dass die 1. Faktorladung auf 1 fixiert ist ($\lambda_{2} = 1$) sollte nun nur noch 6 zu schätzende Parameter enthalten. Demzufolge müsste die Warnmeldung, die beim letzten Versuch entstanden ist, verschwinden:
+
+```{r}
+fit1 <- lavaan(mod1, conspiracy)
+```
+
+So weit, so gut. Wenn wir uns wieder angucken, welche Parameter geschätzt werden mussten, sehen wir
+
+```{r}
+inspect(fit1, 'free')
+```
+
+dass in `$lambda` nur noch die Ladungen von Q7 und Q12 geschätzt werden müssen. Die Ladung von Q2 ist kein Paramater des Modells mehr, weil wir diese ja auf einen Wert festgelegt haben.
+
+Jetzt können wir uns noch einmal die Ergebnisse angucken:
+
+```{r}
+summary(fit1)
+```
+
+Wir sehen, dass wir jetzt für alle Parameter Standardfehler erhalten und
+
+```{r, echo = FALSE}
+abbrev(fit1, 'Degrees of freedom', 'Parameter Estimates', shift = 2)
+```
+
+das Modell jetzt 0 Freiheitsgrade hat. Es handelt sich also um ein *gerade identifiziertes* oder auch *saturiertes* Modell. Modelle mit $df = 0$ enthalten keine Prüfbare Vereinfachung der empirischen Datenlage. Die einzelnen Parameter sind lediglich Umformulierungen von Informationen, die wir schon in den empirischen Daten vorliegen haben. Bei [Eid, Gollwitzer & Schmitt (2017)](https://hds.hebis.de/ubffm/Record/HEB366849158) finden Sie auf S. 866 - 867 eine detaillierte Darstellung, wie Sie die Parameter dieses Modells auch händisch bestimmen können.
+
+Welche inhaltlichen Aussagen erlaubt uns diese Umformulierung jetzt? Gucken wir uns mal die Faktorladungen an:
+
+```{r, echo = FALSE}
+abbrev(fit1, 'Latent Variables', 'Variances', shift = 2)
+```
+
+In der Ergebnisaufbereitung von `lavaan` hat sich gegenüber dem Regressionsmodell aus Sitzung 1 wenig geändert. Die Spalten sind nach wie vor Name der Variable, geschätzter Parameter, Standardfehler, $z$-Wert und $p$-Wert. Die Faktorladungen sind durch Überschriften gegliedert. In unserem Fall gibt es nur eine latente Variable, weswegen es nur die Überschrift `GC =~` gibt. Alle darunter stehenden Ladungen beziehen sich also logischerweise auf Faktorladungen von manifesten Variable zu dieser latenten Variable. Für die Ladung der manifesten Variable Q2 sind die Spalten für den Standardfehler, $z$-Wert und $p$-Wert leer. Das liegt daran, dass wir diesen Parameter festlegen, es gibt bezüglich seiner Größe also keine Unsicherheit in der Schätzung (die im Standardfehler quantifiziert wird) und demzufolge auch keine Inferenz dazu, ob Sie bedeutsam von 0 verschieden ist. Sie ist per Definition von 0 verschieden, weil wir das - ohne empirische Unsicherheit - so festgelegt haben.
+
+Was bedeuten diese Ladungen aber inhaltlich? Glücklicherweise hält auch für die CFA das beinahe allgemeingültige Mantra der sozialwissenschaftlichen Auswertungsverfahren: "es ist alles nur Regression". Die Faktorladungen entsprechen hier also dem Regressionsgewicht der manifesten Variable vorhergesagt durch die latente Variable. (Bitte beachten Sie die Richtung! Häufig wird diese Beziehung fälschlicherweise umgekehrt interpretiert - in der klassischen CFA ist aber die latente Variable die unabhängige Variable und die manifesten Variablen sind die abhängigen Variablen.) Ein Bild:
+
+```{r, fig = TRUE, echo = FALSE}
+tmp <- inspect(fit1, 'est')
+plottable <- data.frame(GC = seq(0, 5, .01))
+plottable <- cbind(plottable, t(tmp$lambda %*% plottable$GC))
+plottable <- reshape(plottable,
+  varying = list(c('Q2', 'Q7', 'Q12')),
+  v.names = 'manifest',
+  timevar = 'variable',
+  times = c('Q2', 'Q7', 'Q12'),
+  idvar = 'GC',
+  direction = 'long')
+plottable$variable <- factor(plottable$variable, levels = c('Q2', 'Q7', 'Q12'))
+
+library(ggplot2)
+ggplot(plottable, aes(x = GC, y = manifest, group = variable)) +
+  geom_line(aes(color = variable)) +
+  theme_minimal() +
+  labs(y = 'Manifeste Variablen', x = 'Latente Variable (GC)',
+    color = 'Variable') +
+  scale_color_goethe()
+```
+
+Die Ausprägung der manifesten Variable wird vorhergesagt durch die Ausprägung der latenten Variable - für $GC = 2$ sagen wir also $Q2 = 2$ vorher, weil die Faktorladung dieses Items auf 1 fixiert ist ($\lambda_{2} = 1$). Für Q7 ist die Ladung allerdings $\lambda_{7} = `r round(coef(fit1)[1], 3)`$, sodass die gelbe Regressionsgerade in der Abbildung ein bisschen steiler verläuft.
+
+Das heißt, dass zwei Personen, die sich in der latenten Variable um eine Einheit unterscheiden im Ausmaß der Zustimmung zur Aussage "The power held by heads of state is second to that of small unknown groups who really control world politics" (Q2) ebenfalls um eine Einheit unterscheiden. Bezüglich der Aussage "A small, secret group of people is responsible for making all major world decisions, such as going to war" (Q7) unterscheiden sich die gleichen beiden Personen aber um `r round(coef(fit1)[1], 3)` Einheiten. Weil der Unterschied auf dem latenten Konstrukt GC sich also stärker in Q7 manifestiert als in Q2 (gleiche Unterschiede in GC führen zu stärkeren Unterschieden in Q7 als in Q2), spricht man davon, dass Q7 stärker auf der latenten Dimension *diskriminiert*. Daher wird die Faktorladung häufig als *Diskriminationsparameter* bezeichnet. Durch die Festlegung von $\lambda_2 = 1$ sind die "Einheiten" von denen hier gesprochen wird, die Einheiten der Skala, die genutzt wurde um Q2 zu erheben - in unserem Fall also eine 5-Punkt Likert-Skala.
+
+Wie Sie in der Theorie-Sitzung gesehen haben sind die einzelnen Messgleichungen:
+
+$$
+  \begin{align}
+    Q2 &= \tau_2 + \lambda_2 \cdot GC + \delta_2 \\
+    Q7 &= \tau_7 + \lambda_7 \cdot GC + \delta_7 \\
+    Q12 &= \tau_{12} + \lambda_{12} \cdot GC + \delta_{12} \\
+  \end{align}
+$$
+
+Das sind letztlich also einfache lineare Gleichungen mit einer unabhängigen Variable - wie einfache Regressionen. Weil unsere Vorhersage aber mit Fehler behaftet ist, ist jede manifeste Variable mit einem Residuum $\delta$ behaftet, deren Varianzen in der `lavaan`-Zusammenfassung so dargestellt werden:
+
+```{r, echo = FALSE}
+abbrev(fit1, 'Variances', shift = 1, ellipses = 'top')
+```
+
+Wie schon bei der Regression in Sitzung 1 wird mit dem `.` vor dem Variablennamen deutlich gemacht, dass diese Variable in irgendeiner Form im Modell eine abhängige Variable ist. Das heißt, dass es sich bei der berichteten Varianz um eine *Residualvarianz* handelt. Für `GC` ist das nicht der Fall, weil - wie gerade besprochen - die latente Variable in der CFA die unabhängige Variable ist.
+
+Was bringt uns das Wissen um die latente Varianz und die Residualvarianzen inhaltlich? Ein Kernkonzept der klassischen Messtheorie (KTT) ist die *Reliabilität*, also das Ausmaß in dem unser Instrument wahre Unterschiede zwischen Personen misst. Für unser Modell lässt sie sich einfach ausdrücken, für Q7 z.B.:
+
+$$
+  rel(Q7) = \frac{\lambda_7^2 var(GC)}{var(Q7)} = \frac{\lambda_7^2 var(GC)}{\lambda_7^2 var(GC) + var(\delta_7)} = 1 - \frac{var(\delta_7)}{\lambda_7^2 var(GC) + var(\delta_7)}
+$$
+
+Besonders die erste Version der Reliabilitätsbestimmung sieht dem klassischen $R^2$ einer Regression sehr ähnlich - was daran liegt, dass es das Gleiche ist. Wenn wir also die Reliabilität einer unserer manifesten Variablen bestimmen wollen, können wir entweder händisch die Paramater verrechnen oder uns das $R^2$ von `lavaan` ausgeben lassen, so wie wir es in der 1. Sitzung für die Regression gemacht haben:
+
+```{r}
+inspect(fit1, 'rsquare')
+```
+
+Weil $R^2$ und Reliabilitäten in vielen Fällen von Interesse sind, können wir auch die Modellzusammenfassung um diesen Abschnitt erweitern, indem wir in der `summary`-Funktion das Zusatzargument `rsq` auf `TRUE` setzen. Dann erhalten wir am Ende der Modellzusammenfassung die $R^2$-Schätzungen:
+
+```{r, eval = FALSE}
+summary(fit1, rsq = TRUE)
+```
+```{r, echo = FALSE}
+abbrev(fit1, 'R-Square', rsq = TRUE, shift = 1, ellipses = 'top')
+```
+
+In diesem Fall ist die Reliabilität von Q7 also `r round(inspect(fit1, 'rsquare')[2], 3)`. Das heißt, dass ca. `r round(inspect(fit1, 'rsquare')[2], 2)*100`% der interindividuellen Unterschiede, die wir bezüglich der Zustimmung zur Aussage von Q7 beobachten können auf wahre Unterschiede in der latenten Dimension *malevolent global conspiracies* attribuiert werden können. Die verbleibenden `r round(1-inspect(fit1, 'rsquare')[2], 2)*100`% gehen auf Messfehler zurück. Was uns die CFA hier über das Ausmaß der klassischen Reliabilitätsbestimmung, wie Sie sie wahrscheinlich im Bachelorstudium gelernt haben, ermöglicht ist, dass wir die Reliabilität jedes einzelnen Items eines Fragebogens bestimmen können, nicht nur die der gesamten Skala.
+
+### Mittelwertsstruktur {#Mittelwertsstruktur}
+
+Wie Ihnen vielleicht aufgefallen ist, war in unseren gesammelten Ergebnissen bisher nirgends die Rede von Intercepts oder Mittelwerten. Das liegt daran, dass wir auch diese explizit in die Modellsyntax aufnehmen müssten. Üblicherweise werden in der CFA die Intercepts aller manifesten Variablen als Parameter aufgenommen, der Mittelwert der latenten Variable aber auf 0 fixiert. Dadurch handelt es sich bei der latenten Variable in der CFA im Normalfall um eine *zentrierte Variable*.
+
+Unten sehen Sie das Modell `mod1` mit dem wir bisher gerechnet haben. Probieren Sie dieses Modell so zu erweitern, dass es auch die Intercepts der manifesten Variablen enthält und legen Sie es im Objekt `mod2` ab! Schätzen Sie das Modell auch direkt und legen Sie die Ergebnisse in `fit2` ab und rufen Sie das Objekt anschließen mit `fit2` auf um zu prüfen, ob es funktioniert hat! Mit dem *`r fontawesome::fa('lightbulb')` Solution* Button erhalten Sie die vollständige Lösung.
+
+```{r mod_means, exercise = TRUE, exercise.eval = FALSE, exercise.lines = 24}
+mod1 <- '
+# Faktorladungen
+GC =~ 1*Q2 + Q7 + Q12
+
+# Residualvarianzen
+Q2 ~~ Q2
+Q7 ~~ Q7
+Q12 ~~ Q12
+
+# Latente Varianz
+GC ~~ GC'
+
+fit2 <- ...
+```
+
+```{r mod_means-solution}
+# Modellsyntax
+  # Intercepts werden immer mit ~1 angesprochen
+mod2 <- '
+# Faktorladungen
+GC =~ 1*Q2 + Q7 + Q12
+
+# Residualvarianzen
+Q2 ~~ Q2
+Q7 ~~ Q7
+Q12 ~~ Q12
+
+# Latente Varianz
+GC ~~ GC
+
+# Intercepts
+Q2 ~ 1
+Q7 ~ 1
+Q12 ~ 1'
+
+# Modellschätzung
+fit2 <- lavaan(mod2, conspiracy)
+
+# Überprüfen
+fit2
+```
+
+```{r, echo = FALSE}
+# Modellsyntax
+  # Intercepts werden immer mit ~1 angesprochen
+mod2 <- '
+# Faktorladungen
+GC =~ 1*Q2 + Q7 + Q12
+
+# Residualvarianzen
+Q2 ~~ Q2
+Q7 ~~ Q7
+Q12 ~~ Q12
+
+# Latente Varianz
+GC ~~ GC
+
+# Intercepts
+Q2 ~ 1
+Q7 ~ 1
+Q12 ~ 1'
+
+# Modellschätzung
+fit2 <- lavaan(mod2, conspiracy)
+```
+
+Wenn Sie alles richtig gemacht haben, sollte das Ergebnis der CFA mit Mittelwertsstruktur zunächst so aussehen:
+
+```{r}
+fit2
+```
+
+Mit dem `summary` Befehl können wir uns wieder die Modellzusammenfassung ansehen. Im Vergleich zum bisherigen `fit1` kommt ein Abschnitt dazu:
+
+```{r, eval = FALSE}
+summary(fit2)
+```
+```{r, echo = FALSE}
+abbrev(fit2, 'Intercepts', 'Variances')
+```
+
+Wie bei der Regression und bei den Varianzen schon gesehen, markiert der `.` Variablen, die im Modell abhängige Variablen sind, sodass der dargestellte Wert als *Intercept* (sprich bedingter Mittelwert) und nicht als *Mittelwert* interpretiert werden sollte. Wie bei Intercepts in Regressionen auch, ist das hier dargestellte Intercept von Q7 der Wert, den wir erwarten, wenn eine Person auf dem Prädiktor (GC) den Wert 0 hat. Durch die Festlegung des Mittelwerts von GC auf 0 bedeutet das Intercept also, dass es der erwartete Wert einer durchschnittlichen Person ist. Genau genommen ist das also lediglich eine sehr umständliche Variante doch den Mittelwert von Q7 zu meinen. Wenn wir die Darstellung als Regression um diese Intercepts erweitern ergibt sich folgendes Bild:
+
+```{r, echo = FALSE, fig = TRUE}
+tmp <- inspect(fit2, 'est')
+
+plottable <- data.frame(GC = seq(-2.5, 2.5, .01))
+plottable <- cbind(plottable, t(tmp$lambda %*% plottable$GC + as.vector(tmp$nu)))
+plottable <- reshape(plottable,
+  varying = list(c('Q2', 'Q7', 'Q12')),
+  v.names = 'manifest',
+  timevar = 'variable',
+  times = c('Q2', 'Q7', 'Q12'),
+  idvar = 'GC',
+  direction = 'long')
+plottable$variable <- factor(plottable$variable, levels = c('Q2', 'Q7', 'Q12'))
+
+ggplot(plottable, aes(x = GC, y = manifest, group = variable)) +
+  geom_line(aes(color = variable)) +
+  theme_minimal() +
+  labs(y = 'Manifeste Variablen', x = 'Latente Variable (GC)',
+    color = 'Variable') +
+  scale_color_goethe() +
+  geom_vline(xintercept = 0, lty = 2)
+```
+
+Die gestrichelte Linie stellt den Mittelwert der latenten Variable dar. Der Punkt an dem die jeweilige Regressionsgerade diese Linie schneidet ist also das Intercept. Erneut ist eine berechtigte Frage: "Aber was soll mir das jetzt bringen?" Die Intercepts werden im Rahmen der klassischen Testtheorie als *Leichtigkeitsparameter* interpretiert. Der Aussage "The power held by heads of state is second to that of small unknown groups who really control world politics" (Q2) weist eine Person mit durchschnittlicher Ausprägung auf der Dimension *malevolent global conspiracies* einen Wahrheitsgehalt von `r round(tmp$nu[1], 3)` zu (auf einer Skala von 1 bis 5). Die Gleiche, durchschnittliche Person schätzt den Wahrheitsgehalt der Aussage "A small, secret group of people is responsible for making all major world decisions, such as going to war" (Q7) auf einer Skala von 1 bis 5 mit  `r round(tmp$nu[2], 3)` ein. Q2 wird also in größerem Ausmaß zugestimmt - die Aussage ist *leichter* zu bejahen, daher die Bezeichnung als *Leichtigkeitsparameter*.
+
+## Zweifaktorielles Modell
+
+Wie wir im letzten Abschnitt gesehen haben, hatte das Modell für die Facette *malevolent global conspiracies* 0 Freiheitsgrade und war deswegen lediglich eine Umformulierung der empirischen Datenlage. Um uns mit Modellen zu beschäftigen, die prüfbare Behauptungen darstellen können wir zwei Wege beschreiten.
+
+Wir können in das Modell Einschränkungen einführen, die die Beziehung zwischen den drei Items Q2, Q7 und Q12 und der latenten Variable GC präzisieren. Diese Messmodelle der Klassischen Testtheorie werden im [Appendix A](#AppendixA) besprochen. Wenn Sie Ihre Kenntnis über die CFA und ihre Umsetzung in `lavaan` also vertiefen wollen, finden Sie dort eine detaillierte Darstellung der hierarchischen Messmodelle und der Einführung von Paramatergleichsetzungen in `lavaan`.
+
+Die zweite Möglichkeit um die behauptete Messstruktur des Konstrukts in prüfbare Aussagen zu überführen ist es dieses gegenüber anderen psychologischen Konstrukten und Aussagen explizit abzugrenzen. Wenn die drei Aussagen in Q2, Q7 und Q12 Manifestierungen der Facette *malevolent global conspiracies* darstellen, sollte sie in einer CFA z.B. von der Facette *control of information* (Q5, Q10, Q15) klar unterscheidbar sein. Wenn sie das nicht wären, müssten wir die theoretische Konzeption der verschwörungstheoretischen Überzeugungen als fünf-dimensionales Konstrukt revidieren und z.B. mit einer EFA untersuchen, welche Dimensionen sich empirisch unterscheiden lassen. Wie Sie am Titel dieses Abschnitts erkennen konnten, befassen wir uns hier mit diesem Vorgehen.
+
+### Vereinfachte Modellsyntax
+
+Im letzten Abschnitt haben wir uns damit abgemüht das Modell in seiner Gänze in der `lavaan`-Modellsyntax darzustellen. Wie erwähnt gibt es aber einige Dinge, die in der breiten Masse der CFA Modelle in gleicher Weise gehandhabt werden: üblicherweise wird die Faktorladung der 1. manifesten Variable auf 1 fixiert, für alle abhängigen Variablen sollen auch Residualvarianzen geschätzt werden und wenn wir latente Variablen definieren, sollen diese auch Varianz haben. Dieses Verhalten kann in `lavaan` erzeugt werden, sodass wir uns sparen können alle Elemente im Modell aufzulisten. Dafür können wir ein sparsames Modell definieren und an einen von drei Befehlen weitergeben:
+
+  - `cfa`: enthält Voreinstellungen, die in der Anwendung von CFAs üblich sind
+  - `sem`: macht genau das Gleiche wie `cfa`
+  - `growth`: enthält Voreinstellungen für Wachstumskurvenmodelle, eine spezielle Form der Modllierung von Längsschnittdaten
+
+Warum gibt es `cfa` und `sem`? Offiziell sind beide implementiert, weil es in Zukunft passieren könnte, dass unterschiedliche Voreinstellungen für konfirmatorische Faktorenanalysen und Strukturgleichungsmodelle implementiert werden. Derzeit ist das nicht der Fall, sodass beide Funktionen austauschbar verwandt werden können. Ich nutze sie meistens an unterschiedlichen Stellen, um in meinen `lavaan`-Skripten schnell sehen zu können was an welcher Stelle passiert.
+
+In jedem Fall funktionieren `cfa`, `sem` und `growth` genauso wie der allgemeine `lavaan`-Befehl mit dem wir bisher gearbeitet haben. Der Unterschied besteht lediglich darin, dass Voreinstellungen gesetzt werden, die den Prozess der Modellierung stark abkürzen. Mit der Hilfefunktion `?cfa` können Sie sich ansehen, welche Voreinstellungen vorgenommen werden. Da steht:
 
 
+> The cfa function is a wrapper for the more general lavaan function, using the following default arguments: `int.ov.free = TRUE`, `int.lv.free = FALSE`, `auto.fix.first = TRUE` (unless `std.lv = TRUE)`, `auto.fix.single = TRUE`, `auto.var = TRUE`, `auto.cov.lv.x = TRUE`, `auto.efa = TRUE`, `auto.th = TRUE`, `auto.delta = TRUE`, and `auto.cov.y = TRUE`.
+
+Eine Übersicht über alle möglichen Einstellung in `lavaan` finden Sie mit `?lavOptions`. Für uns sind folgende Aussagen von zentraler Bedeutung:
+
+  - `auto.fix.first = TRUE`: die erste Faktorladung jeder latenten Variable wird automatisch fixiert
+  - `auto.var = TRUE`: die Varianz latenter Variablen und Residualvarianzen manifester Variablen werden automatisch frei geschätzt
+  - `auto.cov.lv.x = TRUE`: Kovarianzen zwischen exogenen latenten Variablen werden automatisch frei geschätzt.
+
+Das heißt, das alles sind Dinge, die wir in der Modellsyntax nicht mehr explizit ansprechen müssen. Die Syntax des `mod1` aus dem letzten Abschnitt verkürzt sich daher auf nur eine Zeile:
+
+```{r}
+mod1_simple <- 'GC =~ Q2 + Q7 + Q12'
+```
+```{r mod_c}
+mod1_simple <- 'GC =~ Q2 + Q7 + Q12'
+```
+
+Wenn Sie dieses Modell an `cfa` weitergeben, entstehen genau die gleichen Ergebnisse, die wir im [zweiten Anlauf erzeugt hatten](#ErgebnisseZwei). Probieren Sie es gerne aus um zu prüfen, ob ich Sie anlüge:
+
+```{r cfa_1f, exercise = TRUE, exercise.eval = FALSE, exercise.setup = 'mod_c'}
+fit1_simple <- cfa(mod1_simple, conspiracy)
+```
+
+```{r cfa_1f-hint-1}
+# Ergebniszusammenfassung
+summary(fit1_simple)
+```
+
+Was hier erneut fehlt ist die Mittelwertsstruktur, die nicht per Voreinstellung mit in das Modell aufgenommen wird. Dieser können wir aber per Argument von `cfa` anfordern:
+
+```{r}
+fit2_simple <- cfa(mod1_simple, conspiracy,
+  meanstructure = TRUE)
+```
+
+Dann erhalten wir erneut den zusätzlichen Abschnitt mit den Intercepts, den wir im [letzten Abschnitt per Hand erzeugt hatten](#Mittelwertsstruktur):
+
+```{r cfa_meanstructure}
+mod1_simple <- 'GC =~ Q2 + Q7 + Q12'
+fit2_simple <- cfa(mod1_simple, conspiracy,
+  meanstructure = TRUE)
+```
+
+
+```{r cfa_means, exercise = TRUE, exercise.eval = FALSE, exercise.setup = 'cfa_meanstructure'}
+summary(fit2_simple)
+```
+
+### Modellierung mit zwei latenten Variablen
+
+Diese neu gefundene Leichtigkeit der Modellierung können wir direkt nutzen, um ein zweifaktorielles Modell für die beiden Facetten *malevolent global conspiracies* und *control of information* aufzustellen. Zu unseren bisherigen drei Items (Q2, Q7 und Q12) kommen die folgenden drei dazu:
+
+| Nr. | Itemformulierung |
+|:-:| ---------------------- |
+| 5 | Groups of scientists manipulate, fabricate, or suppress evidence in order to deceive the public |
+| 10 | New and advanced technology which would harm current industry is being suppressed |
+| 15 | A lot of important information is deliberately concealed from the public out of self-interest |
+
+Um die beiden Facetten voneinander abzugrenzen, stellen wir ein Modell mit zwei latenten Variablen auf, welches als Pfaddiagramm so aussieht:
+
+<img src="https://raw.githubusercontent.com/martscht/PsyMSc1/Sitzung3/inst/tutorials/CFA/images/cfa3.png" width="66%"/>
+
+
+
+## Appendix A: Hierarchie der Messmodelle {#AppendixA}
 
 ## Literatur
 [Eid, M., Gollwitzer, M., & Schmitt, M. (2017).](https://hds.hebis.de/ubffm/Record/HEB366849158) *Statistik und Forschungsmethoden* (5. Auflage, 1. Auflage: 2010). Weinheim: Beltz.
