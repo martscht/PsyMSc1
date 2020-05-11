@@ -86,7 +86,7 @@ two_factor_ML$PVAL # p-Wert
 
 # Passt auch eines mit 1 Faktor?
 one_factor_ML <- fa(dataFR2, nfactors = 1, rotate = "oblimin", fm = "ml")
-one_factor_ML$chi # Chi-Quadratwert 
+one_factor_ML$STATISTIC # Chi-Quadratwert 
 one_factor_ML$PVAL # p-Wert
 
 anova(one_factor_ML, two_factor_ML)
@@ -94,7 +94,7 @@ anova(one_factor_ML, two_factor_ML)
 
 # Passt auch eines mit 3 Faktor?
 three_factor_ML <- fa(dataFR2, nfactors = 3, rotate = "oblimin", fm = "ml")
-three_factor_ML$chi # Chi-Quadratwert 
+three_factor_ML$STATISTIC # Chi-Quadratwert 
 three_factor_ML$PVAL # p-Wert
 
 anova(two_factor_ML, three_factor_ML)
