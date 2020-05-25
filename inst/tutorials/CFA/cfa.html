@@ -1286,7 +1286,7 @@ sol &lt;- lavTestLRT(fit_two, fit_four)
 
 grade_result(
   pass_if(~ identical(sol, .result)),
-  correct = &#39;Sehr gut! Das Ergebnis dieses Vergleich ist mit dem bezüglich der Querladung identisch! Wie geschildert liegt das daran, dass in beiden Fällen in gleichem Ausmaß ein stärkerer Zusammenhang zwischen Q10 und Q15 ermöglicht wird.&#39;,
+  correct = &#39;Sehr gut! Das Ergebnis dieses Vergleichs ist mit dem bezüglich der Querladung identisch! Wie geschildert liegt das daran, dass in beiden Fällen in gleichem Ausmaß ein stärkerer Zusammenhang zwischen Q10 und Q15 ermöglicht wird.&#39;,
   incorrect = &#39;Leider falsch. Stellen Sie sicher, dass Sie die Residualkovarianz zwischen Q10 und Q15 zugelassen haben und dass Sie den Modellvergleich mit lavTestLRT durchführen!&#39;,
   glue_correct = &#39;{.correct}&#39;,
   glue_incorrect = &#39;{.incorrect}&#39;)</code></pre>
@@ -1295,6 +1295,11 @@ grade_result(
 </div>
 <div id="section-AppendixA" class="section level2">
 <h2>Appendix A: Hierarchie der Messmodelle</h2>
+<p>In vielen Bereichen der Psychologie ist es wichtig nicht nur festzuhalten, dass mehrere beobachtbare Variablen ein gemeinsames latentes Konstrukt erheben, sondern auch sicherzustellen, dass sie dies in gleicher Weise tun. Nehmen wir an, sie kämen in die Situation für einen, nicht näher benannten, Statistik-lastigen Kurs im Master der Psychologie drei parallele Formen einer Modulprüfung entwickeln zu müssen. In dem Fall würden Sie im Interesse der Kursteilnehmer und -teilnehmerinnen versuchen sicherzustellen, dass die drei Formen die statistischen Kompetenzen (das latente Konstrukt) auch in gleicher Weise erheben und sich nicht z.B. in der mittleren Schwierigkeit unterscheiden.</p>
+<p>Verschiedene Formen der “Gleichheit” dieser drei Messung werden in der Hierarchie der Messmodelle festgehalten:</p>
+<p><img src="images/mess1.png" width="66%"/></p>
+<p><em>Im Folgenden arbeiten wir mit ein paar fiktiven Daten zu dieser imaginären Prüfung. Die Daten sind ebenfalls im Paket enthalten, müssen aber zunächst geladen werden.</em></p>
+<pre class="r"><code>data(emp, package = &#39;PsyMSc1&#39;)</code></pre>
 </div>
 <div id="section-literatur" class="section level2">
 <h2>Literatur</h2>
@@ -1312,6 +1317,7 @@ library(ezCutoffs)
 library(knitr)
 
 data(conspiracy, package = 'PsyMSc1')
+data(emp, package = 'PsyMSc1')
 knitr::opts_chunk$set(exercise.checker = gradethis::grade_learnr)
 source('startup.R')
 </script>

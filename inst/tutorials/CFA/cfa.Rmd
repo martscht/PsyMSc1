@@ -1157,9 +1157,11 @@ grade_result(
 
 In vielen Bereichen der Psychologie ist es wichtig nicht nur festzuhalten, dass mehrere beobachtbare Variablen ein gemeinsames latentes Konstrukt erheben, sondern auch sicherzustellen, dass sie dies in gleicher Weise tun. Nehmen wir an, sie kämen in die Situation für einen, nicht näher benannten, Statistik-lastigen Kurs im Master der Psychologie drei parallele Formen einer Modulprüfung entwickeln zu müssen. In dem Fall würden Sie im Interesse der Kursteilnehmer und -teilnehmerinnen versuchen sicherzustellen, dass die drei Formen die statistischen Kompetenzen (das latente Konstrukt) auch in gleicher Weise erheben und sich nicht z.B. in der mittleren Schwierigkeit unterscheiden.
 
-Verschiedene Formen der "Gleichheit" dieser drei Messung werden in der Hierarchie der Messmodelle festgehalten:
+Verschiedene Formen der "Gleichheit" dieser drei Messungen werden in der Hierarchie der Messmodelle festgehalten:
 
 <img src="images/mess1.png" width="66%"/>
+
+In der Abbildung sind die fünf typischen Messmodelle der klassischen Testtheorie zu sehen. In der Bezeichnung bezieht sich der Buchstabe $\tau$ auf den zugrundeliegenden, wahren Wert einer manifesten Variable. Anders als die latente Variablen, die wir bisher betrachtet haben, ist so ein $\tau$ für jede manifeste Variable einzeln definiert, kann aber ohne weitere Modellannahmen nicht empirisch geschätzt werden. Die Namen der Messmodell beziehen sich darauf, wie die wahren Werte $\tau$ verschiedener manifester Variablen im Verhältnis zueinander stehen. $\tau$-parallel heißt also z.B., dass die wahren Werte zweier Parallelformen der Statstikprüfung wirklich parallel sind - also in jedweder Hinsicht gleiche Eigenschaften haben. Der Weg, um von einem Messmodell zum nächsten zu kommen, ist stets an den Verbindungen dargestellt.
 
 *Im Folgenden arbeiten wir mit ein paar fiktiven Daten zu dieser imaginären Prüfung. Die Daten sind ebenfalls im Paket enthalten, müssen aber zunächst geladen werden.*
 
@@ -1167,7 +1169,59 @@ Verschiedene Formen der "Gleichheit" dieser drei Messung werden in der Hierarchi
 data(emp, package = 'PsyMSc1')
 ```
 
+Der Datensatz enthält lediglich drei Variablen:
 
+```{r}
+summary(emp)
+```
+
+Die Werte stellen auf einer Skala von ca. -3 bis 3 die geschätzte Fähigkeit in drei verschiedenen Versionen des Tests dar.
+
+### $\tau$-kongenerisches Modell
+
+Das am weitesten verbreitete Messmodell in der Psychologie ist das $\tau$-kongenerische Messmodell. Dieses haben wir z.B. auch in den anderen Abschnitten dieser Sitzung gesehen. Für unsere fiktive Statstikprüfung können wir es wie folgt anlegen:
+
+```{r}
+# Modell
+mod1 <- 'stat =~ test1 + test2 + test3'
+
+# Schätzung
+fit1 <- cfa(mod1, emp,
+  meanstructure = TRUE)
+```
+
+Der Abschnitt zu den Parametern sieht in der Zusammenfassung dann so aus:
+
+```{r, eval = FALSE}
+summary(fit1)
+```
+
+```{r echo = FALSE}
+abbrev(fit1, shift = 1)
+```
+
+Oder etwas bildlicher ausgedrückt:
+
+```{r, fig = TRUE, echo = FALSE}
+tmp <- inspect(fit1, 'est')
+plottable <- data.frame(stat = seq(-3, 3, .01))
+plottable <- cbind(plottable, t(tmp$lambda %*% plottable$stat))
+plottable <- reshape(plottable,
+  varying = list(c('test1', 'test2', 'test3')),
+  v.names = 'manifest',
+  timevar = 'variable',
+  times = c('Test 1', 'Test 2', 'Test 3'),
+  idvar = 'stat',
+  direction = 'long')
+plottable$variable <- factor(plottable$variable, levels = c('Test 1', 'Test 2', 'Test 3'))
+
+ggplot(plottable, aes(x = stat, y = manifest, group = variable)) +
+  geom_line(aes(color = variable)) +
+  theme_minimal() +
+  labs(y = 'Manifeste Variablen', x = 'Latente Variable (stat)',
+    color = 'Variable') +
+  scale_color_goethe()
+```
 
 ## Literatur
 [Eid, M., Gollwitzer, M., & Schmitt, M. (2017).](https://hds.hebis.de/ubffm/Record/HEB366849158) *Statistik und Forschungsmethoden* (5. Auflage, 1. Auflage: 2010). Weinheim: Beltz.
