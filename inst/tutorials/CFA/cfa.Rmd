@@ -22,6 +22,7 @@ library(ezCutoffs)
 library(knitr)
 
 data(conspiracy, package = 'PsyMSc1')
+data(emp, package = 'PsyMSc1')
 knitr::opts_chunk$set(exercise.checker = gradethis::grade_learnr)
 source('startup.R')
 ```
@@ -1153,6 +1154,20 @@ grade_result(
 
 
 ## Appendix A: Hierarchie der Messmodelle {#AppendixA}
+
+In vielen Bereichen der Psychologie ist es wichtig nicht nur festzuhalten, dass mehrere beobachtbare Variablen ein gemeinsames latentes Konstrukt erheben, sondern auch sicherzustellen, dass sie dies in gleicher Weise tun. Nehmen wir an, sie kämen in die Situation für einen, nicht näher benannten, Statistik-lastigen Kurs im Master der Psychologie drei parallele Formen einer Modulprüfung entwickeln zu müssen. In dem Fall würden Sie im Interesse der Kursteilnehmer und -teilnehmerinnen versuchen sicherzustellen, dass die drei Formen die statistischen Kompetenzen (das latente Konstrukt) auch in gleicher Weise erheben und sich nicht z.B. in der mittleren Schwierigkeit unterscheiden.
+
+Verschiedene Formen der "Gleichheit" dieser drei Messung werden in der Hierarchie der Messmodelle festgehalten:
+
+<img src="images/mess1.png" width="66%"/>
+
+*Im Folgenden arbeiten wir mit ein paar fiktiven Daten zu dieser imaginären Prüfung. Die Daten sind ebenfalls im Paket enthalten, müssen aber zunächst geladen werden.*
+
+```{r, eval = FALSE}
+data(emp, package = 'PsyMSc1')
+```
+
+
 
 ## Literatur
 [Eid, M., Gollwitzer, M., & Schmitt, M. (2017).](https://hds.hebis.de/ubffm/Record/HEB366849158) *Statistik und Forschungsmethoden* (5. Auflage, 1. Auflage: 2010). Weinheim: Beltz.
