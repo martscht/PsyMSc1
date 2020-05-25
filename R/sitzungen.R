@@ -53,7 +53,7 @@ Sitzung_3 <- function() {
     devtools::install_github('rstudio-education/gradethis', upgrade = 'never')
   }
   library(gradethis)
-  compile('cfa')
+  compile('CFA')
 }
 
 #' @rdname Sitzungen
