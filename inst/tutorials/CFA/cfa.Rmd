@@ -2,11 +2,12 @@
 title: "Sitzung 3: Konfirmatorische Faktorenanalyse"
 output:
   learnr::tutorial:
-    progressive: true
+    progressive: false
     allow_skip: true
     includes:
       after_body: footer.html
       in_header: header.html
+    toc_depth: 2
 runtime: shiny_prerendered
 ---
 
@@ -17,6 +18,8 @@ library(shiny)
 library(fontawesome)
 library(lavaan)
 library(ggplot2)
+library(ezCutoffs)
+library(knitr)
 
 data(conspiracy, package = 'PsyMSc1')
 knitr::opts_chunk$set(exercise.checker = gradethis::grade_learnr)
@@ -120,7 +123,7 @@ ncol(conspiracy)
 head(conspiracy)
 ```
 
-## Einfaktorielles Modell
+## Einfaktorielles Modell {#Einfaktor}
 
 In der Konzeption der verschwörungstheoretischen Überzeugungen nach Brotherton, French und Pickering (2013) wird behauptet, dass die Items 2, 7 und 12 ein gemeinsames Konstrukt - nämlich "Malevolent global conspiracies" - erheben. Hier noch einmal die genaue Formulierung der drei Aussagen:
 
@@ -134,7 +137,7 @@ Es wird also behauptet, dass es eine grundlegende Eigenschaft von Personen gibt,
 
 Als Pfadmodell dargestellt, sieht das zunächst so aus:
 
-<img src="https://raw.githubusercontent.com/martscht/PsyMSc1/Sitzung3/inst/tutorials/CFA/images/cfa1.png" width="33%"/>
+<img src="images/cfa1.png" width="33%"/>
 
 ### Modellsyntax
 
@@ -214,7 +217,7 @@ abbrev(fit1, 'Degrees of freedom', 'P-value', shift = 1)
 
 In diesem Fall sind die Freiheitsgrade negativ - das Modell ist also *global unteridentifiziert*. Bevor Sie jetzt auf den *Continue* Knopf drücken um herauszufinden, wie man dieses Problem behebt, überlegen Sie kurz anhand Ihres Wissens aus dem Theorie-Teil was genau das Problem sein könnte und wie Sie es beheben würden, wenn die Sitzung hier einfach vorbei wäre.
 
-### Modellidentifikation
+### Modellidentifikation {#Modellidentifikation}
 
 Sie wissen inzwischen bestimmt, wo sich das Problem in diesem Fall verbirgt. Aber haben Sie trotzdem etwas Geduld - wir werden uns hier ein generelles Vorgehen in `lavaan` ansehen, mit dem man solche Probleme auch in komplizierteren Situationen lösen kann.
 
@@ -244,7 +247,7 @@ tmp
 
 Die zu schätzenden Parameter ($n_{par}$) können wir im Pfaddiagramm abzählen:
 
-<img src="https://raw.githubusercontent.com/martscht/PsyMSc1/Sitzung3/inst/tutorials/CFA/images/cfa2.png" width="33%"/>
+<img src="images/cfa2.png" width="33%"/>
 
 Wenn wir uns nicht damit abmühen möchten die Parameter selbst zu zählen, können wir die Anzahl natürlich auch einfach von `lavaan` bekommen:
 
@@ -620,7 +623,7 @@ fit2_simple <- cfa(mod1_simple, conspiracy,
 summary(fit2_simple)
 ```
 
-### Modellierung mit zwei latenten Variablen
+### Modellierung mit zwei latenten Variablen {#TwoFactors}
 
 Diese neu gefundene Leichtigkeit der Modellierung können wir direkt nutzen, um ein zweifaktorielles Modell für die beiden Facetten *malevolent global conspiracies* und *control of information* aufzustellen. Zu unseren bisherigen drei Items (Q2, Q7 und Q12) kommen die folgenden drei dazu:
 
@@ -632,8 +635,521 @@ Diese neu gefundene Leichtigkeit der Modellierung können wir direkt nutzen, um 
 
 Um die beiden Facetten voneinander abzugrenzen, stellen wir ein Modell mit zwei latenten Variablen auf, welches als Pfaddiagramm so aussieht:
 
-<img src="https://raw.githubusercontent.com/martscht/PsyMSc1/Sitzung3/inst/tutorials/CFA/images/cfa3.png" width="66%"/>
+<img src="images/cfa3.png" width="66%"/>
 
+Inhaltlich wird mit diesem Modell behauptet, dass die Zustimmung zu den sechs Aussagen sich auf zwei verschiedene Überzeugungen von Personen zurückführen lässt. Die Erste stellt die Überzeugung dar, dass es eine kleine, elitäre Gruppe von Personen gibt, die das Weltgeschehen im Geheimen steuert. Diese Überzeugung äußert sich in der Zustimmung zu den drei Aussagen in Q2, Q7 und Q12. Die Zweit ist die Überzeugung, dass technologischer und wissenschaftlicher Fortschritt absichtlich verschleiert wird, um die Interessen einiger weniger zu schützen. Diese Überzeugung äußert sich dann in der Zustimmung zu den Aussagen in Q5, Q10 und Q15. Zusätzlich behauptet dieses Modell aber auch, dass sich eine Überzeugung bezüglich *malevolent global conspiracies* **nicht** in der Zustimmung zu den Aussagen in Q5, Q10 oder Q15 wiederfinden lässt. Zusammenhänge der Zustimmung zu den Aussagen in Q12 ("Certain significant events have been the result of the activity of a small group who secretly manipulate world events") und Q10 ("New and advanced technology which would harm current industry is being suppressed") sollen nur dadurch entstehen, dass die beiden grundlegenden (latenten) Überzeugungen miteinander zusammenhängen können. Diese latente Korrelation wird im Pfadmodell durch den Doppelpfeil kenntlich gemacht.
+
+Um dieses Modell in `lavaan` zu implementieren brauchen wir nur die folgenden Zeilen:
+
+```{r}
+mod_two <- '
+  GC =~ Q2 + Q7 + Q12
+  CI =~ Q5 + Q10 + Q15'
+```
+
+Durch die oben besprochenen Voreinstellungen werden die restlichen Modellelemente ergänzt, wenn wir `cfa` oder `sem` nutzen, um das Modell zu schätzen.
+
+```{r}
+fit_two <- cfa(mod_two, conspiracy,
+  meanstructure = TRUE)
+```
+
+Nutzen Sie die Befehle, die wir im Abschnitt zum einfaktoriellen Modell kennengelernt haben um sich über die Ergebnisse dieses zweifaktoriellen Modells einen Überblick zu verschaffen!
+
+```{r two_factors_prep}
+mod_two <- '
+  GC =~ Q2 + Q7 + Q12
+  CI =~ Q5 + Q10 + Q15'
+fit_two <- cfa(mod_two, conspiracy,
+  meanstructure = TRUE)
+```
+
+```{r two_factors_summary, exercise = TRUE, exercise.setup = 'two_factors_prep', exercise.eval = FALSE}
+# Allgemeiner Überblick
+summary(fit_two)
+
+# Reliabilität der sechs Aussagen
+inspect(fit_two, 'rsquare')
+```
+
+Die `summary` enthält nun den neuen Abschnitt `Covariances` der, wie Sie vermutlich erraten können, Kovarianzen zwischen den latenten Variablen enthält. Versuchen Sie mit `inspect` die **Korrelation** zwischen den beiden Faktoren in Erfahrung zu bringen!
+
+```{r two_factors, exercise = TRUE, exercise.setup = 'two_factors_prep', exercise.eval = FALSE}
+
+```
+
+```{r two_factors-hint-1}
+# Nutzen Sie die Hilfe um zu sehen, was inspect ausgeben kann!
+?inspect
+```
+
+```{r two_factors-check}
+sol1 <- inspect(fit_two, 'cor.lv')
+sol2 <- inspect(fit_two, 'std')
+sol3 <- inspect(fit_two, 'std.lv')
+
+grade_result(
+  pass_if(~ identical(sol1, .result), 'Auf diesem Weg wird die Korrelationsmatrix der latenten Variablen ausgegeben und Sie haben einen schnellen Überblick. Das ist besonders nützlich, wenn Sie mit vielen latenten Variablen gleichzeitig arbeiten.'),
+  pass_if(~ identical(sol2, .result), 'Auf diesem Weg werden alle Modellparameter standardisiert und Sie erhalten die Ergebnisse in Matrizenform. Die latenten Korrelationen sind dann in der Matrix $psi enthalten. Faktorladungen in $lambda entsprechen hier der Korrelation zwischen latenter und manifester Variable.'),
+  pass_if(~ identical(sol3, .result), 'Auf diesem Weg werden die Modellparameter erzeugt, die Sie bekommen hätten, wenn die latenten Varianzen auf 1 fixiert gewesen wären, statt die erste Faktorladung auf 1 zu fixieren. Die Ergebnisse werden hier in Matrizenform ausgegeben. Weil die latenten Variablen dann z-Standardisiert sind, entsprechen die Werte in der Matrix $psi den latenten Korrelationen.'),
+  correct = 'Sehr gut!',
+  incorrect = 'Leider falsch. Gucken Sie noch einmal genau in den Abschnitt zu "what" in der Hilfe von inspect.',
+  glue_correct = '{.correct} {.message}',
+  glue_incorrect = '{.incorrect}')
+```
+
+### Parametertabelle & erweiterte Zusammenfassung {#paramaterEstimates}
+
+Bisher haben wir hauptsächlich mit `inspect` gearbeitet, um uns die Ergebnisse unserer Modelle detailliert anzugucken. In den allermeisten Fällen ist das auch der sinnvollste Ansatz. Trotzdem ist es immer gut auch Alternativen zu kennen. Die erste sinnvolle alternative Darstellungsart von Ergebnissen ist die Parametertabelle, die wir in `lavaan` über `paramaterEstimates` anfordern können. Für das zweifaktorielle Modell sieht diese so aus:
+
+```{r}
+parameterEstimates(fit_two)
+```
+
+```{r, echo = FALSE}
+para <- parameterEstimates(fit_two)
+```
+
+
+Per Voreinstellung bekommen wir damit einen Datensatz, der `r ncol(para)` Spalten hat und aus so vielen Zeilen besteht, wie unser Modell Parameter hat (in diesem Fall `r nrow(para)`). Die ersten drei Spalten (`r names(para)[1:3]`) sind dazu da, den Parameter zu kennzeichnen, der in dieser Zeile dargestellt wird. Dafür gibt `op` den *operator* - also die Art des Parameters - an. In Zeile eins steht da ein `=~` also eine Faktorladung. `lhs` steht für *left hand side* und gibt an, welche Variable links des *operators* steht - `rhs` ist dann logischerweise die *right hand side*. Dadurch, dass hier in drei Spalten des Datensatzes zwischen den Parametern unterschieden wird, können wir sehr einfach und schnell die uns schon bekannten Verfahren nutzen, um die Parameter aus den herauszufiltern, die uns interessieren. Unten wird die Parametertabelle in ein Objekt namens `para` abgelegt. Probieren Sie mal aus, sich für die Intercepts und Mittelwerte alle Spalten aus dieser Parametertabelle ausgeben zu lassen!
+
+```{r para, exercise = TRUE, exercise.eval = FALSE, exercise.setup = 'two_factors_prep'}
+# Parameter in Objekt ablegen
+para <- parameterEstimates(fit_two)
+```
+
+```{r para-hint-1}
+# Spezifische Elemetne werden in R mit [Zeile, Spalte] ausgewählt
+para[1, ]     # erste Zeile, alle Spalten
+para[, 1]     # erste Spalte, alle Zeilen
+```
+
+```{r para-hint-2}
+# Das logische "ist gleich" kann genutzt werden um einen Filter-Vektor zu erstellen
+letters[1:10] == 'c'
+```
+
+```{r para-hint-3}
+# Der lavaan Operator für Mittelwerte und Interceps ist '~1'
+```
+
+
+```{r para-check}
+sol <- para[para$op == '~1', ]
+
+grade_result(
+  pass_if(~ identical(sol, .result)),
+  correct = 'Richtig! Dieser Ansatz kann genutzt werden um die Parameter weiter zu verwenden, z.B. in Abbildungen.',
+  incorrect = 'Leider falsch.',
+  glue_correct = '{.correct}',
+  glue_incorrect = '{.incorrect}')
+```
+
+
+Über die Hilfe zu `parameterEstimates` können wir wieder sehen, welche Argumente diese Funktion entgegennimmt. Ein hilfreiches Argument ist z.B. `standardized = TRUE` mit dem wir *zusätzlich* zu den normalen Ergebnissen auch noch die standardisierten Modellergebnisse anfordern können.
+
+Wenn Sie die Aufbereitung von `summary` eigentlich mögen, aber sich wünschen würden, dass es einfach ein paar zusätzliche Informationen gäbe, können Sie auch die `summary` um zusätzliche Argumente ergänzen. Wir hatten das [vorhin schon für die Varianzaufklärung bzw. Reliabilität gemacht](#ErgebnisseZwei) - aber das Prinzip lässt sich auf viele Aspekte der Modellergebnisse erweitern. Folgendes sind ein paar interessante Argumente, um die wir die `summary` erweitern können:
+
+  - `rsquare = TRUE`: Varianzaufklärung bzw. Reliabilität
+  - `standardized = TRUE`: Standardisierte Parameter
+  - `ci = TRUE`: Konfidenzintervalle um die Parameterschätzer
+  - `fit.measures = TRUE`: Kennwerte zur Modellpassung bzw. -güte.
+
+Wenn wir die Ergebniszusammenfassung z.B. um Konfidenzintervalle erweitern, sieht der Abschnitt der Faktorladungen so aus:
+
+```{r, eval = FALSE}
+summary(fit_two, ci = TRUE)
+```
+```{r, echo = FALSE}
+abbrev(fit_two, 'Latent Variables', 'Covariances', ci = TRUE)
+```
+
+Probieren Sie gerne noch ein paar andere Möglichkeiten aus!
+
+```{r extended_summary, exercise = TRUE, exercise.setup = 'two_factors_prep', exercise.eval = FALSE}
+summary(fit_two)
+```
+
+Was genau es mit den Fit-Statistiken auf sich hat gucken wir uns im [nächsten Abschnitt](#ModelFit) an.
+
+
+## Model Fit {#ModelFit}
+
+Im [letzten Abschnitt hatten wir kurz die inhaltliche Modellimplikation besprochen](#TwoFactors) und dabei festgehalten, dass das zwei-Faktormodell die Behauptung aufstellt, dass der Zustimmung zu den Aussagen in Q2, Q7 und Q12 eine gemeinsame latente Variable zugrunde liegt und die Zustimmung zu den Aussagen in Q5, Q10 und Q15 von einer anderen, unterscheidbarer latenten Variable abhängt. Wie haltbar ist diese Aussage? Nach klassischer Popper'scher Vorstellung müssen wir eine Theorie aufstellen (unser Modell) diese mit der Empirie abgleichen (unsere Daten) und dann entscheiden, ob unsere Theorie verworfen werden muss oder beibehalten werden kann. Bei konfirmatorischer Faktorenanalyse und Strukturgleichungsmodellierung wird diese Entscheidung anhand des *Model Fits* getroffen.
+
+Wie Sie in der inhaltlichen Sitzung bereits erfahren haben, wird die Modellpassung über den Vergleich der modellimplizierten und der empirischen Kovarianzmatrix bestimmt. Wenn die empirische Kovarianzmatrix $\mathbf{S}$ zu stark von unserer Modellimplikation $\mathbf{\Sigma(\widehat{\theta})}$ abweicht, muss das Modell verworfen werden. Wie die beiden Matrizen aussehen können wir natürlich über `inspect` erfahren:
+
+```{r}
+# Empirische Matrix
+inspect(fit_two, 'sampstat')$cov
+
+# Modellimplizierte Matrix
+inspect(fit_two, 'cov.ov')
+```
+
+
+### $\chi^2$ Modeltest {#chisquare}
+
+Den meisten Fit-Statistiken liegt die Fitfunktion $F$ zugrunde. Üblicherweise werden CFAs mit dem maximum likelihood Verfahren geschätzt, sodass diese Fitfunktion als $F_{ML}[\mathbf{\Sigma(\widehat{\theta})}, \mathbf{S}]$ notiert wird. Wie Sie an der Notation sehen, gehen in diese Fitfunktion die beiden oben aufgeführten Matrizen ein. Ziel der Schätzung ist im Groben, dass die Wahrscheinlichkeit der Daten, gegeben unser Modell, maximiert wird. Um die Multiplikation, die notwendig ist um die Wahrscheinlichkeiten unabhängiger Zufallsereignisse zu bestimmen zu umgehen, wird in der Statstik lieber mit Logarithmen gearbeitet. Diese kann man einfach addieren, sodass das Problem vereinfacht wird ohne es wirklich zu ändern. Der Logarithmus der Likelihood wird dann einfach als LogLikelihood bezeichnet.
+
+Um alle möglichen Fit-Statistiken für ein Modell zu bestimmen, können wir wieder mit `inspect` arbeiten. Weil hier ein ziemlicher Wust aus Zahlen entsteht, legen wir das Ergebnis erst einmal in einem Objekt ab:
+
+```{r}
+modelfit <- inspect(fit_two, 'fit.measures')
+```
+
+Um jetzt z.B. die LogLikelihood aus diesem Objekt zu ziehen, können wir mit diese über eckige Klammern auswählen. Dazu können wir erst einmal gucken, welche Werte in dem Objekt abgespeichert sind:
+
+```{r}
+# Namen der Fitstatistiken
+names(modelfit)
+
+# LogLikelihood
+modelfit['logl']
+```
+
+Weil diese Zahl als solche relativ schlecht interpretierbar ist wurde etliche Möglichkeiten entwickelt um sie in Effektstärken oder in inferenzstatistische Prüfung der Modellpassung zu überführen. In fast allen dieser Maße wird dabei mit einem *unrestringierten* Referenzmodell verglichen. "Unrestringiert" heißt hier einfach, dass wir keine Einschränkungen in das Modell einführen - etwas dass wir im [Abschnitt zur Modellidentifikation](#Modellidentifikation) schon gesehen haben und als *saturiertes* oder *gerade identifiziertes* Modell bezeichnet hatten. Wie dort besprochen sind solche Modell nicht prüfbar, weil sie nur eine Umformulierung der Daten darstellen. Wenn wir so etwas aber als Referenz nutzen um unser Modell damit zu vergleichen kriegen wir eine Vorstellung davon, wie gut unser Modell ist. Wenn Sie die Namen der Werte in `modelfit` durchgucken, sehen Sie, dass die LogLikelihood des unrestringierten Modells als `unrestricted.logl` bezeichnet wird:
+
+```{r}
+# LogLikelihood unrestringiertes Modell
+modelfit['unrestricted.logl']
+```
+
+Beinahe als sei es dafür gemacht, folgt die doppelte Differenz dieser beiden LogLikelihoods einer uns bekannten Verteilung (der $\chi^2$-Verteilung) was uns erlaubt Inferenzstatistik zu betreiben, weil wir bei bekannten Verteilungen Ablehnungsbereiche definieren können. Die Form der $\chi^2$-Verteilung hängt, wie z.B. auch die klassische $t$-Verteilung von Freiheitsgraden ab. Die Freiheitsgrade, die bestimmen mit welcher Form der $\chi^2$-Verteilung wir die Differenz der LogLikelihoods prüfen können entspricht - Erneut beinahe auf magische Weise - genau der Differenz aus gegebenen Informationen und zu schätzenden Parametern des Modells. In `modelfit` sind diese Freiheitsgrade unter `df` (*degrees of freedom*) zu finden:
+
+```{r}
+modelfit['df']
+```
+
+Die $\chi^2$-Verteilung mit `r modelfit['df']` Freiheitsgraden sieht so aus:
+
+```{r, fig = TRUE, echo = FALSE}
+chi <- data.frame(x = seq(0, 40, .1))
+chi$y <- dchisq(chi$x, 8)
+chi$p <- pchisq(chi$x, 8)
+ggplot(chi, aes(x = x, y = y)) +
+  geom_line() + theme_minimal() +
+  labs(x = 'z-Wert', y = '') +
+  geom_ribbon(data = subset(chi, p > .95), aes(ymax = y), ymin = 0, fill = goethe_cols('blue'))
+```
+
+Der blau eingefärbte Bereich ist der Ablehnungsbereich bei einem $\alpha$-Fehlerniveau von 5%. Der kritische Wert liegt hier bei gerundet `r round(qchisq(.95, 8), 2)`. Wenn die doppelte Differenz der LogLikelihoods des unrestringierten und unseres Modells diesen kritischen Wert überschreitet muss also die Nullhypothese (unser Modell) verworfen werden:
+
+```{r}
+# Empirische Prüfgröße
+emp <- 2 * (modelfit['unrestricted.logl'] - modelfit['logl'])
+emp
+
+# p-Wert
+pchisq(emp, 8, lower.tail = FALSE)
+```
+
+In diesem Fall wird unser Modell also verworfen. Wie Ihnen bestimmt bewusst ist, können wir uns den Prozess der händischen Bestimmung des $p$-Wertes in `lavaan` auch sparen, weil der $\chi^2$-Test sowohl in `modelfit` als auch in der `summary` direkt mit ausgegeben wird:
+
+```{r}
+# Aus inspect:
+modelfit[c('chisq', 'df', 'pvalue')]
+
+# Aufruf des lavaan Objekts
+fit_two
+```
+
+Wir haben uns also leider nicht verrechnet, dieses Modell wird verworfen.
+
+
+### Deskriptive und relative Gütekriterien
+
+Wie jeder inferenzstatistischer Test ist auch bei der $\chi^2$-Modelltest von der Stichprobengröße abhängig. Komplexe Modelle, die an kleinen Stichproben geprüft werden müssen nicht verworfen werden, einfache Modelle, die an riesigen Stichproben ausprobiert werden, werden auch bei sehr kleinen Diskrepanzen zwischen Annahme und Realität verworfen. Weil prinzipiell nicht belohnt werden soll so wenige Informationen aus der Empirie heranzuziehen wie möglich, gibt es diverse Gütekriterien mit denen versucht wird die Beurteilung eines Modells von der Größe der Stichprobe unabhängig zu machen.
+
+Die bekanntesten Gütekriterien sind der RMSEA (root mean square error of approximation) und der SRMR (standardized root mean square residual). Der RMSEA stellt ist eine Skalierung von $F_{ML}$ anhand der Stichprobengröße welcher nur Werte von 0 oder größer annehmen kann. Der SRMR hingegen ist eine standardisierte Summe der Differenzen zwischen den beiden Matrizen $\mathbf{S}$ und $\mathbf{\Sigma(\widehat{\theta})}$, hängt also nicht direkt von $F_{ML}$ ab. Das hat den Vorteil, dass der SRMR auch bei anderen Schätzverfahren zum Einsatz kommen kann und trotzdem über verschiedene Situationen hinweg vergleichbar bleibt. Allerdings haben Studien gezeigt, dass der RMSEA eine höhere Trennschärfe hat um zwischen "guten" und "schlechten" Modellen zu unterscheiden. Für beide gilt: je höher der Werte, desto schlechter die Modellpassung. Auch diese beiden Kriterien sind in `modelfit` enthalten:
+
+```{r}
+modelfit[c('rmsea', 'srmr')]
+```
+
+Für beide wird häufig das Kriterium von $< .05$ als Daumenregel für gute Modellpassung angenommen. Deskriptiv scheint unser Modell anhand dieser Regeln also sehr gut zu sein.
+
+Als relative Gütekriterien haben Sie in der Theorie-Sitzung GFI, TLI und CFI kennengelernt. Allen drei ist gemeinsam, dass Sie als Vergleichsmodell nicht ein saturiertes bzw. unrestringiertes Modell nutzen, sondern das genaue Gegenteil: das Unabhängigkeitsmodell in dem alle Korrelationen der beobachteten Variablen auf 0 gesetzt werden. Statt also unser postuliertes Modell mit optimaler Passung zu vergleichen und uns nur unsere Fehler vorzuhalten, betrachten diese Kriterien das schlechtest mögliche Modell und geben eine Aussage darüber wie viel besser unser Modell ist. Suchen Sie sich die drei Fitkriterien aus `modelfit` heraus und entscheiden Sie, ob Sie das Modell anhand dieser Kriterien verwerfen würden!
+
+```{r cfi_prep}
+mod_two <- '
+  GC =~ Q2 + Q7 + Q12
+  CI =~ Q5 + Q10 + Q15'
+fit_two <- cfa(mod_two, conspiracy,
+  meanstructure = TRUE)
+modelfit <- inspect(fit_two, 'fit.measures')
+```
+
+```{r cfi, exercise = TRUE, exercise.setup = 'cfi_prep', exercise.eval = FALSE}
+
+```
+
+```{r cfi-hint-1}
+# Namen aller Fitstatistiken im Objekt
+names(modelfit)
+```
+
+### Individuelle Modellbeurteilung
+
+Die oben genannten Fitkriterien werden häufig anhand von Daumenregeln beurteilt. Wie bei allen Daumenregeln gilt auch bei diesen, dass sie nicht uneingeschränkt auf alle Situationen anwendbar sind und es meistens zu genaueren Aussagen führt, sich eine spezifische Situation anzugucken. In anderen Worten, wie für die Effektstärkemaße wie Cohens $d$ und $R^2$ gilt auch beim Modelfit, dass Sie die Grenzen aus den Daumenregeln nur dann nutzen sollten, wenn Sie hinsichtlich Ihres Forschungsgegenstandes komplett ahnungslos sind.
+
+Eine Möglichkeit ist es für eine spezifische Situation einfach spezifische Cut-Off Werte für die Fitstatistiken zu generieren. Die gängigen Cut-Off Werte wurden in Simulationsstudien ermittelt, die bestimmte Konstellationen bezüglich Modelltypen und -komplexität sowie Stichprobengröße machen. Wenn wir genau so eine Simulationsstudie für unsere spezifische Situation durchführen, erhalten wir auch für unsere Situation angepasst Cut-Off Kriterien. Damit wir die Simulation nicht selbst schreiben müssen, können wir einfach die `ezCutoffs` Funktion aus dem gleichnamigen Paket nutzen:
+
+```{r, eval = FALSE}
+library(ezCutoffs)
+cutoff <- ezCutoffs(mod_two, conspiracy)
+```
+```{r, echo = FALSE}
+load('./data/cutoff.rda')
+cat('Data Generation
+
+  |==================================================| 100% elapsed = 13s  ~  0s
+
+Model Fitting
+
+  |==================================================| 100% elapsed = 15s  ~  0s')
+```
+
+Die Funktion nimmt ein paar Argumente entgegen:
+
+  - `model`: das Modell, für das wir Cut-Offs generieren möchten
+  - `data`: Falls wir schon Daten haben, können wir sie hier angeben um einen einfachen Vergleich zwischen empirischen Werten und Cut-Off in einer Tabelle zu haben
+  - `n_obs`: Falls wir noch keine Daten haben, können wir hier angeben, wie groß unsere Stichproben sein soll
+
+Das Durchführen dauert ein paar Sekunden, weil per Voreinstellung nun 1000 neue Datensätze erzeugt werden auf die unser Modell dann auch 1000 mal angewandt werden muss. Darüber hinaus sei gesagt das, weil es sich hier um einen Zufallsprozess handelt, die Ergebnisse, die Sie erzeugen, wenn Sie die Analyse auf Ihrem Rechner durchführen nicht 100%ig deckungsgleich mit denen sein wird, die sie hier sehen.
+
+Um uns die neu entstandenen Cut-Off Werte anzusehen, können wir einfach das Objekt aufrufen:
+
+```{r}
+cutoff
+```
+
+Wir sehen hier, dass die Cut-Off Werte, die für unsere Situation erzeugt wurden sehr viel restriktiver sind, als die generellen Leitlinien. Für den RMSEA ergibt sich ein Cut-Off von ca. `r round(cutoff$summary[4, 5], 2)`, statt der üblichen 0.05, für den SRMR sogar `r round(cutoff$summary[5, 5], 2)`. Anhand dieser spezifischen Cut-Off Werte muss unser Modell abgelehnt werden.
+
+
+### Lokalisierung von Misfit in Kovarianzmatrizen {#Residuals}
+
+Die letzten beiden Abschnitte haben uns nur gezeigt, *dass* unser Modell nicht passt aber noch keine konkrete Aussage über das *Warum* zugelassen. Wenn wir ganz an den Anfang des Abschnitts zurück denken, dann hatten wir dort die beiden Kovarianzmatrizen gesehen, in denen sich die einzelnen Elemente mitunter ein wenig unterscheiden. `lavaan` kann uns die Differenz der beiden Matrizen natürlich auch direkt geben, indem wir die `residuals` der Kovarianzmatrix (`$cov`) inspizieren:
+
+```{r}
+inspect(fit_two, 'residuals')$cov
+```
+
+Leider haben Varianzen und Kovarianzen die ungünstige Eigenschaft, dass Sie keine leicht interpretierbare Skala haben. Wie immer hilft dann die Standardisierung. Diese können wir mit dem `residuals`-Befehl anfordern:
+
+```{r}
+residuals(fit_two, 'standardized')$cov
+```
+
+Die einzelnen Einträge können wir jetzt quasi als $z$-Werte interpretieren: wenn ein Wert vom Betrag also größer als 1.96 ist, ist der Unterschied zwischen Modellimplikation und Empirie an dieser Stelle auf einem $\alpha$-Fehlerniveau von 5% statistisch bedeutsam. Runden wir - weil wir mehrere Elemente gleichzeitig betrachten - mal auf 2 auf.
+
+Um jetzt besser interpretieren zu können, was uns diese Abweichungen sagen, hilft es die Matrix in vier grobe Teile aufzuteilen:
+
+  - Die Varianzen der Items in der Diagonale
+  - Die Kovarianzen zwischen den Items, die *malevolent global conspiracies* angehören
+  - Die Kovarianzen zwischen den Items, die *control of information* angehören
+  - Die Kovarianzen zwischen den Items, die unterscheidlichen Faktoren angehören
+
+Dazu legen die Matrix am besten in einem Objekt ab und gucken uns die Teile einzeln an:
+
+```{r}
+# Als Objekt anlegen
+resi <- residuals(fit_two, 'standardized')$cov
+
+# Varianzen in der Diagonale
+diag(resi)
+```
+
+Die Varianzen können durch das Modell also beinahe perfekt repliziert werden. Ein wenig anders sieht es z.B. bei den Kovarianzen zwischen den Items zu *malevolent global conspiracies* aus:
+
+```{r}
+resi[1:3, 1:3]
+```
+
+Hier ist die empirische Kovarianz deutlich größer als die Modellimplizierte. Was bedeutet das? Unser Modell behauptet, dass die Kovarianz zwischen Q7 und Q12 einfach die durch die Faktorladungen gewichtete Varianz der latenten Variable ist: $cov(Q7, Q12) = \lambda_7 \cdot \lambda_{12} \cdot var(GC)$. Das gilt für alle Kovarianzen zwischen den Items Q2, Q7 und Q12. Wenn diese Erwartung nicht der empirischen Beobachtung entspricht lässt sich das in etwa so interpretieren, dass die Items Q7 und Q12 mehr untereinander gemeinsam haben, als sie mit dem Item Q2 gemeinsam haben. Wenn wir uns die [Formulierungen der Aussagen](#Einfaktor) noch einmal vor Augen führen können wir versuchen einen inhaltlichen Grund für dieses Problem zu finden.
+
+Probieren Sie es doch am Besten selbst mal mit den Items aus, die als Manifestationen der latenten Variable *control of information* dargestellt werden. An welchen Stellen springt Ihnen hier Misfit ins Auge? Wenn Sie die [Itemformulierungen](#TwoFactors) betrachten - woran könnte das inhaltlich liegen?
+
+```{r, resi_prep}
+mod_two <- '
+  GC =~ Q2 + Q7 + Q12
+  CI =~ Q5 + Q10 + Q15'
+fit_two <- cfa(mod_two, conspiracy,
+  meanstructure = TRUE)
+resi <- residuals(fit_two, 'standardized')$cov
+```
+
+
+```{r resi, exercise = TRUE, exercise.setup = 'resi_prep'}
+
+```
+
+```{r resi-hint-1}
+# Die Varianzen und Kovarianzen zu CI-Items extrahieren:
+resi[4:6, 4:6]
+```
+
+```{r resi-hint-2}
+# Logische Matrix, ob etwas vom Betrag > 2 ist
+abs(resi[4:6, 4:6] > 2)
+```
+
+Für ein zweifaktorielles Modell wahrscheinlich relevanter ist der letzte Teil: die Kovarianzen zwischen Items, die nicht zum gleichen Faktor gehören. In der CFA, wie wir sie hier aufgebaut haben, wir impliziert, dass Item Q2 und Item Q5 nur deswegen zusammenhängen, weil es einen Zusammenhang zwischen den grundlegenden Überzeugungen *malevolent global conspiracies* und *control of information* gibt. Item Q5 fällt allerdings direkt zwei mal negativ auf:
+
+```{r}
+resi[4:6, 1:3]
+```
+
+Sowohl mit Q2 als auch mit Q7 scheint es höher zu korrelieren, als durch unser Modell abgebildet werden kann. Ein möglicher Grund könnte hier sein, dass Q5 in seiner Formulierung impliziert, dass die Täuschung im Auftrag der kleinen, geheimen Gruppen durchgeführt wird, welche der zentrale Bestandteil des Faktor *malevolent global conspiracies* sind. Q10 und Q15 hingegen, verdeutlichen, dass solche Täuschung aus Selbstinteresse geschieht. Es könnte also sein, dass Q5 nicht eindeutig genug auf *control of information* zurückzuführen ist, sondern auch Elemente der *malevolent global conspiracies* enthält und eigentlich eine Querladung auf diesen Faktor zugelassen werden müsste.
+
+### Lokalisierung von Misfit mit Modifikationsindizes
+
+Die standardisierten Residuen der Kovarianzmatrizen erlauben uns direkt und detailliert die Diskrepanz zwischen unserem Modell und den empirischen Daten zu beleuchten. Ein Problem besteht aber darin, dass wir uns dabei die rohe Information in der Kovarianzmatrix angucken, statt in der Sprache des Modells zu sehen, welche Parameter Probleme verursachen. Diesen Weg können wir gehen, wenn wir mit Modifikationsindizes arbeiten.
+
+Um Modifikationsindizes in `lavaan` zu ermitteln können wir mit `inspect(fit_two, 'modindices')` arbeiten. Wie schon bei den Residuen im letzten Abschnitt sind wir dabei aber in den Optionen etwas eingeschränkt, sodass es mehr Sinn macht den eigens dafür geschaffenen `modindices`-Befehl zu nutzen. Dieser nimmt ein paar Argumente entgegen, die das Lesen der Ergebnisse erheblich vereinfachen können:
+
+  - `object`: Das Ergebnisobjekt unserer `cfa`
+  - `sort.`: Ob die Ergebnisse nach Größe des Modifikationsindex sortiert sein sollen
+  - `minimum.value`: Grenze die Modifikationsindizes überschreiten müssen um angezeigt zu werden
+  - `filter`: Parameter auf die der Output beschränkt werden soll (z.B. `'=~'` für Faktorladungen)
+
+Um ein bisschen besser zu verstehen, was diese Argumente bewirken, gucken wir uns am besten das Ergebnis mal an:
+
+```{r}
+modindices(fit_two, sort. = TRUE, minimum.value = 5)
+```
+```{r, echo = FALSE}
+modi <- modindices(fit_two, sort. = TRUE, minimum.value = 5)
+```
+
+
+Die Ergebnistabelle beginnt wieder mit den gleichen drei Spalten, wie die [Tabelle der Parameter, die wir uns mit `paramaterEstimates` haben ausgeben lassen](#paramaterEstimates). Als nächste kommt mit `mi` die Spalte für die Modifikationsindizes. Dieser Index stellt eine Schätzung über die Veränderung des $\chi^2$-Wertes des Modells dar, wenn wir die Restriktion dieser Zeile lockern würden. Zur Erinnerung: der $\chi^2$-Wert des Modells ist `r round(fitmeasures(fit_two, 'chisq'), 2)`. Diesen Wert könnten wir um `r round(modi[1, 4], 2)` "Punkte" verringern, wenn wir unsere Annahmen über die Residualkovarianz zwischen Q10 und Q15 lockern würden. Im Modell wird die Annahme gemacht, dass die Q10 und Q15 deswegen korreliert sind, weil sie (zusammen mit Q5) *einen gemeinsamen* Faktor als Ursache haben. Die restliche Varianz in Q10 und Q15 wird als Messfehler definiert, welche im Verständnis der KTT per Definition unkorreliert sind. Der Modifikationsindex zeigt uns hier, dass die Annahme, dass es hier um unkorrelierte, pure Messfehler handelt sich in der Empirie eventuell nicht halten lässt.
+
+Die folgenden Spalten beziehen sich allesamt auf den *expected parameter change* (EPC). Die erste Variante ist unstandardisiert (also in der ersten Zeile eine Kovarianz). Der `sepc.lv` ist der Wert, wenn wir statt der 1. Faktorladungen die latenten Varianzen auf 1 fixieren würden (das verändert für Residualvarianzen überhaupt nichts). Der `sepc.all` ist der Wert, wenn alle Variablen im Modell standardisiert sind und entspricht in diesem Fall der Korrelation. Zu guter Letzt ist der `sepc.nox` der Wert, wenn alle Variable außer exogene manifeste Variablen standardisiert werden (in unserem Fall gibt es keine solche Variablen, also ist der Wert mit `sepc.all` identisch).
+
+Zusammengefasst heißt das Ergebnis für die 1. Zeile also: wenn wir die Residualkovarianz zwischen Q10 und Q15 zulassen, erwarten wir eine Verbesserung der $\chi^2$-Wertes um `r round(modi[1, 4], 2)` Einheiten und die resultierende Residualkorrelation sollte einen Wert von `r round(modi[1, 7], 2)` annehmen.
+
+Wenn Sie sich die volle Ausgabe der `modindices` angucken wollen, können Sie das folgende Fenster nutzen:
+
+```{r modind, exercise = TRUE, exercise.setup = 'two_factors_prep'}
+modindices(fit_two)
+```
+
+Alternativ zur Residualkorrelation zwischen Q10 und Q15 können wir auch die Querladung von Q5 zulassen. Beide Modifikationsindizes sind praktisch identisch. Das liegt daran, dass in beiden Fällen das Gleiche erreicht wird. Der Fehlpassung liegt das Problem zugrunde, dass Q10 und Q15 empirisch stärker korreliert sind, als das Modell zulässt (wie auch die `r round(resi[6,5],2)` zeigt, die wir als standardisiertes Residuum dieser Kovarianz im [letzten Abschnitt](#Residuals) gesehen hatten). Wenn wir die Residualkovarianz zwischen Q10 und Q15 zulassen, wird diesem Punkt direkt Rechnung getragen. Wenn wir die Querladung zulassen, erfolgt das Gleiche indirekt: die Querladung bewirkt, dass der GC Faktor aus Q5 auspartialisiert wird und der Rests vom CI Faktor beeinflusst wird Dieser Rest ist höher mit Q10 und Q15 korreliert, sodass deren Korrelation untereinander durch die unkorrlierten Anteile in Q5 nicht mehr nach unten gedrückt werden muss, um einen gemeinsamen Faktor zu erzeugen.
+
+### Modellvergleiche
+
+Wenn wir die Querladung im Modell zulassen, ergibt sich ein anderes Modell, als das von uns ursprünglich Postulierte. In Form des Pfaddiagramms sieht das dann so aus:
+
+<img src="images/cfa4.png" width="66%"/>
+
+Wir können dieses Modell wieder in zwei Zeilen definieren:
+
+```{r}
+# Modell
+mod_three <- '
+  GC =~ Q2 + Q7 + Q12 + Q5
+  CI =~ Q5 + Q10 + Q15'
+
+# Schätzung
+fit_three <- cfa(mod_three, conspiracy,
+  meanstructure = TRUE)
+```
+```{r crossloading_prep}
+# Modell
+mod_three <- '
+  GC =~ Q2 + Q7 + Q12 + Q5
+  CI =~ Q5 + Q10 + Q15'
+
+# Schätzung
+fit_three <- cfa(mod_three, conspiracy,
+  meanstructure = TRUE)
+```
+
+Wenn Sie möchten können Sie sich die Modellergebnisse hier im Detail angucken und sehen, was sich [gegenüber dem Zweifaktormodell](#TwoFactors) verändert hat:
+
+```{r resi_three, exercise = TRUE, exercise.setup = 'crossloading_prep', exercise.lines = 5}
+
+```
+
+```{r resi_three-hint-1}
+# Allgemeine Zusammenfassung
+summary(fit_three)
+```
+
+```{r resi_three-hint-2}
+# Modellpassung
+inspect(fit_three, 'fitmeasures')
+```
+
+Wenn wir uns mit `inspect(fit_three, 'fitmeasures')` oder `fitmeasures(fit_three)` die Fitstatistiken dieses Modells ausgeben lassen, erhalten wir im direkten Vergleich mit dem Modell ohne Querladungung folgendes Bild:
+
+```{r, echo = FALSE, results = 'asis'}
+fitcomp <- rbind(fitmeasures(fit_three, c('logl', 'chisq', 'df', 'pvalue', 'rmsea', 'srmr', 'cfi', 'tli')),
+fitmeasures(fit_two, c('logl', 'chisq', 'df', 'pvalue', 'rmsea', 'srmr', 'cfi', 'tli')))
+fitcomp <- as.data.frame(fitcomp)
+names(fitcomp) <- c('LogLikelihood', '$\\chi^2$', '$df$', '$p$', 'RMSEA', 'SRMR', 'CFI', 'TLI')
+rownames(fitcomp) <- c('Mit Querladung', 'Ohne Querladung')
+kable(fitcomp, digits = c(1, 3, 0, 3, 3, 3, 3, 3) , align = 'c')
+```
+
+Wie wir sehen schneidet das Modell mit Querladung bei jeder Fitstatistik besser ab. Darüber hinaus muss das Modell auch anhand des $\chi^2$-Tests nicht mehr verworfen werden. Aber ist dieser Unterschied im Vergleich zum Modell ohne Querladung statistisch bedeutsam? Oder statistisch korrekt formuliert: müssen wir die Annahme, dass die Querladung exakt 0 ist (es also keine Querladung gibt) verwerfen? Für den direkten Vergleich zweier geschachtelter Modell haben Sie im Theorie-Abschnitt schon den *Likelihood-Ratio Test* kennengelernt.
+
+Wie der Name verrät werden bei diesem Test die Likelihoods der beiden Modell verglichen. Genau genommen passiert bei diesem Test exakt das, was wir schon beim [einfach $\chi^2$-Test gesehen haben](#chisquare): ein Modell wird mit einem anderen, weniger restriktiven Modell verglichen, indem die Differenz der beiden LogLikelihoods bestimmt wird. Dieser Differenz folgt auch hier der $\chi^2$-Verteilung, jetzt allerdings mit der Differenz der Freiheitsgrade der beiden Modelle als $df$.
+
+In diesem Fall ist das Modell mit Querladung das weniger strenge oder *unrestringierte* Modell ($M_U$). Das Modell ohne Querladung ist ein Sonderfall dieses Modells, weil es die Querladung auf den Wert 0 *restringiert* und wird daher als $M_R$ bezeichnet. Ob diese Restriktion beibehalten werden kann, können wir mit dem Likelihood-Ratio oder auch Modelldifferenztest prüfen. In `lavaan` brauchen wir dafür lediglich beide Ergebnisobjekte und den `lavTestLRT`-Befehl:
+
+```{r}
+lavTestLRT(fit_two, fit_three)
+```
+
+Die Tabelle beginnt zunächst mit den Freiheitsgraden `df` der beiden Modelle. Darauf folgen zwei Informationskriterien, *Akaike's Information Criterion* (`AIC`) und das *Bayesian Information Criterion* (`BIC`). Für beide ist zunächst folgende Daumenregel ausreichend: kleinere Werte sind bessere Werte. Dann kommt noch einmal der $\chi^2$-Wert der einzelnen Modelle (`Chisq`). Die restlichen drei Spalten befassen sich direkt mit dem Ergebnis des Differenztests: `Chisq Diff` ist der Unterschied der $\chi^2$-Werte (bzw. $-2$-mal die Differenz der LogLikelihoods), `Df diff` ist der Unterschied der Freiheitsgrade und `Pr(>Chisq)` ist der $p$-Wert.
+
+In diesem Fall hat der Modellvergleich einen Freiheitsgrad, weil `fit_two` genau *eine Restriktion* gegenüber `fit_three` vornimmt: die Querladung von Q5 wird auf 0 fixiert. Diese eine Restriktion macht `fit_two` um einen Freiheitsgrad sparsamer, weil es einen Parameter weniger gibt, der frei geschätzt werden muss.
+
+Der letzten Spalte können wir entnehmen, dass der Modellvergleich signifikant ausfällt. Das bedeutet, dass die Restriktionen in $M_R$ verworfen werden müssen und wir stattdessen $M_U$ nutzen sollten. Wäre der Vergleich nicht bedeutsam ausgefallen, könnten wir - aufgrund des Sparsamkeitsprinzips - $M_R$ beibehalten.
+
+Ein genereller Hinweis: in einigen Publikationen werden Sie lesen, dass der Likelihood-Ratio Test genutzt wurde, um zu prüfen, ob z.B. ein Einfaktor-Modell oder ein Zwei-Faktormodell einen Satz von Items besser abbildet. Diese Modellvergleiche sind mit dem LRT als problematisch einzustufen, weil die Likelihood-Differenz bei Restriktionen an den Grenzen des zulässigen Parameterraums (Varianzen gleich 0 setzen, Korrelationen auf 1 setzen, usw.) nicht der postulierten $\chi^2$-Verteilung folgt.
+
+Probieren Sie im folgenden den Prozess einmal selbst aus, indem Sie statt der Querladung die Residualkovarianz zulassen, die bei den Modifikationsindizes aufgetaucht war! Bedenken Sie, dass Sie nicht beides gleichzeitig zulassen können, sondern *statt* der Querladung die Residualkovarianz erlauben. Beenden Sie die Übung mit einem Modellvergleich zwischen diesem neuen Modell und dem restringierten Modell in `fit_two`!
+
+```{r resi_cov, exercise = TRUE, exercise.setup = 'two_factors_prep', exercise.eval = FALSE}
+mod_four <- ' ... '
+fit_four <- cfa(...)
+
+```
+
+```{r resi_cov-hint-1}
+# Kovarianzen werden in lavaan mit ~~ angesprochen
+# Das restringierte Modell ist
+mod_two <- '
+  GC =~ Q2 + Q7 + Q12
+  CI =~ Q5 + Q10 + Q15'
+```
+
+```{r resi_cov-hint-2}
+# Vergessen Sie nicht auch die Mittelwertsstruktur bei der Schätzung anzufordern
+fit_four <- cfa(mod_four, conspiracy,
+  meanstructure = TRUE)
+```
+
+```{r resi_cov-check}
+mod_four <- '
+  GC =~ Q2 + Q7 + Q12
+  CI =~ Q5 + Q10 + Q15
+
+  Q10 ~~ Q15'
+fit_four <- cfa(mod_four, conspiracy,
+  meanstructure = TRUE)
+sol <- lavTestLRT(fit_two, fit_four)
+
+grade_result(
+  pass_if(~ identical(sol, .result)),
+  correct = 'Sehr gut! Das Ergebnis dieses Vergleichs ist mit dem bezüglich der Querladung identisch! Wie geschildert liegt das daran, dass in beiden Fällen in gleichem Ausmaß ein stärkerer Zusammenhang zwischen Q10 und Q15 ermöglicht wird.',
+  incorrect = 'Leider falsch. Stellen Sie sicher, dass Sie die Residualkovarianz zwischen Q10 und Q15 zugelassen haben und dass Sie den Modellvergleich mit lavTestLRT durchführen!',
+  glue_correct = '{.correct}',
+  glue_incorrect = '{.incorrect}')
+```
 
 
 ## Appendix A: Hierarchie der Messmodelle {#AppendixA}
