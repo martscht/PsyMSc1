@@ -1166,7 +1166,7 @@ In der Abbildung sind die fünf typischen Messmodelle der klassischen Testtheori
 *Im Folgenden arbeiten wir mit ein paar fiktiven Daten zu dieser imaginären Prüfung. Die Daten sind ebenfalls im Paket enthalten, müssen aber zunächst geladen werden.*
 
 ```{r}
-data(emp, package = 'PsyMSc1')
+data('emp', package = 'PsyMSc1')
 ```
 
 Der Datensatz enthält lediglich drei Variablen:
