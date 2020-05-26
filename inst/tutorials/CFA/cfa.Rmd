@@ -22,7 +22,7 @@ library(ezCutoffs)
 library(knitr)
 
 data(conspiracy, package = 'PsyMSc1')
-data(emp, package = 'PsyMSc1')
+data(stat_test, package = 'PsyMSc1')
 knitr::opts_chunk$set(exercise.checker = gradethis::grade_learnr)
 source('startup.R')
 ```
@@ -1166,13 +1166,13 @@ In der Abbildung sind die fünf typischen Messmodelle der klassischen Testtheori
 *Im Folgenden arbeiten wir mit ein paar fiktiven Daten zu dieser imaginären Prüfung. Die Daten sind ebenfalls im Paket enthalten, müssen aber zunächst geladen werden.*
 
 ```{r}
-data('emp', package = 'PsyMSc1')
+data(stat_test, package = 'PsyMSc1')
 ```
 
 Der Datensatz enthält lediglich drei Variablen:
 
 ```{r}
-summary(emp)
+summary(stat_test)
 ```
 
 Die Werte stellen auf einer Skala von ca. -3 bis 3 die geschätzte Fähigkeit in drei verschiedenen Versionen des Tests dar.
@@ -1186,7 +1186,7 @@ Das am weitesten verbreitete Messmodell in der Psychologie ist das $\tau$-kongen
 mod1 <- 'stat =~ test1 + test2 + test3'
 
 # Schätzung
-fit1 <- cfa(mod1, emp,
+fit1 <- cfa(mod1, stat_test,
   meanstructure = TRUE)
 ```
 
@@ -1238,7 +1238,7 @@ Weil wir zur Skalierung unserer latenten Variable die erste Faktorladung auf 1 s
 mod2 <- 'stat =~ 1*test1 + 1*test2 + 1*test3'
 
 # Schätzung
-fit2 <- cfa(mod2, emp,
+fit2 <- cfa(mod2, stat_test,
   meanstructure = TRUE)
 ```
 
@@ -1299,7 +1299,7 @@ mod3 <- 'stat =~ 1*test1 + 1*test2 + 1*test3
   test3 ~ (alp)*1'
 
 # Schätzung
-fit3 <- cfa(mod3, emp,
+fit3 <- cfa(mod3, stat_test,
   meanstructure = TRUE)
 ```
 
@@ -1356,16 +1356,16 @@ In den Tipps finden Sie weitreichende Hinweise. Der letzte Tipp (Nummer 5) zeigt
 
 ```{r esspar_prep}
 mod1 <- 'stat =~ test1 + test2 + test3'
-fit1 <- cfa(mod1, emp, meanstructure = TRUE)
+fit1 <- cfa(mod1, stat_test, meanstructure = TRUE)
 
 mod2 <- 'stat =~ 1*test1 + 1*test2 + 1*test3'
-fit2 <- cfa(mod2, emp, meanstructure = TRUE)
+fit2 <- cfa(mod2, stat_test, meanstructure = TRUE)
 
 mod3 <- 'stat =~ 1*test1 + 1*test2 + 1*test3
   test1 ~ (alp)*1
   test2 ~ (alp)*1
   test3 ~ (alp)*1'
-fit3 <- cfa(mod3, emp, meanstructure = TRUE)
+fit3 <- cfa(mod3, stat_test, meanstructure = TRUE)
 ```
 
 ```{r esspar, exercise = TRUE, exercise.eval = FALSE, exercise.lines = 15, exercise.setup = 'esspar_prep'}
@@ -1388,7 +1388,7 @@ mod4 <- 'stat =~ 1*test1 + 1*test2 + 1*test3
 ```{r esspar-hint-3}
 # Damit das Modell mit den bisherigen Modellen verglichen
 # werden kann, muss es die Mittelwertsstruktur enthalten
-fit4 <- cfa(mod4, emp,
+fit4 <- cfa(mod4, stat_test,
   meanstructure = TRUE)
 ```
 
@@ -1405,7 +1405,7 @@ mod4 <- 'stat =~ 1*test1 + 1*test2 + 1*test3
   test2 ~~ (eps)*test2
   test3 ~~ (eps)*test3'
 
-fit4 <- cfa(mod4, emp,
+fit4 <- cfa(mod4, stat_test,
   meanstructure = TRUE)
 
 lavTestLRT(fit2, fit4)
@@ -1421,7 +1421,7 @@ mod4 <- 'stat =~ 1*test1 + 1*test2 + 1*test3
   test1 ~~ (eps)*test1
   test2 ~~ (eps)*test2
   test3 ~~ (eps)*test3'
-fit4 <- cfa(mod4, emp,
+fit4 <- cfa(mod4, stat_test,
   meanstructure = TRUE)
 ```
 
@@ -1440,7 +1440,7 @@ mod5 <- 'stat =~ 1*test1 + 1*test2 + 1*test3
   test2 ~~ (eps)*test2
   test3 ~~ (eps)*test3'
 
-fit5 <- cfa(mod5, emp,
+fit5 <- cfa(mod5, stat_test,
   meanstructure = TRUE)
 ```
 
@@ -1466,23 +1466,23 @@ Wir sehen also, dass wir in diesem Fall bei `fit3` den Schlussstrich ziehen soll
 
 ```{r compi_prep}
 mod1 <- 'stat =~ test1 + test2 + test3'
-fit1 <- cfa(mod1, emp, meanstructure = TRUE)
+fit1 <- cfa(mod1, stat_test, meanstructure = TRUE)
 
 mod2 <- 'stat =~ 1*test1 + 1*test2 + 1*test3'
-fit2 <- cfa(mod2, emp, meanstructure = TRUE)
+fit2 <- cfa(mod2, stat_test, meanstructure = TRUE)
 
 mod3 <- 'stat =~ 1*test1 + 1*test2 + 1*test3
   test1 ~ (alp)*1
   test2 ~ (alp)*1
   test3 ~ (alp)*1'
-fit3 <- cfa(mod3, emp, meanstructure = TRUE)
+fit3 <- cfa(mod3, stat_test, meanstructure = TRUE)
 
 mod4 <- 'stat =~ 1*test1 + 1*test2 + 1*test3
   test1 ~~ (eps)*test1
   test2 ~~ (eps)*test2
   test3 ~~ (eps)*test3'
 
-fit4 <- cfa(mod4, emp,
+fit4 <- cfa(mod4, stat_test,
   meanstructure = TRUE)
 
 mod5 <- 'stat =~ 1*test1 + 1*test2 + 1*test3
@@ -1495,7 +1495,7 @@ mod5 <- 'stat =~ 1*test1 + 1*test2 + 1*test3
   test2 ~~ (eps)*test2
   test3 ~~ (eps)*test3'
 
-fit5 <- cfa(mod5, emp,
+fit5 <- cfa(mod5, stat_test,
   meanstructure = TRUE)
 ```
 
