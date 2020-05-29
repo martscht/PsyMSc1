@@ -36,7 +36,11 @@ Loesungen_2 <- function(password) {
 #' @rdname Loesungen
 #' @export
 Loesungen_3 <- function(password) {
-  message('Leider ist die Sitzung noch nicht fertig :(.')
+  if (digest::digest(password) != "41f1470ac9d55f8f55254f21ec63fb71") {
+    stop('Leider haben Sie nicht das richtige Passwort eingegeben.', call. = FALSE)
+  }  else {
+    compile('CFA_lo')
+  }
 }
 
 #' @rdname Loesungen

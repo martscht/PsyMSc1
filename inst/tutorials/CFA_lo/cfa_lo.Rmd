@@ -1,0 +1,158 @@
+---
+title: "Sitzung 1: R Skripte zu den Aufgaben"
+output:
+  learnr::tutorial:
+    progressive: true
+    allow_skip: true
+    includes:
+      after_body: footer.html
+      in_header: header.html
+runtime: shiny_prerendered
+---
+
+```{r setup, include = FALSE}
+library(learnr)
+library(gradethis)
+library(shiny)
+library(lavaan)
+
+data(youth, package = 'PsyMSc1')
+knitr::opts_chunk$set(exercise.checker = gradethis::grade_learnr)
+```
+
+Im Folgenden finden Sie R-Skripte, die zur Lösung der Quiz-Aufgaben in der 3. Sitzung genutzt werden konnten. Bitte bedenken Sie, dass diese Skripte immer nur *unseren* Ansatz darstellen, um die Lösungen zu erzeugen. In R gibt es aber sehr häufig extrem viele unterschiedliche Wege um an das gleiche Ziel zu kommen.
+
+## Einfaktorielles Modell
+
+> Es wird angenommen, dass die fünf Aussagen zu relationalen Aggression ein eindimensionales Konstrukt erheben. Wie muss das Modell aussehen, wenn Sie es in lavaan aufschreiben und dabei die latente Variable ra nennen?
+
+```{r}
+mod <- 'ra =~ ra1 + ra2 + ra3 + ra4 + ra5'
+```
+
+CFAs werden in lavaan immer im muster
+
+```
+latente_variable =~ manifeste_variable + manifeste_variable + ...
+```
+
+notiert. Dabei ist `=~` das Zeichen, um eine latente Variable (links) zu definieren.
+
+## Modellschätzung
+
+> Wie muss der Befehl aussehen, um das Modell zur relationalen Aggression aus der letzten Aufgabe zu schätzen? Nehmen wir an, dass Sie das Modell in der Syntax mod genannt haben und dass Sie die Intercepts im Modell enthalten haben möchten.
+
+```{r}
+fit <- cfa(mod, youth, meanstructure = TRUE)
+```
+
+Modelle, die mit vereinfachter Syntax geschrieben sind, können in `lavaan` mit `cfa()` oder `sem()` geschätzt werden. Diese Befehle erwarten das Modell als erstes Argument (vorgegeben), dann den Datensatz (`youth`) als zweites. Um Intercepts im Modell ausgeben zu lassen, müssen wir mit `meanstructure = TRUE` die Mittelwertsstruktur in das Modell einschließen.
+
+## Modellpassung
+
+> Schätzen Sie das einfaktorielle Modell für die relationale Aggression (inklusive Mittelwertsstruktur). Ermitteln Sie $\chi^2$-Wert, Freiheitsgrade und dazugehörigen $p$-Wert. Wie Schätzen Sie in diesem Fall die Modellpassung, unter Berücksichtigung der Stichprobengröße, ein? (Gehen Sie von einem $\alpha$-Fehlerniveau von 5% aus.)
+
+```{r}
+model_fit <- inspect(fit, 'fit')
+model_fit[c('chisq', 'df', 'pvalue')]
+```
+
+Der $\chi^2$-Test prüft als $H_0$ die Gleichheit von modellimplizierter und empirischer Kovarianzmatrix der beobachteten Variablen. Wenn dieser signifikant ausfällt, ist es ausreichend unwahrscheinlich diese Daten zu beobachten, wenn das Modell das wahre wäre, um dieses Modell zu verwerfen.
+
+In Fällen mit so kleiner Stichprobe ist es besonders relevant auf den $\chi^2$-Wert zu achten, weil er eine strikte Prüfung des Modells darstellt, aber noch nicht durch übermäßige Power ungeeignet ist um eine globale Modellprüfung zu ermöglichen.
+
+## Modfikationsindizes
+
+> Nutzen Sie Modifikationsindizes um zu sehen, an welchen Stellen das Modell verbessert werden könnte. Finden Sie heraus, welche Modellrestriktion das größte Ausmaß an Modelmisfit verursacht. Welche Aussage können Sie hier machen?
+>
+> Gucken Sie sich noch einmal die Itemformulierungen genau an, um sich inhaltlich zu verdeutlichen, was hier die Ursache für Misfit sein könnte!
+
+```{r}
+residuals(fit, 'standardized')
+modindices(fit, sort = TRUE)
+```
+
+Der Modifikationsindex ist in diesem Fall mit ca. 20 Punkten am höchsten für die Residualkovarianz zwischen ra2 und ra4 (`ra2 ~~ ra4`). Der EPC deutet darauf hin, dass der eigentliche Wert bei 0.132 liegt. Weil dieser positiv ist und unser Modell eine Kovarianz von 0 postuliert wird der Zusammenhang zwischen ra2 und ra4 unterschätzt. Wenn Sie mit `residuals(fit, 'standardized')` die Abweichungen der Kovarianzmatrizen genauer inspizieren, sehen Sie auch hier, dass das Residuum positiv ist, der Zusammenhang vom Modell also unterschätzt wird.
+
+
+## Angepasstes Modell
+
+> Stellen Sie für die relationale Aggression folgendes Modell auf:
+> ```{r}
+ mod2 <- 'ra =~ ra1 + ra2 + ra3 + ra4 + ra5
+ ra2 ~~ ra4'
+ ```
+> und schätzen Sie das Modell anschließend (schließen Sie die Mittelwertstruktur in das Modell ein). Wie groß ist die Korrelation zwischen den Residuen von ra2 und ra4?
+
+```{r}
+mod2 <- 'ra =~ ra1 + ra2 + ra3 + ra4 + ra5
+  ra2 ~~ ra4'
+fit2 <- cfa(mod2, youth, meanstructure = TRUE)
+summary(fit2, std = TRUE)
+```
+
+Sie können die latente Korrelation auf unterschiedliche Weise ausgeben lassen. Am häufigsten werden die standardisierten Ergebnisse zur Zusammenfassung hinzugefügt.
+
+## Modellvergleich
+
+> Führen Sie einen Likelihood-Ratio Test durch, um die beiden Modelle aus den bisherigen Aufgaben direkt miteinander zu vergleichen. Welches Ergebnis erhalten Sie für diesen Vergleich?
+
+```{r}
+lavTestLRT(fit, fit2)
+```
+
+Wenn Sie die beiden Modelle mit `lavTestLRT` vergleichen erhalten sie eine Tabelle mit 7 Spalten. In den letzten drei sehen Sie die Werte bezüglich des Modellvergleichs, die in dieser Aufgabe gefragt waren.
+
+## Abschließendes Modell
+
+> Um das veränderte Modell nun auf seine globale Modellpassung zu untersuchen, nutzen Sie das ezCutoffs-Paket um anwendungsspezifische Cutoff-Werte zu generieren. Wie schätzen Sie hier abschließend die Modellpassung ein?
+
+```{r}
+library(ezCutoffs)
+ezCutoffs(mod2, youth)
+```
+
+In diesem Fall fallen die empirische Werte der Modellpassung allesamt besser aus als die simulierten Cutoff-Werte.
+
+## Modell für Empathie
+
+> Erstellen Sie zunächst ein einfaktorielles Modell für die fünf Items zur Empathie. Welches Item hat die höchste Reliabilität?  Wie lautet der $\chi^2$-Wert für dieses Modell?
+
+```{r}
+mod3 <- 'em =~ em1 + em2 + em3 + em4 + em5'
+fit3 <- cfa(mod3, youth, meanstructure = TRUE)
+summary(fit3, fit = TRUE, rsq = TRUE)
+```
+
+Die Reliabilität können Sie entweder mit `inspect(fit4, 'rsquare')` oder `summary(fit4, rsq = TRUE)` ausgeben lassen. Hier hat em5 den höchsten Wert (0.733). Der $\chi^2$-Wert wird in der `summary()` mit ausgegeben, Sie können ihn aber auch z.B. über in`inspect(fit4, 'fit')` abrufen.
+
+## Zweifaktorielles Modell
+
+> Stellen Sie das gemeinsame Modell für Empathie und relationale Aggression auf. Wie groß ist die Korrelation zwischen den beiden latenten Variablen?
+
+```{r}
+mod4 <- '
+  ra =~ ra1 + ra2 + ra3 + ra4 + ra5
+  em =~ em1 + em2 + em3 + em4 + em5'
+fit4 <- cfa(mod4, youth, meanstructure = TRUE)
+summary(fit4, std = TRUE)
+```
+
+Die Korrelation der latenten Variablen können Sie sich ausgeben lassen, wenn Sie die Ergebnisszusammenfassung mit `summary(fit4, std = TRUE)` um die standardisierten Ergebnisse erweitern lassen. Alternativ können Sie sich über `fit(fit4, 'cor.lv')` z.B. auch nur die latente Korrelationsmatrix ansehen.
+
+## Modellrestriktion
+
+> Prüfen Sie, ob empathisches Verhalten mit relational aggressivem Verhalten zusammenhängt, indem Sie ein Modell aufstellen, in dem die Korrelation auf 0 restringiert ist. Vergleichen Sie dieses Modell mit dem Modell, in dem die Korrelation zwischen beiden Faktoren frei geschätzt wird.
+
+```{r}
+mod5 <- '
+  ra =~ ra1 + ra2 + ra3 + ra4 + ra5
+  em =~ em1 + em2 + em3 + em4 + em5
+  ra ~~ 0*em'
+fit5 <- cfa(mod5, youth, meanstructure = TRUE)
+summary(fit5)
+
+lavTestLRT(fit4, fit5)
+```
+
+Wenn Sie dieses Modell schätzen und dann über den LRT mit dem vorherigen Modell (`mod4`) ohne die Restriktion vergleichen, erhalten Sie eine inferenzstatistische Prüfung des Zusammenhangs. Dieser Test fällt (bei einem $\alpha$-Fehlerniveau von 5%) signifikant aus, sodass geschlussfolgert werden muss, dass die beiden latenten Variablen bedeutsam zusammenhängen.
