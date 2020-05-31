@@ -1,0 +1,48 @@
+---
+title: "Sitzung 4: Pfadanalysen und Strukturgleichungsmodelle"
+output:
+  learnr::tutorial:
+    progressive: true
+    allow_skip: true
+    includes:
+      after_body: footer.html
+      in_header: header.html
+runtime: shiny_prerendered
+---
+
+```{r setup, include = FALSE}
+library(learnr)       # package to generate interactive HTML
+library(gradethis)    # grade Code from input in HTML
+library(shiny)        # nice appearance in R
+library(fontawesome)  # nice fonts
+library(corrplot)     # Korrelationsmatrix grafisch darstellen
+library(psych)        # EFA durchführen
+
+knitr::opts_chunk$set(exercise.checker = gradethis::grade_learnr)
+```
+
+
+
+## Einleitung zur Pfadanalysen und Strukturgleichungsmodellen (SEM)
+
+???
+
+Bevor wir mit den Analysen beginnen können, laden wir zunächst alle Pakete, welche wir im Folgenden benötigen werden.
+```{r, eval = F}
+library(corrplot) # Korrelationsmatrix grafisch darstellen
+library(lavaan)
+```
+
+Den gesamten R-Code, der in dieser Sitzung genutzt wird, können Sie [`r fontawesome::fa("download")` hier herunterladen](https://raw.githubusercontent.com/martscht/PsyMSc1/master/inst/scripts/EFA.R). 
+
+## Datensatz
+
+???
+
+
+
+## Literatur
+[Eid, M., Gollwitzer, M., & Schmitt, M. (2017).](https://hds.hebis.de/ubffm/Record/HEB366849158) *Statistik und Forschungsmethoden* (5. Auflage, 1. Auflage: 2010). Weinheim: Beltz. 
+
+
+* <small> *Blau hinterlegte Autorenangaben führen Sie direkt zur universitätsinternen Ressource.*
