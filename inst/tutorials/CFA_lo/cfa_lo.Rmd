@@ -133,7 +133,8 @@ Die Reliabilität können Sie entweder mit `inspect(fit4, 'rsquare')` oder `summ
 ```{r}
 mod4 <- '
   ra =~ ra1 + ra2 + ra3 + ra4 + ra5
-  em =~ em1 + em2 + em3 + em4 + em5'
+  em =~ em1 + em2 + em3 + em4 + em5
+  ra2 ~~ ra4'
 fit4 <- cfa(mod4, youth, meanstructure = TRUE)
 summary(fit4, std = TRUE)
 ```
@@ -148,6 +149,7 @@ Die Korrelation der latenten Variablen können Sie sich ausgeben lassen, wenn Si
 mod5 <- '
   ra =~ ra1 + ra2 + ra3 + ra4 + ra5
   em =~ em1 + em2 + em3 + em4 + em5
+  ra2 ~~ ra4
   ra ~~ 0*em'
 fit5 <- cfa(mod5, youth, meanstructure = TRUE)
 summary(fit5)
