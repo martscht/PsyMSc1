@@ -296,7 +296,7 @@ TE := IE + c
 so manipulieren, dass es auch die latente Ebene enthält. Messmodelle wurden mit `=~` bestimmt, wobei links davon die neu definierte latente Variable steht. Nennen Sie die latente Variable für Zeitdruck `ZD` (Items: `zd1`, `zd2` und `zd6`) und die latente Variable Emotionale Erschöpfung `BOEE` (Items: `bo1`, `bo6`, `bo12` und `bo19`; Achtung: ohne "s" - diese Variablen gibt es nämlich im Datensatz). Setzen Sie den exogenen Skalierer auf die latente Varianz und den endogenen Skalierer auf die erste Faktorladung (dies war der Default!). Inkludieren Sie auch die Berechnung des indirekten und des totalen Effekts mit den gleichen Bezeichungen. Schätzen Sie anschließend das Modell und schauen sich die Summary an.
 
 
-```{r exercise_model_SEM, , exercise = TRUE, exercise.setup = "exercise_setup1", exercise.eval = FALSE}
+```{r exercise_model_SEM, exercise = TRUE, exercise.setup = "exercise_setup1", exercise.eval = FALSE}
 model_sem_IE_TE <- '
 # Messmodelle
 ...
