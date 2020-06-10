@@ -35,7 +35,6 @@ Bevor wir mit den Analysen beginnen können, laden wir zunächst alle Pakete, we
 ```{r, eval = F}
 library(lavaan)
 library(semPlot) # grafische Darstellung von Pfadanalyse- und Strukturgleichungsmodellen
-library(semTools) # weitere Funktion für SEM
 ```
 
 Den gesamten R-Code, der in dieser Sitzung genutzt wird, können Sie [`r fontawesome::fa("download")` hier herunterladen](https://raw.githubusercontent.com/martscht/PsyMSc1/master/inst/scripts/EFA.R). 
@@ -327,7 +326,7 @@ ZD =~ ... + ...
 ...
 '
 
-fit_sem_IE_TE <- ...
+fit_sem_IE_TE <- 
 summary(fit_sem_IE_TE)
 ```
 
@@ -345,7 +344,7 @@ ZD ~~ 1*ZD
 ...
 '
 
-fit_sem_IE_TE <- ...
+fit_sem_IE_TE <- 
 summary(fit_sem_IE_TE)
 ```
 
@@ -363,7 +362,7 @@ BFs ~ ... + ...
 ...
 '
 
-fit_sem_IE_TE <- ...
+fit_sem_IE_TE <- 
 summary(fit_sem_IE_TE)
 ```
 
@@ -382,7 +381,7 @@ IE := a*b
 TE := ...
 '
 
-fit_sem_IE_TE <- ...
+fit_sem_IE_TE <- 
 summary(fit_sem_IE_TE)
 ```
 
@@ -402,7 +401,7 @@ IE := a*b
 TE := ...
 '
 
-fit_sem_IE_TE <- ...
+fit_sem_IE_TE <- 
 summary(fit_sem_IE_TE)
 ```
 
