@@ -315,7 +315,7 @@ fit_sem_IE_TE <- ...
 
 ```
 
-```{r exercise_model_SEM-hint-1, eval = F}
+```{r exercise_model_SEM-hint-1}
 model_sem_IE_TE <- '
 # Messmodelle
 ZD =~ ... + ...
@@ -333,7 +333,7 @@ fit_sem_IE_TE <- ...
 ```
 
 
-```{r exercise_model_SEM-hint-2, eval = F}
+```{r exercise_model_SEM-hint-2}
 model_sem_IE_TE <- '
 # Messmodelle
 ZD =~ NA*zd1 + ...
@@ -351,7 +351,7 @@ fit_sem_IE_TE <- ...
 ...
 ```
 
-```{r exercise_model_SEM-hint-3, eval = F}
+```{r exercise_model_SEM-hint-3}
 model_sem_IE_TE <- '
 # Messmodelle
 ZD =~ NA*zd1 + ...
@@ -370,7 +370,7 @@ fit_sem_IE_TE <- ...
 ...
 ```
 
-```{r exercise_model_SEM-hint-4, eval = F}
+```{r exercise_model_SEM-hint-4}
 model_sem_IE_TE <- '
 # Messmodelle
 ZD =~ NA*zd1 + ...
@@ -391,7 +391,7 @@ fit_sem_IE_TE <- ...
 ```
 
 
-```{r exercise_model_SEM-hint-5, eval = F}
+```{r exercise_model_SEM-hint-5}
 model_sem_IE_TE <- '
 # Messmodelle
 ZD =~ NA*zd1 + ...
@@ -411,7 +411,7 @@ fit_sem_IE_TE <- sem(model_sem_IE_TE, data = StressAtWork)
 ...
 ```
 
-```{r exercise_model_SEM-solution, eval = F}
+```{r exercise_model_SEM-solution}
 model_sem_IE_TE <- '
 # Messmodelle
 ZD =~ NA*zd1 + ...
