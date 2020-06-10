@@ -310,9 +310,9 @@ model_sem_IE_TE <- '
 '
 
 
-fit_sem_IE_TE <- ...
-...
 
+fit_sem_IE_TE <- ...
+summary(fit_sem_IE_TE)
 ```
 
 ```{r exercise_model_SEM-hint-1}
@@ -327,8 +327,8 @@ ZD =~ ... + ...
 ...
 '
 
-
-fit_sem_IE_TE <- 
+fit_sem_IE_TE <- ...
+summary(fit_sem_IE_TE)
 ```
 
 
@@ -345,9 +345,8 @@ ZD ~~ 1*ZD
 ...
 '
 
-
 fit_sem_IE_TE <- ...
-...
+summary(fit_sem_IE_TE)
 ```
 
 ```{r exercise_model_SEM-hint-3}
@@ -364,9 +363,8 @@ BFs ~ ... + ...
 ...
 '
 
-
 fit_sem_IE_TE <- ...
-...
+summary(fit_sem_IE_TE)
 ```
 
 ```{r exercise_model_SEM-hint-4}
@@ -384,9 +382,8 @@ IE := a*b
 TE := ...
 '
 
-
 fit_sem_IE_TE <- ...
-...
+summary(fit_sem_IE_TE)
 ```
 
 
@@ -405,9 +402,8 @@ IE := a*b
 TE := ...
 '
 
-
-fit_sem_IE_TE <- sem(model_sem_IE_TE, data = StressAtWork)
-...
+fit_sem_IE_TE <- ...
+summary(fit_sem_IE_TE)
 ```
 
 ```{r exercise_model_SEM-solution}
@@ -427,7 +423,7 @@ TE := ...
 
 
 fit_sem_IE_TE <- sem(model_sem_IE_TE, data = StressAtWork)
-summary(...)
+summary(fit_sem_IE_TE)
 ```
 
 
