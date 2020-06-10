@@ -311,7 +311,7 @@ model_sem_IE_TE <- '
 
 
 fit_sem_IE_TE <- ...
-summary(fit_sem_IE_TE)
+...
 ```
 
 ```{r exercise_model_SEM-hint-1}
@@ -327,7 +327,7 @@ ZD =~ ... + ...
 '
 
 fit_sem_IE_TE <- 
-summary(fit_sem_IE_TE)
+...
 ```
 
 
@@ -345,7 +345,7 @@ ZD ~~ 1*ZD
 '
 
 fit_sem_IE_TE <- 
-summary(fit_sem_IE_TE)
+...
 ```
 
 ```{r exercise_model_SEM-hint-3}
@@ -363,7 +363,7 @@ BFs ~ ... + ...
 '
 
 fit_sem_IE_TE <- 
-summary(fit_sem_IE_TE)
+...
 ```
 
 ```{r exercise_model_SEM-hint-4}
@@ -382,7 +382,7 @@ TE := ...
 '
 
 fit_sem_IE_TE <- 
-summary(fit_sem_IE_TE)
+...
 ```
 
 
@@ -401,8 +401,8 @@ IE := a*b
 TE := ...
 '
 
-fit_sem_IE_TE <- 
-summary(fit_sem_IE_TE)
+fit_sem_IE_TE <- sem(...)
+summary(...)
 ```
 
 ```{r exercise_model_SEM-solution}
@@ -588,7 +588,7 @@ TE := IE + c
 Wenn wir weiterhin die Defaulteinstellungen der Funktion `sem` nutzen wollen (1. Faktorladung = 1, etc.), dann müssen wir bei der Bennenung der Faktorladungen etwas aufpassen. Bspw. schätzen wir die erste Faktorladung von Zeitdruck frei via `NA*zd1`, um dies bezubehalten müssen wir dahinter noch einmal schreiben `(l1)*zd1`, wobei `l1` hier als Platzhalter für $\lambda_1$ stehen soll. Nun wollen wir, dass die anderen Faktorladungen äquivalent dazu sind. Bei Emotionaler Erschöpfung können wir es uns etwas leichter machen. Hier benutzten wir die erste Faktorladung als Skalierer. Wenn nun alle Faktorladungen gleich sein sollen, so können wir einfach den Präfix `1*` vor alle Faktorladungen schreiben, was zum äquivalenten Ergebnis kommt, als wenn wir vor alle bspw. `(l2)*` schreiben würden: alle Faktorladungen würden so per Default auf 1 gesetzt. Achtung, wenn wir hier auch `(l1)` verwendet hätten, so wären die Faktorladungen gleich mit denen des Zeitdruck, was wir allerdings nicht wollen. Die essentielle $\tau$-Äquivalenzannahme gilt nur pro latenter Variable.
 
 
-```{r exercise_model_SEM_tau, exercise = T, exercise.eval = FALSE, exercise.setup = "exercise_setup2"}
+```{r exercise_model_SEM_tau, exercise = TRUE, exercise.setup = "exercise_setup2", exercise.eval = FALSE}
 model_sem_IE_TE_tau <- '
 # Messmodelle
 ZD =~ NA*zd1 + zd2 + zd6
@@ -609,7 +609,7 @@ fit_sem_IE_TE_tau <- sem(model_sem_IE_TE_tau, StressAtWork)
 summary(fit_sem_IE_TE_tau, fit.measures = T)
 ```
 
-```{r exercise_model_SEM_tau-hint-1, eval = F}
+```{r exercise_model_SEM_tau-hint-1}
 model_sem_IE_TE_tau <- '
 # Messmodelle
 ZD =~ NA*zd1 + (l1)*zd1 + ...*zd2 + zd6
