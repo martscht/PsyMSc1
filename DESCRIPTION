@@ -2,7 +2,7 @@ Package: PsyMSc1
 Type: Package
 Title: Übungen für die Seminare im Sommersemester 2020
 Description: Diese Paket bündelt die Übungsskripte für die PsyMSc 1 Seminare.
-Version: 0.2.0
+Version: 0.4.0
 Date: 2020-03-26
 Authors@R: c(person("Schultze", "Martin", email = "schultze@psych.uni-frankfurt.de",
                     role = c("aut", "cre")),
