@@ -230,7 +230,7 @@ parameterEstimates(fit_paths_IE_TE_boot, ci = TRUE)
 ```
 
 ```{r, echo = F}
-load('.data/fit_paths_IE_TE_boot.RData')
+load('./data/fit_paths_IE_TE_boot.RData')
 cat("[...]")
 print(parameterEstimates(fit_paths_IE_TE_boot, ci = TRUE)[7:8,])
 cat("[...]")
@@ -542,7 +542,7 @@ parameterEstimates(fit_sem_IE_TE_boot, ci = TRUE)
 ```
 
 ```{r, echo = F}
-load('.data/fit_sem_IE_TE_boot.RData')
+load('./data/fit_sem_IE_TE_boot.RData')
 cat("[...]")
 print(parameterEstimates(fit_sem_IE_TE_boot, ci = TRUE)[21:22,])
 cat("[...]")
