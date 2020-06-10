@@ -44,7 +44,7 @@ Den gesamten R-Code, der in dieser Sitzung genutzt wird, können Sie [`r fontawe
 Der Datensatz `StressAtWork`, den wir im Folgenden untersuchen wollen ist eine Zusammenstellung aus mehreren Studien der Arbeits- und Organisationspsychologie Abteilung der Goethe-Universität, in welchen Call-Center-Mitarbeiter untersucht wurden. Wir können diesen wie gewohnt laden:
 
 ```{r}
-data("StressAtWork.rda", package = "PsyMSc1")
+data("StressAtWork", package = "PsyMSc1")
 ```
 
 
