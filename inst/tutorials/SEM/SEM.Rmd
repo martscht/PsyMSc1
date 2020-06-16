@@ -83,7 +83,7 @@ StressAtWork$BOEEs <- rowMeans(StressAtWork[,paste0("bo",c(1, 6, 12, 19))])
 StressAtWork$BFs <- rowMeans(StressAtWork[,paste0("bf",1:20)])
 ```
 
-Das Modell wird nun, ähnlich dem Regressionsmodell aus der ersten Sitzung, aufgestellt. In `lavaan` werden gerichtete Beziehung zwischen Variablen mit `~` dargestellt, wobei links der *Tilde* die abhängige Variable (das Kriterium) und rechts der *Tilde* die unabhängige Variable (der Prädiktor) steht. Für unser angenommenes Modell gibt es folgende Beziehung: Zeitdruck wirkt auf Emotionale Erschöpfung und auf Psychosomatische Beschwerden. Emotionale Erschöpfung wirkt auf Psychosomatische Beschwerden. Es muss folglich zwei Gleichungen geben: in einer Gleichung ist `BOEEs` die abhängige Variable und wird durch `ZDs` vorhergesagt. In der zweiten Gleichung ist `BFs` die abhängige Variable und wird  durch `BOEEs` und `ZDs` vorhergesagt.
+Hierbei hilft uns `paste0`, die Schreibweise abzukürzen: wir müssen nicht alle Itemnamen einzeln tippen, sondern die "Strings" werden automatisch erzeugt. Um dies genauer zu verstehen, könnten wir bspw. `paste0("zd",c(1, 2, 6))` einmal ausführen. Dies kommt zum gleichen Ergebnis, wie als wenn wir `c("zd1", "zd2", "zd6")` getippt hätten. Das Modell wird nun, ähnlich dem Regressionsmodell aus der ersten Sitzung, aufgestellt. In `lavaan` werden gerichtete Beziehung zwischen Variablen mit `~` dargestellt, wobei links der *Tilde* die abhängige Variable (das Kriterium) und rechts der *Tilde* die unabhängige Variable (der Prädiktor) steht. Für unser angenommenes Modell gibt es folgende Beziehung: Zeitdruck wirkt auf Emotionale Erschöpfung und auf Psychosomatische Beschwerden. Emotionale Erschöpfung wirkt auf Psychosomatische Beschwerden. Es muss folglich zwei Gleichungen geben: in einer Gleichung ist `BOEEs` die abhängige Variable und wird durch `ZDs` vorhergesagt. In der zweiten Gleichung ist `BFs` die abhängige Variable und wird  durch `BOEEs` und `ZDs` vorhergesagt.
 
 ```{r}
 model_paths <- '
@@ -157,7 +157,7 @@ semPaths(object = fit_paths, what = "model", layout = "tree2", rotation = 2,
          col = list(man = "skyblue"),  edge.label.cex=1, sizeMan = 5)
 ```
 
-Sie können die Argumente der Funktion `semPaths` nachlesen, indem sie `??semPaths` in einem neuen `R`-Studio Fenster ausführen und dann `semPlot::semPaths` in der Übersicht auswählen oder sie schauen sich die[Dokumentation online hier an](https://www.rdocumentation.org/packages/semPlot/versions/1.1.2/topics/semPaths).
+Sie können die Argumente der Funktion `semPaths` nachlesen, indem sie `??semPaths` in einem neuen `R`-Studio Fenster ausführen und dann `semPlot::semPaths` in der Übersicht auswählen oder sie schauen sich die [Dokumentation online hier an](https://www.rdocumentation.org/packages/semPlot/versions/1.1.2/topics/semPaths).
 
 ```{r exercise_semPaths_est, fig.align="center", fig.height=6,  exercise = TRUE, exercise.eval = FALSE, exercise.setup = "exercise_setup1"}
 semPaths(object = fit_paths, what = "est", layout = "tree2", rotation = 2, 
