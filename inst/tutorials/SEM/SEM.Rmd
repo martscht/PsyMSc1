@@ -611,7 +611,7 @@ _`curve = T` und `curvePivot = T` hat in diesem Modell **keinen Effekt**, da es 
 Durch Gleichsetzen von Parametern in Modellen können verschiedene Annahmen überprüft werden. Zum einen können wir so, wie auch schon im Appendix der vergangenen Sitzung angesprochen (`PsyMSc1::Sitzung_3()`), auf essentielle $\tau$-Äquivalenz prüfen. Auch kann eine Gruppierungvariable verwendet werden, um Unterschiede zwischen Gruppen zu untersuchen. Wir wollen uns nun Invarianz über hinweg Gruppen ansehen. Diese Analyseform wird unter Multi Sample Analysis (Multi-Gruppen-Analyse) zusammengefasst.
 
 ### Multi Sample Analysis
-Wir könnten uns bspw. fragen, ob die gleichen Beziehungen, so wie wir sie gerade beobachtet haben gleichermaßen für Männer und Frauen gelten. Im Datensatz `StressAtWork` ist die Variable `sex` enthalten. Hier sind Frauen mit `1` und Männer mit `2` kodiert. Wenn wir diese Variable als Gruppierung verwenden, können wir die Invarianz der Parameter über das Geschlecht untersuchen. Um die Gruppierung in das Modell mit aufzunehmen, können wir in `sem` einfach dem Argument `group` den Namen der Gruppierungsvariable übergeben.
+Wir könnten uns bspw. fragen, ob die gleichen Beziehungen, so wie wir sie gerade beobachtet haben gleichermaßen für Männer und Frauen gelten. Im Datensatz `StressAtWork` ist die Variable `sex` enthalten. Hier sind Frauen mit `1` und Männer mit `2` kodiert. Wenn wir diese Variable als Gruppierung verwenden, können wir die Invarianz der Parameter über das Geschlecht untersuchen. Um die Gruppierung in das Modell mit aufzunehmen, können wir in `sem` einfach dem Argument `group` den Namen der Gruppierungsvariable übergeben (hierbei sind die "Gänsefüßchen" wichtig!).
 
 ```{r, results = "hide"}
 fit_sem_IE_TE_MSA <- sem(model_sem_IE_TE, data = StressAtWork, group = "sex")
@@ -685,341 +685,7 @@ Bis auf die hinzukommenden indirekten und totalen Effekte:
 ```{r, echo = F}
 abbrev(X = fit_sem_IE_TE_MSA_abc, begin = "Defined Parameters", end = NULL, shift = 1)
 ```
-hat sich nichts am Output geändert. Wir haben ja auch nur Labels vergeben und neu definierte Parameter hinzugefügt, die allerdings, wie zuvor schon erwähnt, die Modellstruktur (und somit auch die $df$) nicht tangieren. Die totalen und die indirekten Effekte scheinen sich kaum über die Gruppen hinweg zu unterscheiden. Ein vollständig benanntes Modell entnehmen wir `model_sem_IE_TE_sex`. Wird dieses geschätzt, sehen wir, dass es keine Veränderung hinsichtlich Parameterschätzungen oder Modellfit gibt; lediglich alle Parameter wurden benannt. Hierbei wurde `l` als Faktorladung verwendet und dann wurden alle Faktorladungen nach einander durchnummeriert (wie genau hier vorgegangen wird, ist immer dem Anwender überlassen). Die Endungen `_1` und `_2` stehen jeweils für Gruppe 1 und 2, also Frauen und Männer. Demnach wäre `l3_2` die 3. Faktorladung in Gruppe 2 also die Faktorladung von `zd6` der Männer. Die Fehlervarianzen wurden mit `t` benannt und Die Interzepts mit `i`. Außerdem können wir eine Art Effektkodierung bei den Mittelwerten der latenten Variablen vornehmen indem wir bspw. für Zeitdruck Folgendes vorgeben: `ZD~c(0,li1)*1`, für latenten Interzept 1. Hier ist es nun so, dass aus Identifikationsgründen der erste Interzept auf 0 gesetzt werden muss, mit dem zweiten allerdings, sind wir in der Lage zu Untersuchen, ob sich die latenten Mittelwerte von einander unterscheiden (genau dann, wenn der latente Interzept der zweiten Gruppe von 0 verschieden ist).
-
-
-
-```{r}
-model_sem_IE_TE_sex <- '
-# Messmodelle
-ZD =~ zd1 + c(l2_1, l2_2)*zd2 + c(l3_1, l3_2)*zd6
-BOEE =~ bo1 + c(l5_1, l5_2)*bo6 + c(l6_1, l6_2)*bo12 + c(l7_1, l7_2)*bo19
-
-# Fehlervarianzen
-zd1 ~~ c(t1_1, t1_2)*zd1
-zd2 ~~ c(t2_1, t2_2)*zd2
-zd6 ~~ c(t3_1, t3_2)*zd6
-
-bo1 ~~ c(t4_1, t4_2)*bo1
-bo6 ~~ c(t5_1, t5_2)*bo6
-bo12 ~~ c(t6_1, t6_2)*bo12
-bo19 ~~ c(t7_1, t7_2)*bo19
-
-# Interzepts
-zd1 ~ c(i1_1, i1_2)*1
-zd2 ~ c(i2_1, i2_2)*1
-zd6 ~ c(i3_1, i3_2)*1
-
-bo1 ~ c(i4_1, i4_2)*1
-bo6 ~ c(i5_1, i5_2)*1
-bo12 ~ c(i6_1, i6_2)*1
-bo19 ~ c(i7_1, i7_2)*1
-
-# latente Interzepts (kappas)
-BFs ~ c(I8_1, I8_2)*1 # eig. manifest
-
-
-# Strukturmodell
-BOEE ~ c(a1, a2)*ZD
-BFs ~  c(b1, b2)*BOEE + c(c1,c2)*ZD
-
-BOEE ~~ c(p1_1, p1_2)*BOEE
-BFs ~~ c(p2_1, p2_2)*BFs
-
-# Neue Parameter
-IE1 := a1*b1
-TE1 := IE1 + c1
-
-IE2 := a2*b2
-TE2 := IE2 + c2
-'
-
-fit_sem_IE_TE_sex <- sem(model_sem_IE_TE_sex, data = StressAtWork, group = "sex")
-summary(fit_sem_IE_TE_sex)
-```
-
-Außerdem schauen wir uns an, was passiert, wenn wir dieses Modell grafisch darstellen wollen. `intercepts = F` und `ask = F` stellen ein, dass die Grafik ohne Interzepts dargestellt werden soll und dass wir nicht mit der Konsole interagieren wollen, um bspw. zuerst Gruppe 1 zu sehen.
-
-```{r, fig.align="center", fig.height=6}
-semPaths(fit_sem_IE_TE_sex, panelGroups = T, layout = "tree2", rotation = 2, intercepts = F, ask = F, edge.label.cex=1.2, sizeMan = 6, sizeLat = 10)
-```
-
-Wir wollen nun verschiedene Arten von Invarianz testen. Diese sind in einander geschachtelt, sollten also nach einander getestet werden. Gilt die vorherige nicht, so müssen wir auch nicht die nächste testen.
-
-#### Konfigurale Invarianz
-Bei der konfiguralen Invarianz geht es darum, dass in beiden Gruppen die gleichen Modelle aufgestellt werden. Gilt diese Annahme bereits nicht, so macht es keinen Sinn das Modell weiter einzuschränken und Parameter über die Gruppen zu restringieren. Glücklicherweise passt das Modell zu den Daten, in welchem das Modell für das Geschlecht jeweils geschätzt wurde. Diese Modell entspricht unserem Modell `model_sem_IE_TE_sex`, welches durch die Daten nicht verworfen wird. 
-
-#### Metrische Invarianz
-Unter metrischer Invarianz verstehen wir, dass die Faktorladungen ($\lambda$) über die Gruppen hinweg gleich sind. Somit ist der Anteil jedes Item, der auf die latenten Variablen zurückzuführen ist, über die Gruppen hinweg gleichen. Wir erreichen dies, indem wir die Faktorladungen über die Gruppen hinweg gleich nennen. Bspw. wird aus `c(l1_1, l1_2)*zd1` `c(l1, l1)*zd1`:
-
-```{r, results = "hide"}
-model_sem_IE_TE_sex_metrisch <- '
-# Messmodelle
-ZD =~ zd1 + c(l2, l2)*zd2 + c(l3, l3)*zd6
-BOEE =~ bo1 + c(l5, l5)*bo6 + c(l6, l6)*bo12 + c(l7, l7)*bo19
-
-# Fehlervarianzen
-zd1 ~~ c(t1_1, t1_2)*zd1
-zd2 ~~ c(t2_1, t2_2)*zd2
-zd6 ~~ c(t3_1, t3_2)*zd6
-
-bo1 ~~ c(t4_1, t4_2)*bo1
-bo6 ~~ c(t5_1, t5_2)*bo6
-bo12 ~~ c(t6_1, t6_2)*bo12
-bo19 ~~ c(t7_1, t7_2)*bo19
-
-# Interzepts
-zd1 ~ c(i1_1, i1_2)*1
-zd2 ~ c(i2_1, i2_2)*1
-zd6 ~ c(i3_1, i3_2)*1
-
-bo1 ~ c(i4_1, i4_2)*1
-bo6 ~ c(i5_1, i5_2)*1
-bo12 ~ c(i6_1, i6_2)*1
-bo19 ~ c(i7_1, i7_2)*1
-
-# latente Interzepts (kappas)
-BFs ~ c(I8_1, I8_2)*1 # eig. manifest
-
-
-# Strukturmodell
-BOEE ~ c(a1, a2)*ZD
-BFs ~  c(b1, b2)*BOEE + c(c1,c2)*ZD
-
-BOEE ~~ c(p1_1, p1_2)*BOEE
-BFs ~~ c(p2_1, p2_2)*BFs
-
-# Neue Parameter
-IE1 := a1*b1
-TE1 := IE1 + c1
-
-IE2 := a2*b2
-TE2 := IE2 + c2
-'
-
-fit_sem_IE_TE_sex_metrisch <- sem(model_sem_IE_TE_sex_metrisch, data = StressAtWork, group = "sex")
-summary(fit_sem_IE_TE_sex_metrisch)
-```
-
-Dem Output entnehmen wir, dass nun die Faktorladungen über die Gruppen hinweg gleich sind:
-
-```{r, echo = F}
-abbrev(X = fit_sem_IE_TE_sex_metrisch, begin = "Group 1", end = "Regression")
-
-abbrev(X = fit_sem_IE_TE_sex_metrisch, begin = "Group 2", end = "Regression")
-```
-
-Um nun zu prüfen, ob diese Restrinktion den Modellfit signifikant verschlechtert hat, verwenden wir wieder den Likelihood Ratio Test.
-
-```{r, eval = F}
-lavTestLRT(fit_sem_IE_TE_sex_metrisch, fit_sem_IE_TE_sex)
-```
-
-```{r, echo = F}
-res_metrisch <- lavTestLRT(fit_sem_IE_TE_sex_metrisch, fit_sem_IE_TE_sex)
-print(res_metrisch)
-```
-
-Die $\chi^2$-Differenz ist klein (`r round(res_metrisch[[5]][2], 3)`) und der p-Wert zeigt an, dass es sich hier um keine signifikante Verschlechterung des Modells handelt p = `r round(res_metrisch[[7]][2], 3)`. Die Null-Hypothese, dass die Faktorladungen über das Geschlecht hinweg gleich sind, wird somit nicht verworfen.
-
-#### Skalare Invarianz
-Als nächsten wollen wir prüfen, ob zusätzlich zu den Faktorladungen auch die Interzepte ($\tau$) über die Gruppen hinweg gleich sind (insgesamt also $\lambda$s und $\tau$s gleich über die Gruppen hinweg). Dazu passen wir erneut unser Modell an. Hierbei ist zu beachten, dass wir nicht das Interzept von `BFs` über die Gruppen hinweg gleichsetzten, da sich die Interzepte auf die manifesten Variablen beziehen, wir `BFs` hier allerdings wie eine latente Variable behandeln wollen. Eine Besonderheit der skalaren Invarianz ist, dass sobald wir die Interzepte über die Gruppen hinweg gleichsetzten, haben wir Freiheitsgrade, mit welchen wir die latenten Interzepte von `ZD` und `BOEE` schätzen können. Dies ist  dann eine Art Effektkodierung, wobei der Mittelwert der einen Gruppe auf 0 gesetzt wird und in der anderen Gruppe wird dann die Abweichung zu dieser Gruppe mitgeführt. Wir wollen dies auch mit aufnehmen, um zu untersuchen, ob ggf. es Unterschiede hinsichtlich der latenten Mittelwerte gibt via `ZD~c(li1_1,li1_2)*1` und `BOEE~c(li1_1,li1_2)*1` und den Nebenbedingungen, dass der erste Eintrag jeweils 0 ist: `li1_1 == 0` und `li2_1 == 0`. 
-
-```{r, results = "hide"}
-model_sem_IE_TE_sex_skalar <- '
-# Messmodelle
-ZD =~ zd1 + c(l2, l2)*zd2 + c(l3, l3)*zd6
-BOEE =~ bo1 + c(l5, l5)*bo6 + c(l6, l6)*bo12 + c(l7, l7)*bo19
-
-# Fehlervarianzen
-zd1 ~~ c(t1_1, t1_2)*zd1
-zd2 ~~ c(t2_1, t2_2)*zd2
-zd6 ~~ c(t3_1, t3_2)*zd6
-
-bo1 ~~ c(t4_1, t4_2)*bo1
-bo6 ~~ c(t5_1, t5_2)*bo6
-bo12 ~~ c(t6_1, t6_2)*bo12
-bo19 ~~ c(t7_1, t7_2)*bo19
-
-# Interzepts
-zd1 ~ c(i1, i1)*1
-zd2 ~ c(i2, i2)*1
-zd6 ~ c(i3, i3)*1
-
-bo1 ~ c(i4, i4)*1
-bo6 ~ c(i5, i5)*1
-bo12 ~ c(i6, i6)*1
-bo19 ~ c(i7, i7)*1
-
-# latente Interzepts (kappas)
-BFs ~ c(I8_1, I8_2)*1 # eig. manifest
-ZD ~ c(li1_1,li1_2)*1
-BOEE ~ c(li2_1,li2_2)*1
-
-# Strukturmodell
-BOEE ~ c(a1, a2)*ZD
-BFs ~  c(b1, b2)*BOEE + c(c1,c2)*ZD
-
-BOEE ~~ c(p1_1, p1_2)*BOEE
-BFs ~~ c(p2_1, p2_2)*BFs
-
-# Neue Parameter
-IE1 := a1*b1
-TE1 := IE1 + c1
-
-IE2 := a2*b2
-TE2 := IE2 + c2
-
-# Nebenbedingungen
-li1_1 == 0
-li2_1 == 0
-'
-
-fit_sem_IE_TE_sex_skalar <- sem(model_sem_IE_TE_sex_skalar, data = StressAtWork, group = "sex")
-```
-
-Diesmal wollen wir direkt den Modellvergleich durchführen:
-
-```{r, eval = F}
-lavTestLRT(fit_sem_IE_TE_sex_skalar, fit_sem_IE_TE_sex_metrisch)
-```
-
-```{r, echo = F}
-res_skalar <- lavTestLRT(fit_sem_IE_TE_sex_skalar, fit_sem_IE_TE_sex_metrisch)
-print(res_skalar)
-```
-
-Die $\chi^2$-Differenz ist erneut klein (`r round(res_skalar[[5]][2], 3)`) und der p-Wert zeigt auch hier an, dass es sich um keine signifikante Verschlechterung des Modells handelt p = `r round(res_skalar[[7]][2], 3)`. Die Null-Hypothese, dass die Interzepte über die Faktorladungen hinaus über das Geschlecht hinweg gleich sind, wird somit nicht verworfen.
-
-#### Strikte Invarianz
-Unter strikter Invarianz verstehen wir, dass zusätzlich zu den Faktorladungen und den Interzepten auch die Residualvarianzen ($\theta$) gleich sind (insgesamt also $\lambda$s, $\tau$s und $\theta$s gleich über die Gruppen hinweg). Wir passen entsprechend das Modell an:
-
-```{r, results = "hide"}
-model_sem_IE_TE_sex_strikt <- '
-# Messmodelle
-ZD =~ zd1 + c(l2, l2)*zd2 + c(l3, l3)*zd6
-BOEE =~ bo1 + c(l5, l5)*bo6 + c(l6, l6)*bo12 + c(l7, l7)*bo19
-
-# Fehlervarianzen
-zd1 ~~ c(t1, t1)*zd1
-zd2 ~~ c(t2, t2)*zd2
-zd6 ~~ c(t3, t3)*zd6
-
-bo1 ~~ c(t4, t4)*bo1
-bo6 ~~ c(t5, t5)*bo6
-bo12 ~~ c(t6, t6)*bo12
-bo19 ~~ c(t7, t7)*bo19
-
-# Interzepts
-zd1 ~ c(i1, i1)*1
-zd2 ~ c(i2, i2)*1
-zd6 ~ c(i3, i3)*1
-
-bo1 ~ c(i4, i4)*1
-bo6 ~ c(i5, i5)*1
-bo12 ~ c(i6, i6)*1
-bo19 ~ c(i7, i7)*1
-
-# latente Interzepts (kappas)
-BFs ~ c(I8_1, I8_2)*1 # eig. manifest
-ZD ~ c(li1_1,li1_2)*1
-BOEE ~ c(li2_1,li2_2)*1
-
-# Strukturmodell
-BOEE ~ c(a1, a2)*ZD
-BFs ~  c(b1, b2)*BOEE + c(c1,c2)*ZD
-
-BOEE ~~ c(p1_1, p1_2)*BOEE
-BFs ~~ c(p2_1, p2_2)*BFs
-
-# Neue Parameter
-IE1 := a1*b1
-TE1 := IE1 + c1
-
-IE2 := a2*b2
-TE2 := IE2 + c2
-
-# Nebenbedingung
-li1_1 == li1_2
-li2_1 == li2_2
-'
-
-fit_sem_IE_TE_sex_strikt <- sem(model_sem_IE_TE_sex_strikt, data = StressAtWork, group = "sex")
-```
-
-Wenn wir nun den Modellvergleich zwischen dem skalar invarianten und dem strikt invarianten Modell durchführen     
-```{r, eval = F}
-lavTestLRT(fit_sem_IE_TE_sex_strikt, fit_sem_IE_TE_sex_skalar)
-```
-
-```{r, echo = F}
-res_strikt <- lavTestLRT(fit_sem_IE_TE_sex_strikt, fit_sem_IE_TE_sex_skalar)
-print(res_strikt)
-```
-
-erhalten wir wieder eine kleine $\chi^2$-Differenz  (`r round(res_strikt[[5]][2], 3)`) und der p-Wert zeigt auch hier an, dass es sich um keine signifikante Verschlechterung des Modells handelt p = `r round(res_strikt[[7]][2], 3)`. Die Null-Hypothese, dass die Residualvarianzen über die Faktorladungen und Interzepte hinaus über das Geschlecht hinweg gleich sind, wird somit nicht verworfen.
-
-#### Strukturinvarianz
-Unter struktureller Invarianz verstehen wir das Gleichsetzten aller Strukturparameter. Hier werden nun alle Varianzen, Residualvarianzen, ungerichteten und gerichteten Effekte des Strukturmodells über die Gruppen hinweg gleich gesetzt.
-(insgesamt also $\lambda$s, $\tau$s, $\theta$s, $\gamma$s, $\beta$s, $\kappa$s $\phi$s und $\psi$s gleich über die Gruppen hinweg). Wir passen entsprechend das Modell an. Wir müssen außerdem auch die Berechnung des indirekten und des totalen Effekts anpassen. Außerdem müssen wir nun das Interzept von `BFs` invariant zwischen den Gruppen setzen.
-     
-```{r, results = "hide"}
-model_sem_IE_TE_sex_struktur <- '
-# Messmodelle
-ZD =~ zd1 + c(l2, l2)*zd2 + c(l3, l3)*zd6
-BOEE =~ bo1 + c(l5, l5)*bo6 + c(l6, l6)*bo12 + c(l7, l7)*bo19
-
-# Fehlervarianzen
-zd1 ~~ c(t1, t1)*zd1
-zd2 ~~ c(t2, t2)*zd2
-zd6 ~~ c(t3, t3)*zd6
-
-bo1 ~~ c(t4, t4)*bo1
-bo6 ~~ c(t5, t5)*bo6
-bo12 ~~ c(t6, t6)*bo12
-bo19 ~~ c(t7, t7)*bo19
-
-# Interzepts
-zd1 ~ c(i1, i1)*1
-zd2 ~ c(i2, i2)*1
-zd6 ~ c(i3, i3)*1
-
-bo1 ~ c(i4, i4)*1
-bo6 ~ c(i5, i5)*1
-bo12 ~ c(i6, i6)*1
-bo19 ~ c(i7, i7)*1
-
-# latente Interzepts (kappas)
-BFs ~ c(I8, I8)*1 # eig. manifest
-ZD ~ 0
-BOEE ~ 0
-
-# Strukturmodell
-BOEE ~ c(a, a)*ZD
-BFs ~  c(b, b)*BOEE + c(c,c)*ZD
-
-BOEE ~~ c(p1, p1)*BOEE
-BFs ~~ c(p2, p2)*BFs
-
-# Neue Parameter
-IE := a*b
-TE := IE + c
-'
-
-fit_sem_IE_TE_sex_struktur <- sem(model_sem_IE_TE_sex_struktur, data = StressAtWork, group = "sex")
-```
-
-Wenn wir nun den Modellvergleich zwischen dem strikt invarianten und dem struktur invarianten Modell durchführen     
-```{r, eval = F}
-lavTestLRT(fit_sem_IE_TE_sex_struktur, fit_sem_IE_TE_sex_strikt)
-```
-
-```{r, echo = F}
-res_struktur <- lavTestLRT(fit_sem_IE_TE_sex_struktur, fit_sem_IE_TE_sex_strikt)
-print(res_struktur)
-```
-
-erhalten wir diesmal einen großen $\chi^2$-Differenz  (`r round(res_struktur[[5]][2], 3)`) und der p-Wert zeigt hier an, dass es sich um eine signifikante Verschlechterung des Modells handelt p = `r round(res_struktur[[7]][2], 3)` $< 0.05$. Die Null-Hypothese, dass alle Parameter im Modell über das Geschlecht hinweg gleich sind, wird somit verworfen. Dies bedeutet also, dass es Geschlechtsunterschiede in den Beziehungen zwischen den latenten Variablen gibt. 
+hat sich nichts am Output geändert. Wir haben ja auch nur Labels vergeben und neu definierte Parameter hinzugefügt, die allerdings, wie zuvor schon erwähnt, die Modellstruktur (und somit auch die $df$) nicht tangieren. Die totalen und die indirekten Effekte scheinen sich kaum über die Gruppen hinweg zu unterscheiden. 
 
 #### Short-Cut Invarianztestung
 Dieses ganze Prozedere erscheint recht aufwendig. Allerdings kann so in jedem Schritt überprüft werden, dass die Parameter richtig restringiert wurden. Auch lassen sich so auch leicht partielle Invarianz einbauen, in welchen bspw. nicht alle Faktorladungen über die Gruppen hinweg gleich sind. Auch könnten Invarianzen nur für bestimmte Variablen angenommen werden. Trotzdem gibt es in `lavaan` die extrem hilfreiche Funktion, dies automatisiert durchzuführen. Dazu müssen wir lediglich in der Schätzung unserer Modelle das Zusatzargument `group.equal` spezifizieren. Lassen wir es weg oder setzte es auf `group.equal = c("")`, so landen wir im konfiguralen Fall. Spezifizieren wir `group.equal = c("loadings")` so wird das metrisch invariante Modell geschätzt. Genauso lassen sich auch das skalar (`group.equal = c("loadings", "intercepts")`) und das strikt (`group.equal = c("loadings", "intercepts", "residuals")`) invariante Modell schätzen. Das struktur-invariante Modell erhalten wir mit `group.equal = c("loadings", "intercepts", "residuals",` ` "means", "lv.variances", "lv.covariances", "regressions")`. Hierbei restringiert `"means"` die latenten Mittelwerte ($\kappa$), `"lv.variances"` die latenten (Residual-)Varianzen ($\phi$s und $\psi$s exogen und endogen) und `"regressions"` die Strukturpfadkoeffizienten ($\gamma$s und $\beta$s). Hätten wir Residualkovarianzen bei den manifesten oder latenten Variablen gehabt, so müssten wir diese auch mit `"residual.covariances"` sowie mit `"lv.covariances"` restringieren. Außerdem hätten wir gar keine neue Modelldefinition gebraucht, wir hätten einfach `model_sem_IE_TE` verwenden können, wenn wir dort nicht schon labels vergeben hätten. **Aus diesem Grund nehmen wir die Bezeichnungen für den indirekten Effekt heraus.** 
@@ -1358,7 +1024,341 @@ srmr    0.027500985            0.04021870")
 `Emprircal fit` ist hier gerade der Modelfit, den wir auch in unseren Daten beobachtet haben. Der $\chi^2$-Wert von 18.444 kommt uns auch sehr bekannt vor! In der Spalte `Cutoff (alpha = 0.05)` steht der zugehörige Cut-Off-Wert, ab welchem von keinem guten Fit mehr zu sprechen wäre. Hierbei ist zu beachten, dass für $TLI$ und $CFI$ kleine Werte (also kleiner als der Cut-Off-Wert) für einen schlechten Fit sprechen, während für $RMSEA$ und $SRMR$ große Werte (also größer als der Cut-Off-Wert) für einen schlechten Fit sprechen.
 
 ## Appendix B {#AppendixB}
+Ein vollständig benanntes Modell entnehmen wir `model_sem_IE_TE_sex`. Wird dieses geschätzt, sehen wir, dass es keine Veränderung hinsichtlich Parameterschätzungen oder Modellfit gibt; lediglich alle Parameter wurden benannt. Hierbei wurde `l` als Faktorladung verwendet und dann wurden alle Faktorladungen nach einander durchnummeriert (wie genau hier vorgegangen wird, ist immer dem Anwender überlassen). Die Endungen `_1` und `_2` stehen jeweils für Gruppe 1 und 2, also Frauen und Männer. Demnach wäre `l3_2` die 3. Faktorladung in Gruppe 2 also die Faktorladung von `zd6` der Männer. Die Fehlervarianzen wurden mit `t` benannt und Die Interzepts mit `i`. Außerdem können wir eine Art Effektkodierung bei den Mittelwerten der latenten Variablen vornehmen indem wir bspw. für Zeitdruck Folgendes vorgeben: `ZD~c(0,li1)*1`, für latenten Interzept 1. Hier ist es nun so, dass aus Identifikationsgründen der erste Interzept auf 0 gesetzt werden muss, mit dem zweiten allerdings, sind wir in der Lage zu Untersuchen, ob sich die latenten Mittelwerte von einander unterscheiden (genau dann, wenn der latente Interzept der zweiten Gruppe von 0 verschieden ist).
 
+
+
+```{r}
+model_sem_IE_TE_sex <- '
+# Messmodelle
+ZD =~ zd1 + c(l2_1, l2_2)*zd2 + c(l3_1, l3_2)*zd6
+BOEE =~ bo1 + c(l5_1, l5_2)*bo6 + c(l6_1, l6_2)*bo12 + c(l7_1, l7_2)*bo19
+
+# Fehlervarianzen
+zd1 ~~ c(t1_1, t1_2)*zd1
+zd2 ~~ c(t2_1, t2_2)*zd2
+zd6 ~~ c(t3_1, t3_2)*zd6
+
+bo1 ~~ c(t4_1, t4_2)*bo1
+bo6 ~~ c(t5_1, t5_2)*bo6
+bo12 ~~ c(t6_1, t6_2)*bo12
+bo19 ~~ c(t7_1, t7_2)*bo19
+
+# Interzepts
+zd1 ~ c(i1_1, i1_2)*1
+zd2 ~ c(i2_1, i2_2)*1
+zd6 ~ c(i3_1, i3_2)*1
+
+bo1 ~ c(i4_1, i4_2)*1
+bo6 ~ c(i5_1, i5_2)*1
+bo12 ~ c(i6_1, i6_2)*1
+bo19 ~ c(i7_1, i7_2)*1
+
+# latente Interzepts (kappas)
+BFs ~ c(I8_1, I8_2)*1 # eig. manifest
+
+
+# Strukturmodell
+BOEE ~ c(a1, a2)*ZD
+BFs ~  c(b1, b2)*BOEE + c(c1,c2)*ZD
+
+BOEE ~~ c(p1_1, p1_2)*BOEE
+BFs ~~ c(p2_1, p2_2)*BFs
+
+# Neue Parameter
+IE1 := a1*b1
+TE1 := IE1 + c1
+
+IE2 := a2*b2
+TE2 := IE2 + c2
+'
+
+fit_sem_IE_TE_sex <- sem(model_sem_IE_TE_sex, data = StressAtWork, group = "sex")
+summary(fit_sem_IE_TE_sex)
+```
+
+Außerdem schauen wir uns an, was passiert, wenn wir dieses Modell grafisch darstellen wollen. `intercepts = F` und `ask = F` stellen ein, dass die Grafik ohne Interzepts dargestellt werden soll und dass wir nicht mit der Konsole interagieren wollen, um bspw. zuerst Gruppe 1 zu sehen.
+
+```{r, fig.align="center", fig.height=6}
+semPaths(fit_sem_IE_TE_sex, panelGroups = T, layout = "tree2", rotation = 2, intercepts = F, ask = F, edge.label.cex=1.2, sizeMan = 6, sizeLat = 10)
+```
+
+Wir wollen nun verschiedene Arten von Invarianz testen. Diese sind in einander geschachtelt, sollten also nach einander getestet werden. Gilt die vorherige nicht, so müssen wir auch nicht die nächste testen.
+
+#### Konfigurale Invarianz
+Bei der konfiguralen Invarianz geht es darum, dass in beiden Gruppen die gleichen Modelle aufgestellt werden. Gilt diese Annahme bereits nicht, so macht es keinen Sinn das Modell weiter einzuschränken und Parameter über die Gruppen zu restringieren. Glücklicherweise passt das Modell zu den Daten, in welchem das Modell für das Geschlecht jeweils geschätzt wurde. Diese Modell entspricht unserem Modell `model_sem_IE_TE_sex`, welches durch die Daten nicht verworfen wird. 
+
+#### Metrische Invarianz
+Unter metrischer Invarianz verstehen wir, dass die Faktorladungen ($\lambda$) über die Gruppen hinweg gleich sind. Somit ist der Anteil jedes Item, der auf die latenten Variablen zurückzuführen ist, über die Gruppen hinweg gleichen. Wir erreichen dies, indem wir die Faktorladungen über die Gruppen hinweg gleich nennen. Bspw. wird aus `c(l1_1, l1_2)*zd1` `c(l1, l1)*zd1`:
+
+```{r, results = "hide"}
+model_sem_IE_TE_sex_metrisch <- '
+# Messmodelle
+ZD =~ zd1 + c(l2, l2)*zd2 + c(l3, l3)*zd6
+BOEE =~ bo1 + c(l5, l5)*bo6 + c(l6, l6)*bo12 + c(l7, l7)*bo19
+
+# Fehlervarianzen
+zd1 ~~ c(t1_1, t1_2)*zd1
+zd2 ~~ c(t2_1, t2_2)*zd2
+zd6 ~~ c(t3_1, t3_2)*zd6
+
+bo1 ~~ c(t4_1, t4_2)*bo1
+bo6 ~~ c(t5_1, t5_2)*bo6
+bo12 ~~ c(t6_1, t6_2)*bo12
+bo19 ~~ c(t7_1, t7_2)*bo19
+
+# Interzepts
+zd1 ~ c(i1_1, i1_2)*1
+zd2 ~ c(i2_1, i2_2)*1
+zd6 ~ c(i3_1, i3_2)*1
+
+bo1 ~ c(i4_1, i4_2)*1
+bo6 ~ c(i5_1, i5_2)*1
+bo12 ~ c(i6_1, i6_2)*1
+bo19 ~ c(i7_1, i7_2)*1
+
+# latente Interzepts (kappas)
+BFs ~ c(I8_1, I8_2)*1 # eig. manifest
+
+
+# Strukturmodell
+BOEE ~ c(a1, a2)*ZD
+BFs ~  c(b1, b2)*BOEE + c(c1,c2)*ZD
+
+BOEE ~~ c(p1_1, p1_2)*BOEE
+BFs ~~ c(p2_1, p2_2)*BFs
+
+# Neue Parameter
+IE1 := a1*b1
+TE1 := IE1 + c1
+
+IE2 := a2*b2
+TE2 := IE2 + c2
+'
+
+fit_sem_IE_TE_sex_metrisch <- sem(model_sem_IE_TE_sex_metrisch, data = StressAtWork, group = "sex")
+summary(fit_sem_IE_TE_sex_metrisch)
+```
+
+Dem Output entnehmen wir, dass nun die Faktorladungen über die Gruppen hinweg gleich sind:
+
+```{r, echo = F}
+abbrev(X = fit_sem_IE_TE_sex_metrisch, begin = "Group 1", end = "Regression")
+
+abbrev(X = fit_sem_IE_TE_sex_metrisch, begin = "Group 2", end = "Regression")
+```
+
+Um nun zu prüfen, ob diese Restrinktion den Modellfit signifikant verschlechtert hat, verwenden wir wieder den Likelihood Ratio Test.
+
+```{r, eval = F}
+lavTestLRT(fit_sem_IE_TE_sex_metrisch, fit_sem_IE_TE_sex)
+```
+
+```{r, echo = F}
+res_metrisch <- lavTestLRT(fit_sem_IE_TE_sex_metrisch, fit_sem_IE_TE_sex)
+print(res_metrisch)
+```
+
+Die $\chi^2$-Differenz ist klein (`r round(res_metrisch[[5]][2], 3)`) und der p-Wert zeigt an, dass es sich hier um keine signifikante Verschlechterung des Modells handelt p = `r round(res_metrisch[[7]][2], 3)`. Die Null-Hypothese, dass die Faktorladungen über das Geschlecht hinweg gleich sind, wird somit nicht verworfen.
+
+#### Skalare Invarianz
+Als nächsten wollen wir prüfen, ob zusätzlich zu den Faktorladungen auch die Interzepte ($\tau$) über die Gruppen hinweg gleich sind (insgesamt also $\lambda$s und $\tau$s gleich über die Gruppen hinweg). Dazu passen wir erneut unser Modell an. Hierbei ist zu beachten, dass wir nicht das Interzept von `BFs` über die Gruppen hinweg gleichsetzten, da sich die Interzepte auf die manifesten Variablen beziehen, wir `BFs` hier allerdings wie eine latente Variable behandeln wollen. Eine Besonderheit der skalaren Invarianz ist, dass sobald wir die Interzepte über die Gruppen hinweg gleichsetzten, haben wir Freiheitsgrade, mit welchen wir die latenten Interzepte von `ZD` und `BOEE` schätzen können. Dies ist  dann eine Art Effektkodierung, wobei der Mittelwert der einen Gruppe auf 0 gesetzt wird und in der anderen Gruppe wird dann die Abweichung zu dieser Gruppe mitgeführt. Wir wollen dies auch mit aufnehmen, um zu untersuchen, ob ggf. es Unterschiede hinsichtlich der latenten Mittelwerte gibt via `ZD~c(li1_1,li1_2)*1` und `BOEE~c(li1_1,li1_2)*1` und den Nebenbedingungen, dass der erste Eintrag jeweils 0 ist: `li1_1 == 0` und `li2_1 == 0`. 
+
+```{r, results = "hide"}
+model_sem_IE_TE_sex_skalar <- '
+# Messmodelle
+ZD =~ zd1 + c(l2, l2)*zd2 + c(l3, l3)*zd6
+BOEE =~ bo1 + c(l5, l5)*bo6 + c(l6, l6)*bo12 + c(l7, l7)*bo19
+
+# Fehlervarianzen
+zd1 ~~ c(t1_1, t1_2)*zd1
+zd2 ~~ c(t2_1, t2_2)*zd2
+zd6 ~~ c(t3_1, t3_2)*zd6
+
+bo1 ~~ c(t4_1, t4_2)*bo1
+bo6 ~~ c(t5_1, t5_2)*bo6
+bo12 ~~ c(t6_1, t6_2)*bo12
+bo19 ~~ c(t7_1, t7_2)*bo19
+
+# Interzepts
+zd1 ~ c(i1, i1)*1
+zd2 ~ c(i2, i2)*1
+zd6 ~ c(i3, i3)*1
+
+bo1 ~ c(i4, i4)*1
+bo6 ~ c(i5, i5)*1
+bo12 ~ c(i6, i6)*1
+bo19 ~ c(i7, i7)*1
+
+# latente Interzepts (kappas)
+BFs ~ c(I8_1, I8_2)*1 # eig. manifest
+ZD ~ c(li1_1,li1_2)*1
+BOEE ~ c(li2_1,li2_2)*1
+
+# Strukturmodell
+BOEE ~ c(a1, a2)*ZD
+BFs ~  c(b1, b2)*BOEE + c(c1,c2)*ZD
+
+BOEE ~~ c(p1_1, p1_2)*BOEE
+BFs ~~ c(p2_1, p2_2)*BFs
+
+# Neue Parameter
+IE1 := a1*b1
+TE1 := IE1 + c1
+
+IE2 := a2*b2
+TE2 := IE2 + c2
+
+# Nebenbedingungen
+li1_1 == 0
+li2_1 == 0
+'
+
+fit_sem_IE_TE_sex_skalar <- sem(model_sem_IE_TE_sex_skalar, data = StressAtWork, group = "sex")
+```
+
+Diesmal wollen wir direkt den Modellvergleich durchführen:
+
+```{r, eval = F}
+lavTestLRT(fit_sem_IE_TE_sex_skalar, fit_sem_IE_TE_sex_metrisch)
+```
+
+```{r, echo = F}
+res_skalar <- lavTestLRT(fit_sem_IE_TE_sex_skalar, fit_sem_IE_TE_sex_metrisch)
+print(res_skalar)
+```
+
+Die $\chi^2$-Differenz ist erneut klein (`r round(res_skalar[[5]][2], 3)`) und der p-Wert zeigt auch hier an, dass es sich um keine signifikante Verschlechterung des Modells handelt p = `r round(res_skalar[[7]][2], 3)`. Die Null-Hypothese, dass die Interzepte über die Faktorladungen hinaus über das Geschlecht hinweg gleich sind, wird somit nicht verworfen.
+
+#### Strikte Invarianz
+Unter strikter Invarianz verstehen wir, dass zusätzlich zu den Faktorladungen und den Interzepten auch die Residualvarianzen ($\theta$) gleich sind (insgesamt also $\lambda$s, $\tau$s und $\theta$s gleich über die Gruppen hinweg). Wir passen entsprechend das Modell an:
+
+```{r, results = "hide"}
+model_sem_IE_TE_sex_strikt <- '
+# Messmodelle
+ZD =~ zd1 + c(l2, l2)*zd2 + c(l3, l3)*zd6
+BOEE =~ bo1 + c(l5, l5)*bo6 + c(l6, l6)*bo12 + c(l7, l7)*bo19
+
+# Fehlervarianzen
+zd1 ~~ c(t1, t1)*zd1
+zd2 ~~ c(t2, t2)*zd2
+zd6 ~~ c(t3, t3)*zd6
+
+bo1 ~~ c(t4, t4)*bo1
+bo6 ~~ c(t5, t5)*bo6
+bo12 ~~ c(t6, t6)*bo12
+bo19 ~~ c(t7, t7)*bo19
+
+# Interzepts
+zd1 ~ c(i1, i1)*1
+zd2 ~ c(i2, i2)*1
+zd6 ~ c(i3, i3)*1
+
+bo1 ~ c(i4, i4)*1
+bo6 ~ c(i5, i5)*1
+bo12 ~ c(i6, i6)*1
+bo19 ~ c(i7, i7)*1
+
+# latente Interzepts (kappas)
+BFs ~ c(I8_1, I8_2)*1 # eig. manifest
+ZD ~ c(li1_1,li1_2)*1
+BOEE ~ c(li2_1,li2_2)*1
+
+# Strukturmodell
+BOEE ~ c(a1, a2)*ZD
+BFs ~  c(b1, b2)*BOEE + c(c1,c2)*ZD
+
+BOEE ~~ c(p1_1, p1_2)*BOEE
+BFs ~~ c(p2_1, p2_2)*BFs
+
+# Neue Parameter
+IE1 := a1*b1
+TE1 := IE1 + c1
+
+IE2 := a2*b2
+TE2 := IE2 + c2
+
+# Nebenbedingung
+li1_1 == li1_2
+li2_1 == li2_2
+'
+
+fit_sem_IE_TE_sex_strikt <- sem(model_sem_IE_TE_sex_strikt, data = StressAtWork, group = "sex")
+```
+
+Wenn wir nun den Modellvergleich zwischen dem skalar invarianten und dem strikt invarianten Modell durchführen     
+```{r, eval = F}
+lavTestLRT(fit_sem_IE_TE_sex_strikt, fit_sem_IE_TE_sex_skalar)
+```
+
+```{r, echo = F}
+res_strikt <- lavTestLRT(fit_sem_IE_TE_sex_strikt, fit_sem_IE_TE_sex_skalar)
+print(res_strikt)
+```
+
+erhalten wir wieder eine kleine $\chi^2$-Differenz  (`r round(res_strikt[[5]][2], 3)`) und der p-Wert zeigt auch hier an, dass es sich um keine signifikante Verschlechterung des Modells handelt p = `r round(res_strikt[[7]][2], 3)`. Die Null-Hypothese, dass die Residualvarianzen über die Faktorladungen und Interzepte hinaus über das Geschlecht hinweg gleich sind, wird somit nicht verworfen.
+
+#### Strukturinvarianz
+Unter struktureller Invarianz verstehen wir das Gleichsetzten aller Strukturparameter. Hier werden nun alle Varianzen, Residualvarianzen, ungerichteten und gerichteten Effekte des Strukturmodells über die Gruppen hinweg gleich gesetzt.
+(insgesamt also $\lambda$s, $\tau$s, $\theta$s, $\gamma$s, $\beta$s, $\kappa$s $\phi$s und $\psi$s gleich über die Gruppen hinweg). Wir passen entsprechend das Modell an. Wir müssen außerdem auch die Berechnung des indirekten und des totalen Effekts anpassen. Außerdem müssen wir nun das Interzept von `BFs` invariant zwischen den Gruppen setzen.
+     
+```{r, results = "hide"}
+model_sem_IE_TE_sex_struktur <- '
+# Messmodelle
+ZD =~ zd1 + c(l2, l2)*zd2 + c(l3, l3)*zd6
+BOEE =~ bo1 + c(l5, l5)*bo6 + c(l6, l6)*bo12 + c(l7, l7)*bo19
+
+# Fehlervarianzen
+zd1 ~~ c(t1, t1)*zd1
+zd2 ~~ c(t2, t2)*zd2
+zd6 ~~ c(t3, t3)*zd6
+
+bo1 ~~ c(t4, t4)*bo1
+bo6 ~~ c(t5, t5)*bo6
+bo12 ~~ c(t6, t6)*bo12
+bo19 ~~ c(t7, t7)*bo19
+
+# Interzepts
+zd1 ~ c(i1, i1)*1
+zd2 ~ c(i2, i2)*1
+zd6 ~ c(i3, i3)*1
+
+bo1 ~ c(i4, i4)*1
+bo6 ~ c(i5, i5)*1
+bo12 ~ c(i6, i6)*1
+bo19 ~ c(i7, i7)*1
+
+# latente Interzepts (kappas)
+BFs ~ c(I8, I8)*1 # eig. manifest
+ZD ~ 0
+BOEE ~ 0
+
+# Strukturmodell
+BOEE ~ c(a, a)*ZD
+BFs ~  c(b, b)*BOEE + c(c,c)*ZD
+
+BOEE ~~ c(p1, p1)*BOEE
+BFs ~~ c(p2, p2)*BFs
+
+# Neue Parameter
+IE := a*b
+TE := IE + c
+'
+
+fit_sem_IE_TE_sex_struktur <- sem(model_sem_IE_TE_sex_struktur, data = StressAtWork, group = "sex")
+```
+
+Wenn wir nun den Modellvergleich zwischen dem strikt invarianten und dem struktur invarianten Modell durchführen     
+```{r, eval = F}
+lavTestLRT(fit_sem_IE_TE_sex_struktur, fit_sem_IE_TE_sex_strikt)
+```
+
+```{r, echo = F}
+res_struktur <- lavTestLRT(fit_sem_IE_TE_sex_struktur, fit_sem_IE_TE_sex_strikt)
+print(res_struktur)
+```
+
+erhalten wir diesmal einen großen $\chi^2$-Differenz  (`r round(res_struktur[[5]][2], 3)`) und der p-Wert zeigt hier an, dass es sich um eine signifikante Verschlechterung des Modells handelt p = `r round(res_struktur[[7]][2], 3)` $< 0.05$. Die Null-Hypothese, dass alle Parameter im Modell über das Geschlecht hinweg gleich sind, wird somit verworfen. Dies bedeutet also, dass es Geschlechtsunterschiede in den Beziehungen zwischen den latenten Variablen gibt. 
 
 
 ## Appendix C {#AppendixC}
