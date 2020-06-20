@@ -315,7 +315,7 @@ $$\begin{pmatrix}BO_1\\BO_6\\BO_{12}\\BO_{19}\end{pmatrix}=\begin{pmatrix}\tau_1
 - Strukturmodell in Matrixnotation (wobei wir $BFs$ als latente Variable mitführen)
 $$\begin{pmatrix}\eta_\text{BOEE}\\BF_s\end{pmatrix}=\begin{pmatrix}\gamma_{11}\\\gamma_{21}\end{pmatrix}\xi_\text{ZD} + \begin{pmatrix}0&0\\\beta_{21}&0\end{pmatrix}\begin{pmatrix}\eta_\text{BOEE}\\BF_s\end{pmatrix} + \begin{pmatrix}\zeta_\text{BOEE}\\\zeta_{BF_s}\end{pmatrix}$$
 
-<mark style="background-color: orange">  Wenn wir die Matrizengleichung des Strukturmodells ausrechnen, erhalten wir:
+<mark style="background-color: orange">  Wenn wir die Matrizengleichung des Strukturmodells ausrechnen, erhalten wir: </mark>
 
 $$\eta_\text{BOEE}=\gamma_{11}\xi_\text{ZD} + \zeta_\text{BOEE}$$
 und 
@@ -323,7 +323,7 @@ $$BFs = \gamma_{21}\xi_\text{ZD} + \beta_{21}\eta_\text{BOEE} + \zeta_{BFs}.$$
 Durch Einsetzten folgt:
 $$BFs = \gamma_{21}\xi_\text{ZD} + \beta_{21}\gamma_{11}\xi_\text{ZD}+ \beta_{21}\zeta_\text{BOEE} + \zeta_{BFs}.$$
 
-Wenn wir nun genauer hinschauen, erkennen wir, dass $\gamma_{11}$ dem Pfad $a$, $\gamma_{21}$ dem Pfad $c$ und $\beta_{21}$ dem Pfad $b$ aus dem Mediationspfadmodell entspricht! Entsprechend quantifiziert $\beta_{21}\gamma_{11}$ den indirekten Effekt  von $\xi_\text{ZD}$ über $\eta_\text{BOEE}$ auf $BFs$.  </mark> Wir wollen das Modell `model_paths_IE_TE`, welches so aussah:
+<mark style="background-color: orange"> Wenn wir nun genauer hinschauen, erkennen wir, dass $\gamma_{11}$ dem Pfad $a$, $\gamma_{21}$ dem Pfad $c$ und $\beta_{21}$ dem Pfad $b$ aus dem Mediationspfadmodell entspricht! Entsprechend quantifiziert $\beta_{21}\gamma_{11}$ den indirekten Effekt  von $\xi_\text{ZD}$ über $\eta_\text{BOEE}$ auf $BFs$.  </mark> Wir wollen das Modell `model_paths_IE_TE`, welches so aussah:
 ```{r}
 model_paths_IE_TE <- '
 BOEEs ~ a*ZDs
@@ -542,9 +542,9 @@ Sowie folgenden Ergebnisse für die Messmodelle:
 abbrev(fit_sem_IE_TE, begin = "Latent Variables", end = "Regressions")
 ```
 
-Dem ist zu entnehmen, dass wir, anders als im Beispiel der Pfadanalyse,  nun die Passung zwischen Modell und Daten untersuchen können: der $\chi^2$-Wert liegt bei `r round(fitmeasures(fit_sem_IE_TE)[3], 3)` bei $df=$ `r round(fitmeasures(fit_sem_IE_TE)[4], 3)` mit zugehörigem $p$-Wert von `r round(fitmeasures(fit_sem_IE_TE)[5], 3)`. Demnach verwerfen unsere Daten das Modell nicht. <mark style="background-color: orange"> Auch müssen wir uns die Fit-Indizes in diesem Zusammenhang eigentlich nicht ansehen, da die $H_0$-Hypothese nicht verworfen wird; das Modell passt bereits zu den Daten. Nur in Modellen in welchen eine $H_1$ Hypothese gilt, ist es sinnvoll die Fit-Indiezes zu untersuchen. Auch **nur in solchen Modellen** wächst der $\chi^2$-Wert tatsächlich mit der Stichprobengröße (dies steht im Widerspruch zu einigen Textbüchern, welche propagieren, dass der $\chi^2$-Wert immer mit der Stichprobengröße wächst!). _Es empfiehlt sich sehr über die Beziehung zwischen Stichprobengröße, $\chi^2$-Wert und den Fit-Indizes noch einmal im [Appendix A](#AppendixA) nachzulesen!_ </mark>
+Dem ist zu entnehmen, dass wir, anders als im Beispiel der Pfadanalyse,  nun die Passung zwischen Modell und Daten untersuchen können: der $\chi^2$-Wert liegt bei `r round(fitmeasures(fit_sem_IE_TE)[3], 3)` bei $df=$ `r round(fitmeasures(fit_sem_IE_TE)[4], 3)` mit zugehörigem $p$-Wert von `r round(fitmeasures(fit_sem_IE_TE)[5], 3)`. Demnach verwerfen unsere Daten das Modell nicht. <mark style="background-color: orange"> Die Fit-Indizes zeigen hier alle samt einen guten Fit des Modells an. Dies war zu erwarten, da die Stichprobengröße ausreichend Power liefert (sodass das Modell sinnvoll geschätzt werden kann) und der $\chi^2$-Wert trotzdem nicht signifikant auf dem 5%-Niveau war. Es gibt also keinen Grund an der $H_0$ (auf Modellpassung zwischen Daten und Modell) zu zweifeln. Denn **nur in solchen Modellen**, in denen tatsächlich die $H_1$-Hypothese gilt, wächst der $\chi^2$-Wert tatsächlich mit der Stichprobengröße (dies steht im Widerspruch zu einigen Textbüchern, welche propagieren, dass der $\chi^2$-Wert immer mit der Stichprobengröße wächst!). _Es empfiehlt sich sehr über die Beziehung zwischen Stichprobengröße, $\chi^2$-Wert und den Fit-Indizes noch einmal im [Appendix A](#AppendixA) nachzulesen!_ 
 
-Den Messmodellen entnehmen wir (neben dem unterschiedlichen Setzten der Skalierer), dass die Variablen die latenten Variablen vergleichseweise ähnlich gut messen (ähnlich große Faktorladungen). Um die Reliabilität beurteilen zu können, schauen wir uns die erklärten Varianzanateile an:
+Den Messmodellen entnehmen wir, dass die Variablen die latenten Variablen vergleichseweise ähnlich gut messen (ähnlich große Faktorladungen). Wir sehen außerdem, dass die ersten Faktorladungen jeweils auf 1 gesetzt wurden und hier entsprechend keine Signifikanzentscheidung von Nöten ist (wir haben den Wert hier "ohne Unsicherheit" vorgegeben). </mark> Um die Reliabilität beurteilen zu können, schauen wir uns die erklärten Varianzanateile an:
 
 ```{r, echo = F}
 abbrev(fit_sem_IE_TE, begin = "R-Square", end = "Defined Parameters", rsq = T)
