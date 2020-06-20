@@ -66,7 +66,7 @@ _Emotionale Erschöpfung_ ist hier das Gefühl erschöpft, niedergeschlagen und 
 
 Wir verstehen unter _Leistungserfüllung_ energetische Gefühle, Dinge anzupacken und das Gefühl die Möglichkeit zu haben die eigenen Ambitionen zu erfüllen. Ein Beispielitem ist: _"Ich fühle mich sehr tatkräftig."_
 
-## Theoretische Grundlage {#Hypothesen}
+### Theoretische Grundlage {#Hypothesen}
 Pfadanalysen und Strukturgleichungsmodelle gehören, wie auch die CFA, zu den konfirmatorsichen, also Theorie bestätigenden, Verfahren und sollen ganz im Popper’schen Sinn durch Vergleiche der Daten mit theoretischen Modellen wissenschaftliche Erkenntnis gewinnen. Wir haben in unseren Daten drei Arten von Variablen: Zeitdruck und Arbeitsorganisationale Probleme sind Stressoren und sollten also mit einer gewissen Wahrscheinlichkeit in einem Individuum zu einer Stressreaktion führen. Emotionale Erschöpfung ist eine Facette von Burnout und gehört somit zu den kurzfristigeren Stressfolgen. Psychosomatische Beschwerden treten unter anderem auf, wenn Stress über einen langen Zeitraum auf ein Individuum einwirkt. Somit können wir postulieren, dass Stress über Emotionale Erschöpfung auf Psychosomatische Beschwerden wirkt und somit nur einen indirekten Effekt auf die Psychosomatischen Beschwerden hat:
 
 <center> <img src="https://raw.githubusercontent.com/martscht/PsyMSc1/master/inst/tutorials/SEM/images/Wolken.png" width="50%"/> </center>
@@ -83,7 +83,7 @@ StressAtWork$BOEEs <- rowMeans(StressAtWork[,paste0("bo",c(1, 6, 12, 19))])
 StressAtWork$BFs <- rowMeans(StressAtWork[,paste0("bf",1:20)])
 ```
 
-Hierbei hilft uns `paste0`, die Schreibweise abzukürzen: wir müssen nicht alle Itemnamen einzeln tippen, sondern die "Strings" werden automatisch erzeugt. Um dies genauer zu verstehen, könnten wir bspw. `paste0("zd",c(1, 2, 6))` einmal ausführen. Dies kommt zum gleichen Ergebnis, wie als wenn wir `c("zd1", "zd2", "zd6")` getippt hätten. Das Modell wird nun, ähnlich dem Regressionsmodell aus der ersten Sitzung, aufgestellt. In `lavaan` werden gerichtete Beziehung zwischen Variablen mit `~` dargestellt, wobei links der *Tilde* die abhängige Variable (das Kriterium) und rechts der *Tilde* die unabhängige Variable (der Prädiktor) steht. Für unser angenommenes Modell gibt es folgende Beziehung: Zeitdruck wirkt auf Emotionale Erschöpfung und auf Psychosomatische Beschwerden. Emotionale Erschöpfung wirkt auf Psychosomatische Beschwerden. Es muss folglich zwei Gleichungen geben: in einer Gleichung ist `BOEEs` die abhängige Variable und wird durch `ZDs` vorhergesagt. In der zweiten Gleichung ist `BFs` die abhängige Variable und wird  durch `BOEEs` und `ZDs` vorhergesagt.
+Hierbei hilft uns `paste0`, die Schreibweise abzukürzen: wir müssen nicht alle Itemnamen einzeln tippen, sondern die "Strings" werden automatisch erzeugt. Um dies genauer zu verstehen, könnten wir bspw. `paste0("zd",c(1, 2, 6))` einmal ausführen. Dies kommt zum gleichen Ergebnis, wie als wenn wir `c("zd1", "zd2", "zd6")` getippt hätten. Das Modell wird nun, ähnlich dem Regressionsmodell aus der ersten Sitzung, aufgestellt. In `lavaan` werden gerichtete Beziehung zwischen Variablen mit `~` dargestellt, wobei links der *Tilde* die abhängige Variable (das Kriterium) und rechts der *Tilde* die unabhängige Variable (der Prädiktor) steht. Für unser angenommenes Modell gibt es folgende Beziehung: Zeitdruck wirkt auf Emotionale Erschöpfung und auf Psychosomatische Beschwerden. Emotionale Erschöpfung wirkt auf Psychosomatische Beschwerden. Es muss folglich zwei Gleichungen geben: in einer Gleichung ist `BOEEs` die abhängige Variable und wird durch `ZDs` vorhergesagt. In der zweiten Gleichung ist `BFs` die abhängige Variable und wird  durch `BOEEs` und `ZDs` vorhergesagt. Nun hängt es außerdem von der Schätzfunktion ab, welche weiteren Beziehungen wir in unserem Modell spezifizieren müssen. Wir wollen die `sem` Funktion verwenden, um das Modell zu schätzen: `sem` ist,  wie `cfa` (diese kennen Sie aus `PsyMSc1::Sitzung_3()`, um CFAs zu schätzen) auch, eine "Convenience"-Funktion, die gewisse Voreinstellungen verwendet und diese and die `lavaan`-Funktion, die Sie in der ersten Sitzung kennengelernt hatten, übergibt. Sie hatten damals eine Regression mit `lavaan` geschätzt und mussten dabei bspw. mit `Y ~ 1 + X` die Regression anfodern, mit welcher durch `X` die abhängige Variable `Y` vorhergesagt wurde. Sie mussten hierbei explizit das Interzept (also den durch X bedingten Mittelwert von Y) sowie die Resiudalvarianz von `Y` anfordern via `Y ~~ Y` (für eine Wiederholung schauen Sie gerne in `PsyMSc1::Sitzung_1()` vorbei). Wie auch die `cfa`-Funktion übernimmt die `sem` Funktion einige dieser Einstellungen für uns. So müssen wir bspw. Residualvarianzen nicht explizit anfragen. Die Mittelwertsstruktur wird in `sem` per Default nicht mitmodelliert. Wenn wir Mittelwerte betrachten wollen, können wir allerdings de `sem`-Funktion die Zusatzeinstellung `meanstructure = TRUE` übergeben. Somit landen wir bei dieser sehr effizienten Schreibweise für unser Modell:
 
 ```{r}
 model_paths <- '
@@ -92,11 +92,28 @@ BFs ~  BOEEs + ZDs
 '
 ```
 
-In diesem Modell wird Zeitdruck die **unabhängige Variable** genannt, Emotionale Erschöpfung ist der **Mediator**, der die Beziehung der unabhängigen auf die **abhängige Variable** Psychosomatische Beschwerden mediiert. Hier hat Zeitdruck eine direkte Beziehung mit Emotionaler Erschöpfung. Emotionale Erschöpfung hat eine direkte Beziehung mit Psychosomatischen Beschwerden und Zeitdruck hat eine direkte und eine indirekte (über Emotionale Erschöpfung) Beziehung mit Psychosomatischen Beschwerden. Wir können dieses Modell wie gewohnt schätzen, indem wir die Funktion `sem` verwenden und ihr unser Modell sowie die Daten übergeben. Mit `summary` erhalten wir detaillierte Informationen über Modellfit, Parameterschätzungen und deren Signifikanz.
+Hätten wir dieses Modell mit `lavaan` schätzen wollen, so hätten wir folgendes formulieren müssen (wir wollen die Mittelwertsstruktur auch hier ignorieren und alssen daher `~1` weg!):
 
-```{r}
+```{r, eval = F}
+model_paths_lavaan <- '
+BOEEs ~ ZDs
+BFs ~  BOEEs + ZDs
+BOEEs ~~ BOEEs
+BFs ~~ BFs
+'
+```
+
+In diesem Modell wird Zeitdruck die **unabhängige Variable** genannt, Emotionale Erschöpfung ist der **Mediator**, der die Beziehung der unabhängigen auf die **abhängige Variable** Psychosomatische Beschwerden mediiert. Hier hat Zeitdruck eine direkte Beziehung mit Emotionaler Erschöpfung. Emotionale Erschöpfung hat eine direkte Beziehung mit Psychosomatischen Beschwerden und Zeitdruck hat eine direkte und eine indirekte (über Emotionale Erschöpfung) Beziehung mit Psychosomatischen Beschwerden. Wir können dieses Modell nun schätzen, indem wir die Funktion `sem` verwenden und ihr unser Modell sowie die Daten übergeben. 
+
+Mit `summary` erhalten wir detaillierte Informationen über Modellfit, Parameterschätzungen und deren Signifikanz.
+
+```{r, results = "hide"}
 fit_paths <- sem(model_paths, data = StressAtWork)
 summary(fit_paths, rsq = T, fit.measures = T)
+```
+
+```{r, echo = F}
+lavaan::summary(fit_paths, rsq = T, fit.measures = T)
 ```
 
 ```{r exercise_setup1, include = F}
@@ -121,11 +138,18 @@ abbrev(X = fit_paths, begin = "Model Test User Model", end = "Model Test Baselin
 ```
 erkennen wir, dass es sich hier um das saturierte Modell handelt. Die Korrelationen zwischen den Skalenmittelwerten sind also nur retransformiert, um unser Modell abzubilden. Ein Modellfit-Test ist nicht möglich.
 
+```{r, echo = F}
+abbrev(X = fit_paths, begin = "User Model versus Baseline Model", end = "Parameter Estimates", fit.measures = T)
+```
+Alle Fit-Indizes zeigen perfekten Fit an (CFI = 1, TLI = 1, RMSEA = 0, SRMR = 0).
+
 
 ```{r, echo = F}
 abbrev(X = fit_paths, begin = "Regressions", end = "Variances", fit.measures = T)
 ```
-Im Gegensatz zur CFA wird uns nun ein Block in der Summary gezeigt, welcher die Regressionskoeffizienten unseres Modells enthält. Hier ist zu erkennen, dass alle Koeffizienten auf dem 5% Niveau signifikant von 0 verschieden sind. Es kann sich also maximal um eine partielle Mediation handeln, da die direkte Beziehung zwischen Zeitdruck und Psychsomatischen Beschwerden laut dieser Signifikanzentscheidung mit einer Irrtumswahrscheinlichkeit von 5% auch in der Population besteht und somit der Effekt von Zeitdruck auf die Psychosomatischen Beschwerden nicht vollständig über die Emotionale Erschöpfung mediiert wird. Von einer vollständigen Mediation würden wir sprechen, wenn die direkte Beziehung zwischen Zeitdruck und Psychosomatischen Beschwerden (also zwischen unabhängiger und abhängiger Variable) nicht bedeutsam von 0 verschieden ist und der indirekte Effekt von Zeitdruck über Emtionale Erschöpfung auf Psychsomatische Beschwerden signifikant von Null verschieden ist. Für die Population würden wir also bei einer vollständigen Mediation davon ausgehen, dass die unabhängige Variable nur über den Mediator mit der abhängigen Variable zusammenhängt.
+Im Gegensatz zur CFA wird uns nun ein Block in der Summary gezeigt, welcher die Regressionskoeffizienten unseres Modells enthält (ohne Interzept). Hier ist zu erkennen, dass alle Koeffizienten auf dem 5% Niveau signifikant von 0 verschieden sind. Es kann sich also maximal um eine partielle Mediation handeln, da die direkte Beziehung zwischen Zeitdruck und Psychsomatischen Beschwerden laut dieser Signifikanzentscheidung mit einer Irrtumswahrscheinlichkeit von 5% auch in der Population besteht und somit der Effekt von Zeitdruck auf die Psychosomatischen Beschwerden nicht vollständig über die Emotionale Erschöpfung mediiert wird. 
+
+Von einer vollständigen Mediation würden wir sprechen, wenn die direkte Beziehung zwischen Zeitdruck und Psychosomatischen Beschwerden (also zwischen unabhängiger und abhängiger Variable) nicht bedeutsam von 0 verschieden ist und der indirekte Effekt von Zeitdruck über Emtionale Erschöpfung auf Psychsomatische Beschwerden signifikant von Null verschieden ist. Für die Population würden wir also bei einer vollständigen Mediation davon ausgehen, dass die unabhängige Variable nur über den Mediator mit der abhängigen Variable zusammenhängt, also jegliche Veränderung in der unabhängigen Variable mit Veränderungen im Mediator zusammenhängt und durch diese Beziehung auch mit der abhängigen Variable kovariiert.
 
 ```{r, echo = F}
 abbrev(X = fit_paths, begin = "R-Square", end = NULL, shift = 1, rsq = T)
