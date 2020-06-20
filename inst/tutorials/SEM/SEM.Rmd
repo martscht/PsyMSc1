@@ -309,13 +309,21 @@ Bei Zeitdurck und Emotionaler Erschöpfung handelt es sich um reflexive Messmode
 Das Modell in SEM unterscheidet sich im Vergleich zu CFAs: Es wird zwischen Messmodell und Strukturmodell unterschieden. Im Strukturmodell gibt es gerichtete Beziehungen, in welchem zwischen unabhängige und abhängige latenten Variablen unterschieden werden kann. Diese werden häufig auch exogene (unabhängige) und endogene (abhängige) latente Variablen genannt. Außerdem gibt es zwei Arten von Messmodellen: ein exogenes und ein endogenes Messmodell. Diese Messmodelle sind quasi CFAs für die exogenen und die endogenen latenten Variablen; spezifizieren also die Beziehungen zwischen den latenten und den manifesten unabhängen bzw. abhängen Variablen. Wir wollen uns die Messmodelle sowie das Strukturmodell unserer Analyse ansehen:
 
 - Exogenes Messmodell
-$$\begin{pmatrix}ZD_1\\ZD_2\\ZD_6\end{pmatrix}=\begin{pmatrix}\tau_1^{x}\\\tau_2^{x}\\\tau_6^{x}\end{pmatrix}+\begin{pmatrix}\lambda_{11}^{x}\\\lambda_{21}^{x}\\\lambda_{31}^{x}\end{pmatrix}\xi_{\text{ZD}} + \begin{pmatrix}\delta_1\\\delta_2\\\delta_6\end{pmatrix}$$
+$$\begin{pmatrix}ZD_1\\ZD_2\\ZD_6\end{pmatrix}=\begin{pmatrix}\tau_1^{x}\\\tau_2^{x}\\\tau_6^{x}\end{pmatrix}+\begin{pmatrix}\lambda_{11}^{x}=1\\\lambda_{21}^{x}\\\lambda_{31}^{x}\end{pmatrix}\xi_{\text{ZD}} + \begin{pmatrix}\delta_1\\\delta_2\\\delta_6\end{pmatrix}$$
 - Endogenes Messmodell
-$$\begin{pmatrix}BO_1\\BO_6\\BO_{12}\\BO_{19}\end{pmatrix}=\begin{pmatrix}\tau_1^{y}\\\tau_6^{y}\\\tau_{12}^{y}\\\tau_{19}^{y}\end{pmatrix}+\begin{pmatrix}1\\\lambda_{21}^{y}\\\lambda_{31}^{y}\\\lambda_{41}^{y}\end{pmatrix}\eta_{\text{BOEE}} + \begin{pmatrix}\varepsilon_1\\\varepsilon_6\\\varepsilon_{12}\\\varepsilon_{19}\end{pmatrix}$$
+$$\begin{pmatrix}BO_1\\BO_6\\BO_{12}\\BO_{19}\end{pmatrix}=\begin{pmatrix}\tau_1^{y}\\\tau_6^{y}\\\tau_{12}^{y}\\\tau_{19}^{y}\end{pmatrix}+\begin{pmatrix}\lambda_{11}^{y}=1\\\lambda_{21}^{y}\\\lambda_{31}^{y}\\\lambda_{41}^{y}\end{pmatrix}\eta_{\text{BOEE}} + \begin{pmatrix}\varepsilon_1\\\varepsilon_6\\\varepsilon_{12}\\\varepsilon_{19}\end{pmatrix}$$
 - Strukturmodell in Matrixnotation (wobei wir $BFs$ als latente Variable mitführen)
 $$\begin{pmatrix}\eta_\text{BOEE}\\BF_s\end{pmatrix}=\begin{pmatrix}\gamma_{11}\\\gamma_{21}\end{pmatrix}\xi_\text{ZD} + \begin{pmatrix}0&0\\\beta_{21}&0\end{pmatrix}\begin{pmatrix}\eta_\text{BOEE}\\BF_s\end{pmatrix} + \begin{pmatrix}\zeta_\text{BOEE}\\\zeta_{BF_s}\end{pmatrix}$$
 
-Wenn wir genauer hinschauen, erkennen wir, dass $\gamma_{11}$ dem Pfad $a$, $\gamma_{21}$ dem Pfad $c$ und $\beta_{21}$ dem Pfad $b$ aus dem Mediationspfadmodell entspricht! Wir wollen das Modell `model_paths_IE_TE`, welches so aussah:
+Wenn wir dieses Matrizengleichung ausrechnen, erhalten wir:
+
+$$\eta_\text{BOEE}=\gamma_{11}\xi_\text{ZD} + \zeta_\text{BOEE}$$
+und 
+$$BFs = \gamma_{21}\xi_\text{ZD} + \beta_{21}\eta_\text{BOEE} + \zeta_{BFs}.$$
+Durch Einsetzten folgt:
+$$BFs = \gamma_{21}\xi_\text{ZD} + \beta_{21}\gamma_{11}\xi_\text{ZD}+ \beta_{21}\zeta_\text{BOEE} + \zeta_{BFs}.$$
+
+Wenn wir nun genauer hinschauen, erkennen wir, dass $\gamma_{11}$ dem Pfad $a$, $\gamma_{21}$ dem Pfad $c$ und $\beta_{21}$ dem Pfad $b$ aus dem Mediationspfadmodell entspricht! Entsprechend quantifiziert $\beta_{21}\gamma_{11}$ den indirekten Effekt  von $\xi_\text{ZD}$ über $\eta_\text{BOEE}$ auf $BFs$. Wir wollen das Modell `model_paths_IE_TE`, welches so aussah:
 ```{r}
 model_paths_IE_TE <- '
 BOEEs ~ a*ZDs
@@ -326,7 +334,7 @@ IE := a*b
 TE := IE + c
 '
 ```
-so manipulieren, dass es auch die latente Ebene enthält. Messmodelle wurden mit `=~` bestimmt, wobei links davon die neu definierte latente Variable steht. Nennen Sie die latente Variable für Zeitdruck `ZD` (Items: `zd1`, `zd2` und `zd6`) und die latente Variable Emotionale Erschöpfung `BOEE` (Items: `bo1`, `bo6`, `bo12` und `bo19`; Achtung: ohne "s" - diese Variablen gibt es nämlich im Datensatz). Setzen Sie den exogenen Skalierer auf die latente Varianz und den endogenen Skalierer auf die erste Faktorladung (dies war der Default!). Inkludieren Sie auch die Berechnung des indirekten und des totalen Effekts mit den gleichen Bezeichungen. Schätzen Sie anschließend das Modell und schauen sich die Summary an.
+so manipulieren, dass es auch die latente Ebene enthält. Messmodelle wurden mit `=~` bestimmt, wobei links davon die neu definierte latente Variable steht (der Name der latenten Variable ist beliebig). Nennen Sie die latente Variable für Zeitdruck `ZD` (Items: `zd1`, `zd2` und `zd6`) und die latente Variable Emotionale Erschöpfung `BOEE` (Items: `bo1`, `bo6`, `bo12` und `bo19`; Achtung: ohne "s" - diese Variablen gibt es nämlich im Datensatz - das waren die Skalenmittelwerte für Zeitdruck und Emotionale Erschöpfung). <mark style="background-color: orange"> Lassen Sie die `sem`-Funktion die Default-Skalierer auf die 1. Faktorladung pro latentem Konstrukt setzten, indem Sie nichts weiter unternehmen, als `R` zu sagen, welche Messungen zu welchem latenten Konstrukt gehören (Sie überschreiben diesen Default, indem Sie `NA*` vor das erste Item der latenten Variable schreiben und anschließend Varianz der latenten Variable auf 1 setzen). Außerdem werden per Default alle Residualvarianzen der Messungen geschätzt, Sie müssen diese also nicht explizit formulieren. Inkludieren Sie auch die Berechnung des indirekten und des totalen Effekts mit den gleichen Bezeichungen. Sie brauchen folglich 2 Messmodellsgleichungen, eine Gleichung für die Beziehung zwischen `ZD` und `BOEE`, sowie eine Gleichung für die Beziehung zwischen `ZD`, `BOEE` und `BFs`. Zum Schluss brauchen Sie noch die neu definierten Koeffizienten für den indirekten und den totalen Effekt (vgl. oben). </mark> Schätzen Sie anschließend das Modell mit `sem` und schauen sich die Summary an.
 
 
 ```{r exercise_model_SEM, exercise = TRUE, exercise.setup = "exercise_setup1", exercise.eval = FALSE}
@@ -367,8 +375,7 @@ fit_sem_IE_TE <-
 ```{r exercise_model_SEM-hint-2}
 model_sem_IE_TE <- '
 # Messmodelle
-ZD =~ NA*zd1 + ...
-ZD ~~ 1*ZD
+ZD =~ zd1 + ...
 ...
 # Strukturmodell
 ...
@@ -384,8 +391,7 @@ fit_sem_IE_TE <-
 ```{r exercise_model_SEM-hint-3}
 model_sem_IE_TE <- '
 # Messmodelle
-ZD =~ NA*zd1 + ...
-ZD ~~ 1*ZD
+ZD =~ zd1 + ...
 ...
 # Strukturmodell
 BOEE ~ ...
@@ -402,9 +408,8 @@ fit_sem_IE_TE <-
 ```{r exercise_model_SEM-hint-4}
 model_sem_IE_TE <- '
 # Messmodelle
-ZD =~ NA*zd1 + ...
-ZD ~~ 1*ZD
-...
+ZD =~ zd1 + ...
+BOEE =~ ...
 # Strukturmodell
 BOEE ~ ...
 BFs ~ ... + ...
@@ -422,9 +427,8 @@ fit_sem_IE_TE <-
 ```{r exercise_model_SEM-hint-5}
 model_sem_IE_TE <- '
 # Messmodelle
-ZD =~ NA*zd1 + ...
-ZD ~~ 1*ZD
-...
+ZD =~ zd1 + ...
+BOEE =~ ...
 # Strukturmodell
 BOEE ~ ...
 BFs ~ ... + ...
@@ -441,9 +445,8 @@ summary(...)
 ```{r exercise_model_SEM-solution}
 model_sem_IE_TE <- '
 # Messmodelle
-ZD =~ NA*zd1 + ...
-ZD ~~ 1*ZD
-...
+ZD =~ zd1 + ...
+BOEE =~ ...
 # Strukturmodell
 BOEE ~ ...
 BFs ~ ... + ...
@@ -463,8 +466,7 @@ summary(fit_sem_IE_TE)
 ```{r, include = F}
 model_sem_IE_TE <- '
 # Messmodelle
-ZD =~ NA*zd1 + zd2 + zd6
-ZD ~~ 1*ZD
+ZD =~ zd1 + zd2 + zd6
 BOEE =~ bo1 + bo6 + bo12 + bo19
 
 # Strukturmodell
@@ -502,8 +504,7 @@ fit_paths <- sem(model_paths, data = StressAtWork)
 # Modell
 model_sem_IE_TE <- '
 # Messmodelle
-ZD =~ NA*zd1 + zd2 + zd6
-ZD ~~ 1*ZD
+ZD =~ zd1 + zd2 + zd6
 BOEE =~ bo1 + bo6 + bo12 + bo19
 
 # Strukturmodell
@@ -604,8 +605,7 @@ Das Pfadanalysemodell hatte als Voraussetzung, dass alle Variablen essentiell $\
 ```{r, eval = F}
 model_sem_IE_TE <- '
 # Messmodelle
-ZD =~ NA*zd1 + zd2 + zd6
-ZD ~~ 1*ZD
+ZD =~ zd1 + zd2 + zd6
 BOEE =~ bo1 + bo6 + bo12 + bo19
 
 # Strukturmodell
@@ -624,8 +624,7 @@ Wenn wir weiterhin die Defaulteinstellungen der Funktion `sem` nutzen wollen (1.
 ```{r exercise_model_SEM_tau, exercise = TRUE, exercise.setup = "exercise_setup2", exercise.eval = FALSE}
 model_sem_IE_TE_tau <- '
 # Messmodelle
-ZD =~ NA*zd1 + zd2 + zd6
-ZD ~~ 1*ZD
+ZD =~ zd1 + zd2 + zd6
 BOEE =~ bo1 + bo6 + bo12 + bo19
 
 # Strukturmodell
@@ -645,8 +644,7 @@ summary(fit_sem_IE_TE_tau, fit.measures = T)
 ```{r exercise_model_SEM_tau-hint-1}
 model_sem_IE_TE_tau <- '
 # Messmodelle
-ZD =~ NA*zd1 + (l1)*zd1 + ...*zd2 + zd6
-ZD ~~ 1*ZD
+ZD =~ (l1)*zd1  + (l1)*zd2 + ...*zd6
 BOEE =~ (l2)*bo1 + ...*bo6 + bo12 + bo19
 
 # Strukturmodell
@@ -667,8 +665,7 @@ summary(fit_sem_IE_TE_tau, fit.measures = T)
 ```{r, include=F}
 model_sem_IE_TE_tau <- '
 # Messmodelle
-ZD =~ NA*zd1 + (l1)*zd1 + (l1)*zd2 + (l1)*zd6
-ZD ~~ 1*ZD
+ZD =~ (l1)*zd1 + (l1)*zd2 + (l1)*zd6
 BOEE =~ (l2)*bo1 + (l2)*bo6 + (l2)*bo12 + (l2)*bo19
 
 # Strukturmodell
@@ -703,8 +700,7 @@ fit_paths <- sem(model_paths, data = StressAtWork)
 # Modell
 model_sem_IE_TE <- '
 # Messmodelle
-ZD =~ NA*zd1 + zd2 + zd6
-ZD ~~ 1*ZD
+ZD =~ zd1 + zd2 + zd6
 BOEE =~ bo1 + bo6 + bo12 + bo19
 
 # Strukturmodell
@@ -720,8 +716,7 @@ fit_sem_IE_TE <- sem(model_sem_IE_TE, StressAtWork)
 ## Modell für essentielle tau-Äquvivalenz
 model_sem_IE_TE_tau <- '
 # Messmodelle
-ZD =~ NA*zd1 + (l1)*zd1 + (l1)*zd2 + (l1)*zd6
-ZD ~~ 1*ZD
+ZD =~ (l1)*zd1 + (l1)*zd2 + (l1)*zd6
 BOEE =~ (l2)*bo1 + (l2)*bo6 + (l2)*bo12 + (l2)*bo19
 
 # Strukturmodell
@@ -780,8 +775,7 @@ fit_paths <- sem(model_paths, data = StressAtWork)
 # Modell
 model_sem_IE_TE <- '
 # Messmodelle
-ZD =~ NA*zd1 + zd2 + zd6
-ZD ~~ 1*ZD
+ZD =~ zd1 + zd2 + zd6
 BOEE =~ bo1 + bo6 + bo12 + bo19
 
 # Strukturmodell
@@ -797,8 +791,7 @@ fit_sem_IE_TE <- sem(model_sem_IE_TE, StressAtWork)
 ## Modell für essentielle tau-Äquvivalenz
 model_sem_IE_TE_tau <- '
 # Messmodelle
-ZD =~ NA*zd1 + (l1)*zd1 + (l1)*zd2 + (l1)*zd6
-ZD ~~ 1*ZD
+ZD =~ (l1)*zd1 + (l1)*zd2 + (l1)*zd6
 BOEE =~ (l2)*bo1 + (l2)*bo6 + (l2)*bo12 + (l2)*bo19
 
 # Strukturmodell
@@ -874,8 +867,7 @@ Außerdem fällt uns auf, dass sowohl die Faktorladungen als auch die Pfadkoeffi
 ```{r, results="hide"}
 model_sem_IE_TE_MSA_abc <- '
 # Messmodelle
-ZD =~ NA*zd1 + zd2 + zd6
-ZD ~~ 1*ZD
+ZD =~ zd1 + zd2 + zd6
 BOEE =~ bo1 + bo6 + bo12 + bo19
 
 # Strukturmodell
@@ -912,9 +904,8 @@ hat sich nichts am Output geändert. Wir haben ja auch nur Labels vergeben und n
 ```{r}
 model_sem_IE_TE_sex <- '
 # Messmodelle
-ZD =~ NA*zd1 + c(l1_1, l1_2)*zd1 + c(l2_1, l2_2)*zd2 + c(l3_1, l3_2)*zd6
-ZD ~~ 1*ZD
-BOEE =~ c(l4_1, l4_2)*bo1 + c(l5_1, l5_2)*bo6 + c(l6_1, l6_2)*bo12 + c(l7_1, l7_2)*bo19
+ZD =~ zd1 + c(l2_1, l2_2)*zd2 + c(l3_1, l3_2)*zd6
+BOEE =~ bo1 + c(l5_1, l5_2)*bo6 + c(l6_1, l6_2)*bo12 + c(l7_1, l7_2)*bo19
 
 # Fehlervarianzen
 zd1 ~~ c(t1_1, t1_2)*zd1
@@ -976,9 +967,8 @@ Unter metrischer Invarianz verstehen wir, dass die Faktorladungen ($\lambda$) ü
 ```{r, results = "hide"}
 model_sem_IE_TE_sex_metrisch <- '
 # Messmodelle
-ZD =~ NA*zd1 + c(l1, l1)*zd1 + c(l2, l2)*zd2 + c(l3, l3)*zd6
-ZD ~~ 1*ZD
-BOEE =~ c(l4, l4)*bo1 + c(l5, l5)*bo6 + c(l6, l6)*bo12 + c(l7, l7)*bo19
+ZD =~ zd1 + c(l2, l2)*zd2 + c(l3, l3)*zd6
+BOEE =~ bo1 + c(l5, l5)*bo6 + c(l6, l6)*bo12 + c(l7, l7)*bo19
 
 # Fehlervarianzen
 zd1 ~~ c(t1_1, t1_2)*zd1
@@ -1050,9 +1040,8 @@ Als nächsten wollen wir prüfen, ob zusätzlich zu den Faktorladungen auch die 
 ```{r, results = "hide"}
 model_sem_IE_TE_sex_skalar <- '
 # Messmodelle
-ZD =~ NA*zd1 + c(l1, l1)*zd1 + c(l2, l2)*zd2 + c(l3, l3)*zd6
-ZD ~~ 1*ZD
-BOEE =~ c(l4, l4)*bo1 + c(l5, l5)*bo6 + c(l6, l6)*bo12 + c(l7, l7)*bo19
+ZD =~ zd1 + c(l2, l2)*zd2 + c(l3, l3)*zd6
+BOEE =~ bo1 + c(l5, l5)*bo6 + c(l6, l6)*bo12 + c(l7, l7)*bo19
 
 # Fehlervarianzen
 zd1 ~~ c(t1_1, t1_2)*zd1
@@ -1120,9 +1109,8 @@ Unter strikter Invarianz verstehen wir, dass zusätzlich zu den Faktorladungen u
 ```{r, results = "hide"}
 model_sem_IE_TE_sex_strikt <- '
 # Messmodelle
-ZD =~ NA*zd1 + c(l1, l1)*zd1 + c(l2, l2)*zd2 + c(l3, l3)*zd6
-ZD ~~ 1*ZD
-BOEE =~ c(l4, l4)*bo1 + c(l5, l5)*bo6 + c(l6, l6)*bo12 + c(l7, l7)*bo19
+ZD =~ zd1 + c(l2, l2)*zd2 + c(l3, l3)*zd6
+BOEE =~ bo1 + c(l5, l5)*bo6 + c(l6, l6)*bo12 + c(l7, l7)*bo19
 
 # Fehlervarianzen
 zd1 ~~ c(t1, t1)*zd1
@@ -1190,9 +1178,8 @@ Unter struktureller Invarianz verstehen wir das Gleichsetzten aller Strukturpara
 ```{r, results = "hide"}
 model_sem_IE_TE_sex_struktur <- '
 # Messmodelle
-ZD =~ NA*zd1 + c(l1, l1)*zd1 + c(l2, l2)*zd2 + c(l3, l3)*zd6
-ZD ~~ 1*ZD
-BOEE =~ c(l4, l4)*bo1 + c(l5, l5)*bo6 + c(l6, l6)*bo12 + c(l7, l7)*bo19
+ZD =~ zd1 + c(l2, l2)*zd2 + c(l3, l3)*zd6
+BOEE =~ bo1 + c(l5, l5)*bo6 + c(l6, l6)*bo12 + c(l7, l7)*bo19
 
 # Fehlervarianzen
 zd1 ~~ c(t1, t1)*zd1
@@ -1252,8 +1239,7 @@ Dieses ganze Prozedere erscheint recht aufwendig. Allerdings kann so in jedem Sc
 ```{r}
 model_sem_IE_TE_no_label <- '
 # Messmodelle
-ZD =~ NA*zd1 + zd2 + zd6
-ZD ~~ 1*ZD
+ZD =~ zd1 + zd2 + zd6
 BOEE =~ bo1 + bo6 + bo12 + bo19
 
 # Strukturmodell
