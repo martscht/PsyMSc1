@@ -315,7 +315,7 @@ $$\begin{pmatrix}BO_1\\BO_6\\BO_{12}\\BO_{19}\end{pmatrix}=\begin{pmatrix}\tau_1
 - Strukturmodell in Matrixnotation (wobei wir $BFs$ als latente Variable mitführen)
 $$\begin{pmatrix}\eta_\text{BOEE}\\BF_s\end{pmatrix}=\begin{pmatrix}\gamma_{11}\\\gamma_{21}\end{pmatrix}\xi_\text{ZD} + \begin{pmatrix}0&0\\\beta_{21}&0\end{pmatrix}\begin{pmatrix}\eta_\text{BOEE}\\BF_s\end{pmatrix} + \begin{pmatrix}\zeta_\text{BOEE}\\\zeta_{BF_s}\end{pmatrix}$$
 
-Wenn wir dieses Matrizengleichung ausrechnen, erhalten wir:
+<mark style="background-color: orange">  Wenn wir die Matrizengleichung des Strukturmodells ausrechnen, erhalten wir:
 
 $$\eta_\text{BOEE}=\gamma_{11}\xi_\text{ZD} + \zeta_\text{BOEE}$$
 und 
@@ -323,7 +323,7 @@ $$BFs = \gamma_{21}\xi_\text{ZD} + \beta_{21}\eta_\text{BOEE} + \zeta_{BFs}.$$
 Durch Einsetzten folgt:
 $$BFs = \gamma_{21}\xi_\text{ZD} + \beta_{21}\gamma_{11}\xi_\text{ZD}+ \beta_{21}\zeta_\text{BOEE} + \zeta_{BFs}.$$
 
-Wenn wir nun genauer hinschauen, erkennen wir, dass $\gamma_{11}$ dem Pfad $a$, $\gamma_{21}$ dem Pfad $c$ und $\beta_{21}$ dem Pfad $b$ aus dem Mediationspfadmodell entspricht! Entsprechend quantifiziert $\beta_{21}\gamma_{11}$ den indirekten Effekt  von $\xi_\text{ZD}$ über $\eta_\text{BOEE}$ auf $BFs$. Wir wollen das Modell `model_paths_IE_TE`, welches so aussah:
+Wenn wir nun genauer hinschauen, erkennen wir, dass $\gamma_{11}$ dem Pfad $a$, $\gamma_{21}$ dem Pfad $c$ und $\beta_{21}$ dem Pfad $b$ aus dem Mediationspfadmodell entspricht! Entsprechend quantifiziert $\beta_{21}\gamma_{11}$ den indirekten Effekt  von $\xi_\text{ZD}$ über $\eta_\text{BOEE}$ auf $BFs$.  </mark> Wir wollen das Modell `model_paths_IE_TE`, welches so aussah:
 ```{r}
 model_paths_IE_TE <- '
 BOEEs ~ a*ZDs
@@ -385,6 +385,7 @@ ZD =~ zd1 + ...
 # Strukturmodell
 ...
 
+
 # Neue Parameter
 ...
 
@@ -438,6 +439,7 @@ model_sem_IE_TE <- '
 # Messmodelle
 ZD =~ zd1 + ...
 BOEE =~ ...
+
 # Strukturmodell
 BOEE ~ a*ZD
 BFs ~ ... + ...
@@ -456,6 +458,7 @@ model_sem_IE_TE <- '
 # Messmodelle
 ZD =~ zd1 + ...
 BOEE =~ ...
+
 # Strukturmodell
 BOEE ~ a*ZD
 BFs ~ ... + ...
