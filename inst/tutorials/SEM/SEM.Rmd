@@ -465,7 +465,6 @@ IE := a*b
 TE := ...
 '
 
-
 fit_sem_IE_TE <- sem(model_sem_IE_TE, data = StressAtWork)
 summary(fit_sem_IE_TE)
 ```
