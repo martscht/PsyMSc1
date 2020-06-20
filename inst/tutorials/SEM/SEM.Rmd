@@ -704,10 +704,10 @@ BFs ~  BOEE + ZD
 '
 ```
 
-Probieren wir dies doch gleich einmal aus. Um `BFs` hier wie eine latente Variable zu behandeln, müssen wir bestimmen, dass das Interzept und die Residualvarianz nicht mit den manifesten Variablen zusammen gleichgesetzt wird, sondern erst mit den latenten Variablen über die Gruppen restringiert wird (bei der Testung der vollständigen Invarianz). Dazu müssen wir zusätzlich die partielle Invarianzeinstellung verwenden: `group.partial = c("BFs ~ 1", "BFs ~~BFs")`. Hiermit wird bestimmt, welche Koeffizienten nicht von den Invarianzeinstellungen betroffen sein sollen. Fangen wir mit dem Fitten des konfigural invarianten Modells an.
+<mark style="background-color: orange">  Probieren wir dies doch gleich einmal aus. Um `BFs` hier wie eine latente Variable zu behandeln, müssen wir bestimmen, dass das Interzept und die Residualvarianz nicht mit den manifesten Variablen zusammen gleichgesetzt wird, sondern erst mit den latenten Variablen über die Gruppen restringiert wird (bei der Testung der vollständigen Invarianz). Dazu müssen wir zusätzlich die partielle Invarianzeinstellung verwenden: `group.partial = c("BFs ~ 1", "BFs ~~BFs")`. Hiermit wird bestimmt, welche Koeffizienten nicht von den Invarianzeinstellungen betroffen sein sollen. Auch wenn diese Einstellungen erst bei der skalaren/starken Invarianz (`"BFs~1"`) und bei der strikten Invarianz (`"BFs~~BFs"`) zu tragen kommen, stellen wir diese auch beim konfigural-invarianten und beim metrisch-invarianten (schwach-invarianten) Modell mit ein. </mark> Fangen wir mit dem Fitten des konfigural invarianten Modells an.
 
 #### Konfigurale Invarianz
-<mark style="background-color: orange">Bei der konfiguralen oder auch Struktur-Invarianz </mark> geht es darum, dass in beiden Gruppen die gleichen Modelle aufgestellt werden. Gilt diese Annahme bereits nicht, so macht es keinen Sinn das Modell weiter einzuschränken und Parameter über die Gruppen zu restringieren. Glücklicherweise passt das Modell zu den Daten, in welchem das Modell für das Geschlecht jeweils geschätzt wurde. Hier schauen wir uns dies noch einmal zur Wiederholung und zum Umbennen des geschätzten Modells an und spezifizieren mit `group.equal = c("")`, dass keine Parameter über die Gruppen als identisch angenommen werden sollen:
+<mark style="background-color: orange"> Bei der konfiguralen oder auch Struktur-Invarianz </mark> geht es darum, dass in beiden Gruppen die gleichen Modelle aufgestellt werden. Gilt diese Annahme bereits nicht, so macht es keinen Sinn das Modell weiter einzuschränken und Parameter über die Gruppen zu restringieren. Glücklicherweise passt das Modell zu den Daten, in welchem das Modell für das Geschlecht jeweils geschätzt wurde. Hier schauen wir uns dies noch einmal zur Wiederholung und zum Umbennen des geschätzten Modells an und spezifizieren mit `group.equal = c("")`, dass keine Parameter über die Gruppen als identisch angenommen werden sollen:
 
 ```{r, results = "hide"}
 fit_sem_sex_konfigural <- sem(model_sem, data = StressAtWork, group = "sex", 
@@ -744,33 +744,7 @@ abbrev(X = fit_sem_sex_metrisch, begin = "Group 1", end = "Intercepts")
 abbrev(X = fit_sem_sex_metrisch, begin = "Group 2", end = "Intercepts")
 ```
 
-
-
-
-`group.equal = c("loadings", "intercepts")`
-`group.equal = c("loadings", "intercepts", "residuals")`
-`group.equal = c("loadings", "intercepts", "residuals",` ` "means", "lv.variances", "lv.covariances", "regressions")`
-
-#### Skalare Invarianz
-
-#### Strikte Invarianz
-
-#### Vollständige Invarianz
-
-
-```{r}
-fit_sem_sex_metrisch <- sem(model_sem, data = StressAtWork, group = "sex",
-                                   group.equal = c("loadings"), group.partial = c("BFs ~ 1", "BFs ~~BFs"))
-
-fit_sem_sex_skalar <- sem(model_sem, data = StressAtWork, group = "sex",
-                                 group.equal = c("loadings", "intercepts"), group.partial = c("BFs ~ 1", "BFs ~~BFs"))
-
-fit_sem_sex_strikt <- sem(model_sem, data = StressAtWork, group = "sex",
-                                 group.equal = c("loadings", "intercepts", "residuals"), group.partial = c("BFs ~ 1", "BFs ~~BFs"))
-
-fit_sem_sex_struktur <- sem(model_sem, data = StressAtWork, group = "sex",
-                                   group.equal = c("loadings", "intercepts", "residuals", "means", "lv.variances", "regressions"))
-```
+Wir erkennen, dass "einfach" nur die Parameter durchnummeriert werden, wobei Parameter, die auf 1 restringiert sind mitgezählt werden, aber nicht ihr eigenes Label erhalten. So heißt $\lambda_2$, der Ladungskoeffizient von `zd2` hier `.p2.`, wobei das `p` für Parameter steht und die Punkte andeuten, dass es sich hierbei um ein intern vergebenes (alsoein durch die Funktion selbst vergebenes) Label handelt. Wollen wir nun wissen, ob sich die Modelle statistisch signifikant von einander underscheiden, können wir wieder den Likelihood-Ratio-Test ($\chi^2$-Differenzentest) heranziehen.
 
 ```{r, eval = F}
 lavTestLRT(fit_sem_sex_metrisch, fit_sem_sex_konfigural)
@@ -781,6 +755,19 @@ res_metrisch <- lavTestLRT(fit_sem_sex_metrisch, fit_sem_sex_konfigural)
 print(res_metrisch)
 ```
 
+Die $\chi^2$-Differenz liegt bei `r round(res_metrisch[[5]][2], 4)` bei $\Delta df=$ `r res_metrisch[[6]][2]` mit dem zugehörigen $p$-Wert von `r round(res_metrisch[[7]][2], 4)`. Somit können wir weiter von metrischer Invarianz ausgehen. Dies beudeutet, dass über das Geschlecht hinweg die Items zu gleichen Teilen sich aus den latenten Variabeln zusammensetzten.
+
+
+#### Skalare Invarianz
+Als nächsten wollen wir prüfen, ob zusätzlich zu den Faktorladungen auch die Interzepte ($\tau$) über die Gruppen hinweg gleich sind (insgesamt also $\lambda$s und $\tau$s gleich über die Gruppen hinweg). Dazu passen wir erneut unser Modell an. Hierbei ist zu beachten, dass wir nicht das Interzept von `BFs` über die Gruppen hinweg gleichsetzten, da sich die Interzepte auf die manifesten Variablen beziehen, wir `BFs` hier allerdings wie eine latente Variable behandeln wollen. Dazu haben wir die `group.partial = c("BFs ~ 1", "BFs ~~BFs")` Einstellungen verwendet. Eine Besonderheit der skalaren Invarianz ist, dass sobald wir die Interzepte über die Gruppen hinweg gleichsetzten, haben wir Freiheitsgrade, mit welchen wir die latenten Interzepte von `ZD` und `BOEE` schätzen können. Dies ist  dann eine Art Effektkodierung, wobei der Mittelwert der einen Gruppe auf 0 gesetzt wird und in der anderen Gruppe wird dann die Abweichung zu dieser Gruppe mitgeführt. Wir schauen uns dies im Output an.
+
+```{r, results = "hide"}
+fit_sem_sex_skalar <- sem(model_sem, data = StressAtWork, group = "sex",
+                                 group.equal = c("loadings", "intercepts"), group.partial = c("BFs ~ 1", "BFs ~~BFs"))
+summary(fit_sem_sex_skalar, fit.measures = T)
+```
+Hier greift nun tatsächlich die Einstellung `"BFs~~1"` in `group.partial`. Nun wollen wir untersuchen, ob das metrisch- und das skalar-invariante Modell sich signifikant in der Modellbeschreibung unterscheiden.
+
 ```{r, eval = F}
 lavTestLRT(fit_sem_sex_skalar, fit_sem_sex_metrisch)
 ```
@@ -790,6 +777,16 @@ res_skalar <- lavTestLRT(fit_sem_sex_skalar, fit_sem_sex_metrisch)
 print(res_skalar)
 ```
 
+Die $\chi^2$-Differenz ist erneut klein (`r round(res_skalar[[5]][2], 3)`) und der p-Wert zeigt auch hier an, dass es sich um keine signifikante Verschlechterung des Modells handelt p = `r round(res_skalar[[7]][2], 3)`. Die Null-Hypothese, dass die Interzepte über die Faktorladungen hinaus über das Geschlecht hinweg gleich sind, wird somit nicht verworfen. <mark style="background-color: orange"> Dies bedeutet nun, dass Unterschiede in den Items zwischen Personen tatsächlich auch auf Unterschiede  der latenten Variablen dieser Personen zurückzuführen sind, was eine sehr wichtige Information ist. </mark>
+
+
+#### Strikte Invarianz
+Unter strikter Invarianz verstehen wir, dass zusätzlich zu den Faktorladungen und den Interzepten auch die Residualvarianzen ($\theta$) gleich sind (insgesamt also $\lambda$s, $\tau$s und $\theta$s gleich über die Gruppen hinweg). Wir passen entsprechend das Modell an:
+```{r}
+fit_sem_sex_strikt <- sem(model_sem, data = StressAtWork, group = "sex",
+                                 group.equal = c("loadings", "intercepts", "residuals"), group.partial = c("BFs ~ 1", "BFs ~~BFs"))
+```
+Hier greift nun tatsächlich die Einstellung `"BFs~~BFs"` in `group.partial`. Wir vergleichen das skalar- und das strikt-invariante Modell hinsichtlich der Modellbeschreibung.
 ```{r, eval = F}
 lavTestLRT(fit_sem_sex_strikt, fit_sem_sex_skalar)
 ```
@@ -799,17 +796,45 @@ res_strikt <- lavTestLRT(fit_sem_sex_strikt, fit_sem_sex_skalar)
 print(res_strikt)
 ```
 
+Die $\chi^2$-Differenz ist erneut klein (`r round(res_strikt[[5]][2], 3)`) und der p-Wert zeigt auch hier an, dass es sich um keine signifikante Verschlechterung des Modells handelt p = `r round(res_strikt[[7]][2], 3)`. Die Null-Hypothese, dass die Fehlervarianzen über die Faktorladungen und Interzepte hinaus über das Geschlecht hinweg gleich sind, wird somit nicht verworfen. 
+<mark style="background-color: orange"> Dies bedeutet nun, dass Unterschiede in den Reliabilitäten tatsächlich auch auf Unterschiede in den Varianzen der latenten Variablen zurückzuführen sind. </mark>
 
+
+#### Vollständige Invarianz
+
+Unter vollständiger <mark style="background-color: orange"> oder struktureller </mark> Invarianz verstehen wir das Gleichsetzten aller Strukturparameter. Hier werden nun alle Varianzen, Residualvarianzen, ungerichteten und gerichteten Effekte des Strukturmodells über die Gruppen hinweg gleich gesetzt.
+(insgesamt also $\lambda$s, $\tau$s, $\theta$s, $\gamma$s, $\beta$s, $\kappa$s $\phi$s und $\psi$s gleich über die Gruppen hinweg). Wir passen entsprechend das Modell an.  Außerdem müssen wir nun das Interzept und die Residualvarianz von `BFs` invariant zwischen den Gruppen setzen, was wir erreichen, indem wir die `group.partial` Option rausnnehmen.
+```{r}
+fit_sem_sex_voll <- sem(model_sem, data = StressAtWork, group = "sex",
+                                 group.equal = c("loadings", "intercepts", "residuals",
+                                                 "means", "lv.variances", "lv.covariances", "regressions"))
+```
+
+Wenn wir nun den Modellvergleich zwischen dem strikt invarianten und dem vollständig invarianten Modell durchführen     
 ```{r, eval = F}
-lavTestLRT(fit_sem_sex_struktur, fit_sem_sex_strikt)
+lavTestLRT(fit_sem_sex_voll, fit_sem_sex_strikt)
 ```
 
 ```{r, echo = F}
-res_struktur <- lavTestLRT(fit_sem_sex_struktur, fit_sem_sex_strikt)
-print(res_struktur)
+res_voll <- lavTestLRT(fit_sem_sex_voll, fit_sem_sex_strikt)
+print(res_voll)
 ```
 
- <mark style="background-color: orange"> Alle Modellvergleiche sind vollständig äquivalent zu den vorherigen. --> stimmt leider nicht, da die latenten Mittelwerte nicht über </mark>
+erhalten wir diesmal einen großen $\chi^2$-Differenz  (`r round(res_voll[[5]][2], 3)`) und der p-Wert zeigt hier an, dass es sich um eine signifikante Verschlechterung des Modells handelt p = `r round(res_voll[[7]][2], 3)` $< 0.05$, wenn wir  die Restriktion der vollständigen Invarianz in das Modell aufnehmen. Die Null-Hypothese, dass alle Parameter im Modell über das Geschlecht hinweg gleich sind, wird somit verworfen. Dies bedeutet also, dass es Geschlechtsunterschiede in den Beziehungen zwischen den latenten Variablen gibt. Wir schauen uns dies an, indem wir uns den Output der Summary des strikt-invarianten Modells ansehen:
+
+```{r, eval = F}
+summary(fit_sem_sex_strikt)
+```
+
+```{r, echo = F}
+abbrev(X = fit_sem_sex_strikt, begin = "Group 1", end = "Variances")
+
+abbrev(X = fit_sem_sex_strikt, begin = "Group 2", end = "Variances")
+```
+
+<mark style="background-color: orange"> Den Unterpunkten `Regressions` entnehmen wir, dass die Pfadkoeffizienten  recht ähnlich groß zu sein scheinen. Die Standardfehler überlappen sich stark, wenn wir `Estimate` $\pm$ `Std.Err` für einen Koeffizienten über die Gruppen hinweg rechnen. Schauen wir uns die Interzepte in den Unterpunkten `Intercepts` über die Gruppen an, erkennen wir an der Effektkodierung für `ZD` und `BOEE`, dass die latenten Interzepte ($\kappa$) in der einen Gruppe auf 0 und in der anderen Gruppe frei geschätzt wurde. Der Interzept in Gruppe 2 (den Männern) von Zeitdruck ist signifikant von 0 verschieden, das von Emotionaler Erschöpfung nicht. Dies bedeutet, dass sich Männern und Frauen in ihrem latenten Mittelwert von Zeitdruck unterscheiden. Das negative Vorzeichen verrät uns, dass Männer im durchschnitt weniger Zeitdruck erleben. Dieser signifikante Unterschied könnte der Grund gewesen sein, dass die vollständige Invarianz verworfen wird. Um dies genauer zu prüfen, müssten wir sukzessive alle Parameter über die Gruppen gleichsetzen und schauen, für welchen diese Gleichsetzung zu einer signifikanten Verschlechterung des Modells führt. </mark>
+
+
 
 ## Appendix A {#AppendixA}
 ### Modell-Fit, Stichprobengröße und Fehlspezifikation
@@ -1282,6 +1307,7 @@ res_skalar <- lavTestLRT(fit_sem_IE_TE_sex_skalar, fit_sem_IE_TE_sex_metrisch)
 print(res_skalar)
 ```
 
+
 Die $\chi^2$-Differenz ist erneut klein (`r round(res_skalar[[5]][2], 3)`) und der p-Wert zeigt auch hier an, dass es sich um keine signifikante Verschlechterung des Modells handelt p = `r round(res_skalar[[7]][2], 3)`. Die Null-Hypothese, dass die Interzepte über die Faktorladungen hinaus über das Geschlecht hinweg gleich sind, wird somit nicht verworfen.
 
 #### Strikte Invarianz
@@ -1402,7 +1428,7 @@ TE := IE + c
 fit_sem_IE_TE_sex_struktur <- sem(model_sem_IE_TE_sex_struktur, data = StressAtWork, group = "sex")
 ```
 
-Wenn wir nun den Modellvergleich zwischen dem strikt invarianten und dem struktur invarianten Modell durchführen     
+
 ```{r, eval = F}
 lavTestLRT(fit_sem_IE_TE_sex_struktur, fit_sem_IE_TE_sex_strikt)
 ```
