@@ -685,10 +685,12 @@ Bis auf die hinzukommenden indirekten und totalen Effekte:
 ```{r, echo = F}
 abbrev(X = fit_sem_IE_TE_MSA_abc, begin = "Defined Parameters", end = NULL, shift = 1)
 ```
-hat sich nichts am Output geändert. Wir haben ja auch nur Labels vergeben und neu definierte Parameter hinzugefügt, die allerdings, wie zuvor schon erwähnt, die Modellstruktur (und somit auch die $df$) nicht tangieren. Die totalen und die indirekten Effekte scheinen sich kaum über die Gruppen hinweg zu unterscheiden. 
+hat sich nichts am Output geändert. Wir haben ja auch nur Labels vergeben und neu definierte Parameter hinzugefügt, die allerdings, wie zuvor schon erwähnt, die Modellstruktur (und somit auch die $df$) nicht tangieren. 
+<mark style="background-color: orange"> Die totalen und die indirekten Effekte scheinen sich kaum über die Gruppen hinweg zu unterscheiden. Wir könnten hier eine Signifikanztestung durchführen, indem wir wieder via Bootstrapping Konfidenzintervalle für die beiden indirekten Effekte erstellen und dann untersuchen, ob diese überlappen. Diese Untersuchung wird dem/der motivierten Lesenden überlassen. </mark>
 
-#### Short-Cut Invarianztestung
-So wie wir die indirekten Effekte bestimmt und die Koeffizienten für beide Gruppen benannt haben, lassen sich auch Invarianzen händisch prüfen. Wenn zwei Koeffizienten das selbe Label gegeben wird, wird dieser Parameter auf den gleichen Wert gesetzt. Dieses ganze Prozedere erscheint recht aufwendig. Allerdings kann so in jedem Schritt überprüft werden, dass die Parameter richtig restringiert wurden. Auch lassen sich so auch leicht partielle Invarianz einbauen, in welchen bspw. nicht alle Faktorladungen über die Gruppen hinweg gleich sind. Auch könnten Invarianzen nur für bestimmte Variablen angenommen werden. Trotzdem gibt es in `lavaan` die extrem hilfreiche Funktion, dies automatisiert durchzuführen. Dazu müssen wir lediglich in der Schätzung unserer Modelle das Zusatzargument `group.equal` spezifizieren. Lassen wir es weg oder setzten es auf `group.equal = c("")`, so landen wir im konfiguralen Fall (gleiche Modellstruktur wird über die Gruppen hinweg angenommen). Spezifizieren wir `group.equal = c("loadings")` so wird das metrisch invariante Modell geschätzt. Genauso lassen sich auch das skalar (`group.equal = c("loadings", "intercepts")`) und das strikt (`group.equal = c("loadings", "intercepts", "residuals")`) invariante Modell schätzen. Das vollständig-invariante Modell erhalten wir mit `group.equal = c("loadings", "intercepts", "residuals",` ` "means", "lv.variances", "lv.covariances", "regressions")`. Hierbei restringiert `"means"` die latenten Mittelwerte ($\kappa$), `"lv.variances"` die latenten (Residual-)Varianzen ($\phi$s und $\psi$s exogen und endogen) und `"regressions"` die Strukturpfadkoeffizienten ($\gamma$s und $\beta$s). Hätten wir Residualkovarianzen bei den manifesten oder latenten Variablen gehabt, so müssten wir diese auch mit `"residual.covariances"` sowie mit `"lv.covariances"` restringieren. Damit wir die `sem` Funktion nicht durch unsere vergebenen Labels verwirren und somit die Einstellungen mit `group.equal` überschreiben, **nehmen wir die Bezeichnungen für den indirekten Effekt heraus.** Wir nennen das Modell ohne Labels einfach `model_sem`.
+### Short-Cut Invarianztestung
+<mark style="background-color: orange"> So wie wir die indirekten Effekte bestimmt und die Koeffizienten für beide Gruppen benannt haben, lassen sich auch Invarianzen händisch prüfen. Wenn zwei Koeffizienten das selbe Label tragen, wird dieser Parameter auf den gleichen Wert gesetzt. Dieses ganze Prozedere erscheint recht aufwendig. Allerdings kann so in jedem Schritt überprüft werden, dass die Parameter richtig restringiert wurden. Auch lassen sich so auch leicht partielle Invarianz einbauen, in welchen bspw. nicht alle Faktorladungen über die Gruppen hinweg gleich sind. Auch könnten Invarianzen nur für bestimmte Variablen angenommen werden. Trotzdem gibt es in `lavaan` die extrem hilfreiche Funktion, dies automatisiert durchzuführen. Dazu müssen wir lediglich in der Schätzung unserer Modelle das Zusatzargument `group.equal` spezifizieren. </mark> Lassen wir es weg oder setzten es auf `group.equal = c("")`, so landen wir im konfiguralen Fall (gleiche Modellstruktur wird über die Gruppen hinweg angenommen). Spezifizieren wir `group.equal = c("loadings")` so wird das metrisch invariante Modell geschätzt. Genauso lassen sich auch das skalar (`group.equal = c("loadings", "intercepts")`) und das strikt (`group.equal = c("loadings", "intercepts", "residuals")`) invariante Modell schätzen. Das vollständig-invariante Modell erhalten wir mit `group.equal = c("loadings", "intercepts", "residuals",` ` "means", "lv.variances", "lv.covariances", "regressions")`. Hierbei restringiert `"means"` die latenten Mittelwerte ($\kappa$), `"lv.variances"` die latenten (Residual-)Varianzen ($\phi$s und $\psi$s exogen und endogen) und `"regressions"` die Strukturpfadkoeffizienten ($\gamma$s und $\beta$s). Hätten wir Residualkovarianzen bei den manifesten oder latenten Variablen gehabt, so müssten wir diese auch mit `"residual.covariances"` sowie mit `"lv.covariances"` restringieren. 
+<mark style="background-color: orange"> Damit wir die `sem` Funktion nicht durch unsere vergebenen Labels verwirren und somit die Einstellungen mit `group.equal` überschreiben, **nehmen wir die Bezeichnungen für den indirekten Effekt heraus.** Wir nennen das Modell ohne Labels einfach `model_sem`. Für die händische Durchführung sowie simple grafische Repräsentationen siehe [Appendix B](#AppendixB). </mark>
 
 ```{r}
 model_sem <- '
@@ -702,7 +704,34 @@ BFs ~  BOEE + ZD
 '
 ```
 
-Probieren wir dies doch gleich einmal aus. Um `BFs` hier wie eine latente Variable zu behandeln, müssen wir bestimmen, dass das Interzept und die Residualvarianz nicht mit den manifesten Variablen zusammen gleichgesetzt wird, sondern erst mit den latenten Variablen über die Gruppen restringiert wird. Dazu müssen wir zusätzlich die partielle Invarianzeinstellung verwenden: `group.partial = c("BFs ~ 1", "BFs ~~BFs")`. Hiermit wird bestimmt, welche Koeffizienten nicht von den Invarianzeinstellungen betroffen sein sollen.
+Probieren wir dies doch gleich einmal aus. Um `BFs` hier wie eine latente Variable zu behandeln, müssen wir bestimmen, dass das Interzept und die Residualvarianz nicht mit den manifesten Variablen zusammen gleichgesetzt wird, sondern erst mit den latenten Variablen über die Gruppen restringiert wird. Dazu müssen wir zusätzlich die partielle Invarianzeinstellung verwenden: `group.partial = c("BFs ~ 1", "BFs ~~BFs")`. Hiermit wird bestimmt, welche Koeffizienten nicht von den Invarianzeinstellungen betroffen sein sollen. Fangen wir mit dem Fitten des konfigural invarianten Modells an.
+
+#### Konfigurale Invarianz
+Bei der konfiguralen Invarianz geht es darum, dass in beiden Gruppen die gleichen Modelle aufgestellt werden. Gilt diese Annahme bereits nicht, so macht es keinen Sinn das Modell weiter einzuschränken und Parameter über die Gruppen zu restringieren. Glücklicherweise passt das Modell zu den Daten, in welchem das Modell für das Geschlecht jeweils geschätzt wurde. Hier schauen wir uns dies noch einmal zur Wiederholung und zum Umbennen des geschätzten Modells an:
+
+```{r, results = "hide"}
+fit_sem_sex_konfigural <- sem(model_sem, data = StressAtWork, group = "sex", 
+                                     group.equal = c(""), group.partial = c("BFs ~ 1", "BFs ~~*BFs"))
+summary(fit_sem_sex_konfigural, fit.measures = T)
+```
+
+Dem Modell-Fit Teil der Summary entnehmen wir, dass das Modell gut zu den Daten passt:
+```{r, echo = F}
+abbrev(X = fit_sem_sex_konfigural, begin = "Model Test User Model", end = "Parameter Estimates", fit.measures = T)
+```
+Der $\chi^2$-Wert ist nicht signifikant und auch die Fit-Indizes CFI, TLI, RMSEA und SRMR sind unauffällig und deuten auf guten Modell-Fit hin.
+
+
+#### Metrische Invarianz
+Unter metrischer Invarianz verstehen wir, dass die Faktorladungen ($\lambda$) über die Gruppen hinweg gleich sind. Somit ist der Anteil jedes Item, der auf die latenten Variablen zurückzuführen ist, über die Gruppen hinweg gleichen. Wir erreichen dies, indem wir die Faktorladungen über die Gruppen hinweg gleich nennen.
+
+
+#### Skalare Invarianz
+
+#### Strikte Invarianz
+
+#### Vollständige Invarianz
+
 
 ```{r}
 fit_sem_sex_konfigural <- sem(model_sem, data = StressAtWork, group = "sex", 
@@ -1022,6 +1051,9 @@ srmr    0.027500985            0.04021870")
 ```
 
 `Emprircal fit` ist hier gerade der Modelfit, den wir auch in unseren Daten beobachtet haben. Der $\chi^2$-Wert von 18.444 kommt uns auch sehr bekannt vor! In der Spalte `Cutoff (alpha = 0.05)` steht der zugehörige Cut-Off-Wert, ab welchem von keinem guten Fit mehr zu sprechen wäre. Hierbei ist zu beachten, dass für $TLI$ und $CFI$ kleine Werte (also kleiner als der Cut-Off-Wert) für einen schlechten Fit sprechen, während für $RMSEA$ und $SRMR$ große Werte (also größer als der Cut-Off-Wert) für einen schlechten Fit sprechen.
+
+
+
 
 ## Appendix B {#AppendixB}
 Ein vollständig benanntes Modell entnehmen wir `model_sem_IE_TE_sex`. Wird dieses geschätzt, sehen wir, dass es keine Veränderung hinsichtlich Parameterschätzungen oder Modellfit gibt; lediglich alle Parameter wurden benannt. Hierbei wurde `l` als Faktorladung verwendet und dann wurden alle Faktorladungen nach einander durchnummeriert (wie genau hier vorgegangen wird, ist immer dem Anwender überlassen). Die Endungen `_1` und `_2` stehen jeweils für Gruppe 1 und 2, also Frauen und Männer. Demnach wäre `l3_2` die 3. Faktorladung in Gruppe 2 also die Faktorladung von `zd6` der Männer. Die Fehlervarianzen wurden mit `t` benannt und Die Interzepts mit `i`. Außerdem können wir eine Art Effektkodierung bei den Mittelwerten der latenten Variablen vornehmen indem wir bspw. für Zeitdruck Folgendes vorgeben: `ZD~c(0,li1)*1`, für latenten Interzept 1. Hier ist es nun so, dass aus Identifikationsgründen der erste Interzept auf 0 gesetzt werden muss, mit dem zweiten allerdings, sind wir in der Lage zu Untersuchen, ob sich die latenten Mittelwerte von einander unterscheiden (genau dann, wenn der latente Interzept der zweiten Gruppe von 0 verschieden ist).
