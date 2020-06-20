@@ -588,7 +588,7 @@ print(parameterEstimates(fit_sem_IE_TE_boot, ci = TRUE)[21:22,])
 cat("[...]")
 ```
 
-Auch hier ist zu sehen, dass der indirekte Effekt signifikant von 0 abweicht. Da der direkte Effekt von Zeitdruck auf die Psychosomatischen Beschwerden nicht signifikant ist, handelt es sich in diesem Zusammenhang um eine vollständige Mediation. Die vollständige lineare Beziehung zwischen Zeitdruck und Psychosomatischen Beschwerden "fließt" über die Emotionale Erschöpfung.  Die Frage ist nun, warum es hier zu Unterschieden zwischen der Pfadanalyse und SEM kommt. Naiverweise würde wir zunächst erwarten, dass alle Effekte eher signifikant werden, wenn für Messfehler kontrolliert wird. So hatten wir zuvor mit messfehlerbehaften Regressoren in einer Regressionsanalyse argumentiert. Demnach würden wir eher erwarten, dass der direkte Effekt mit SEM signfikant ist. Allerdings haben wir in der Pfadanalyse die Daten unter der Annahme der essentiellen $\tau$-Äquivalenz zusammengefasst: wir haben einfach Mittelwerte ohne bestimmte Gewichtung verwendet. <mark style="background-color: orange"> Nun is es aber so, dass im SEM zu sehen ist, dass die Variablen nicht alle gleich reliabel und sich anscheinend hinsichtlich ihrer Diskriminationsfähigkeit unterscheiden (unterschiedliche $\lambda$s) sind. Auch haben wir in SEM wesentlich mehr empirische Informationen, was die Analysen vertraunswürdiger machen. Zusammenfassend gehen wir also von einer vollständigen Mediation aus. </mark>
+Auch hier ist zu sehen, dass der indirekte Effekt signifikant von 0 abweicht. Da der direkte Effekt von Zeitdruck auf die Psychosomatischen Beschwerden nicht signifikant ist, handelt es sich in diesem Zusammenhang um eine vollständige Mediation. Die vollständige lineare Beziehung zwischen Zeitdruck und Psychosomatischen Beschwerden "fließt" über die Emotionale Erschöpfung.  Die Frage ist nun, warum es hier zu Unterschieden zwischen der Pfadanalyse und SEM kommt. Naiverweise würde wir zunächst erwarten, dass alle Effekte eher signifikant werden, wenn für Messfehler kontrolliert wird. So hatten wir zuvor mit messfehlerbehaften Regressoren in einer Regressionsanalyse argumentiert. Demnach würden wir eher erwarten, dass der direkte Effekt mit SEM signfikant ist. Allerdings haben wir in der Pfadanalyse die Daten unter der Annahme der essentiellen $\tau$-Äquivalenz zusammengefasst: wir haben einfach Mittelwerte ohne bestimmte Gewichtung verwendet. <mark style="background-color: orange"> Nun is es aber so, dass im SEM zu sehen ist, dass die Variablen nicht alle gleich reliabel sind und sich anscheinend hinsichtlich ihrer Diskriminationsfähigkeit unterscheiden (unterschiedliche $\lambda$s). Auch haben wir in SEM wesentlich mehr empirische Informationen, was die Analysen vertraunswürdiger machen. Zusammenfassend gehen wir also von einer vollständigen Mediation aus. </mark>
 
 
 ### Grafische Repräsentation
@@ -608,238 +608,10 @@ semPaths(object = fit_sem_IE_TE, what = "est", layout = "tree2",
 _`curve = T` und `curvePivot = T` hat in diesem Modell **keinen Effekt**, da es hierbei um Kovarianzen geht und wird nur der Vollständigkeit halber aufgeführt._ Der Effekt dieser beiden kann im [Appendix A](#AppendixA) der ersten Grafik des $H_0$-Modells entnommen werden: diese Einstellungen bewirken die nicht vollständig runde Kurve der Fehlerkovarianz (durch `curvePivot = T`), welche vor allem dann die Übersichtlichkeit erhöht, wenn mehrere Kovarianzen vorhanden sind. Mit `curve = F` würden alle Fehlerkovarianzen und Kovarianzen (wenn vorhanden) als gerade Linien eingezeichnet werden.
 
 ## Invarianztestungen und Gleichsetzen von Parametern
-Durch Gleichsetzen von Parametern in Modellen können verschiedene Annahmen überprüft werden. Zum einen können wir so, wie auch schon im Appendix der vergangenen Sitzung angesprochen (`PsyMSc1::Sitzung_3()`), auf essentielle $\tau$-Äquivalenz prüfen. Auch kann eine Gruppierungvariable verwendet werden, um Unterschiede zwischen Gruppen zu untersuchen. Wir wollen uns beides ansehen.
-
-
-### Essentielle $\tau$-Äquivalenz
-Das Pfadanalysemodell hatte als Voraussetzung, dass alle Variablen essentiell $\tau$-Äquivalent sind, also alle $\lambda$s gleich sind pro latenter Variable. Dies können wir in unserem Modell prüfen, indem wir den Faktorladungen Namen geben, analog zur Bennenung der gerichteten Beziehungen zwischen den latenten Variablen, die wir zur Berechnung des indirekten etc. Effekts gebraucht haben. Das letzte Modell sah so aus:
-
-```{r, eval = F}
-model_sem_IE_TE <- '
-# Messmodelle
-ZD =~ zd1 + zd2 + zd6
-BOEE =~ bo1 + bo6 + bo12 + bo19
-
-# Strukturmodell
-BOEE ~ a*ZD
-BFs ~  b*BOEE + c*ZD
-
-# Neue Parameter
-IE := a*b
-TE := IE + c
-'
-```
-
-Wenn wir weiterhin die Defaulteinstellungen der Funktion `sem` nutzen wollen (1. Faktorladung = 1, etc.), dann müssen wir bei der Bennenung der Faktorladungen etwas aufpassen. Bspw. schätzen wir die erste Faktorladung von Zeitdruck frei via `NA*zd1`, um dies bezubehalten müssen wir dahinter noch einmal schreiben `(l1)*zd1`, wobei `l1` hier als Platzhalter für $\lambda_1$ stehen soll. Nun wollen wir, dass die anderen Faktorladungen äquivalent dazu sind. Bei Emotionaler Erschöpfung können wir es uns etwas leichter machen. Hier benutzten wir die erste Faktorladung als Skalierer. Wenn nun alle Faktorladungen gleich sein sollen, so können wir einfach den Präfix `1*` vor alle Faktorladungen schreiben, was zum äquivalenten Ergebnis kommt, als wenn wir vor alle bspw. `(l2)*` schreiben würden: alle Faktorladungen würden so per Default auf 1 gesetzt. Achtung, wenn wir hier auch `(l1)` verwendet hätten, so wären die Faktorladungen gleich mit denen des Zeitdruck, was wir allerdings nicht wollen. Die essentielle $\tau$-Äquivalenzannahme gilt nur pro latenter Variable.
-
-
-```{r exercise_model_SEM_tau, exercise = TRUE, exercise.setup = "exercise_setup2", exercise.eval = FALSE}
-model_sem_IE_TE_tau <- '
-# Messmodelle
-ZD =~ zd1 + zd2 + zd6
-BOEE =~ bo1 + bo6 + bo12 + bo19
-
-# Strukturmodell
-BOEE ~ a*ZD
-BFs ~  b*BOEE + c*ZD
-
-# Neue Parameter
-IE := a*b
-TE := IE + c
-'
-
-
-fit_sem_IE_TE_tau <- sem(model_sem_IE_TE_tau, StressAtWork)
-summary(fit_sem_IE_TE_tau, fit.measures = T)
-```
-
-```{r exercise_model_SEM_tau-hint-1}
-model_sem_IE_TE_tau <- '
-# Messmodelle
-ZD =~ (l1)*zd1  + (l1)*zd2 + ...*zd6
-BOEE =~ (l2)*bo1 + ...*bo6 + bo12 + bo19
-
-# Strukturmodell
-BOEE ~ a*ZD
-BFs ~  b*BOEE + c*ZD
-
-# Neue Parameter
-IE := a*b
-TE := IE + c
-'
-
-
-fit_sem_IE_TE_tau <- sem(model_sem_IE_TE_tau, StressAtWork)
-summary(fit_sem_IE_TE_tau, fit.measures = T)
-```
-
-
-```{r, include=F}
-model_sem_IE_TE_tau <- '
-# Messmodelle
-ZD =~ (l1)*zd1 + (l1)*zd2 + (l1)*zd6
-BOEE =~ (l2)*bo1 + (l2)*bo6 + (l2)*bo12 + (l2)*bo19
-
-# Strukturmodell
-BOEE ~ a*ZD
-BFs ~  b*BOEE + c*ZD
-
-# Neue Parameter
-IE := a*b
-TE := IE + c
-'
-
-fit_sem_IE_TE_tau <- sem(model_sem_IE_TE_tau, StressAtWork)
-```
-
-
-```{r exercise_setup3, include = F}
-## Skalen bilden
-StressAtWork$ZDs <- rowMeans(StressAtWork[,paste0("zd",c(1, 2, 6))])
-StressAtWork$BOEEs <- rowMeans(StressAtWork[,paste0("bo",c(1, 6, 12, 19))])
-StressAtWork$BFs <- rowMeans(StressAtWork[,paste0("bf",1:20)])
-
-## Modell spezifizieren
-model_paths <- '
-BOEEs ~ ZDs
-BFs ~  BOEEs + ZDs
-'
-
-## Modell fitten
-fit_paths <- sem(model_paths, data = StressAtWork)
-
-#### SEM:
-# Modell
-model_sem_IE_TE <- '
-# Messmodelle
-ZD =~ zd1 + zd2 + zd6
-BOEE =~ bo1 + bo6 + bo12 + bo19
-
-# Strukturmodell
-BOEE ~ a*ZD
-BFs ~  b*BOEE + c*ZD
-
-# Neue Parameter
-IE := a*b
-TE := IE + c
-'
-fit_sem_IE_TE <- sem(model_sem_IE_TE, StressAtWork)
-
-## Modell für essentielle tau-Äquvivalenz
-model_sem_IE_TE_tau <- '
-# Messmodelle
-ZD =~ (l1)*zd1 + (l1)*zd2 + (l1)*zd6
-BOEE =~ (l2)*bo1 + (l2)*bo6 + (l2)*bo12 + (l2)*bo19
-
-# Strukturmodell
-BOEE ~ a*ZD
-BFs ~  b*BOEE + c*ZD
-
-# Neue Parameter
-IE := a*b
-TE := IE + c
-'
-
-fit_sem_IE_TE_tau <- sem(model_sem_IE_TE_tau, StressAtWork)
-```
-
-
-Sollten Sie alles richtig formuliert haben (und die Zusatzeinstellungen in der summary als `fit.measures = T, rsq = T` gewählt haben), so sollten Sie folgenden Modellfit erhalten:
-
-```{r, echo = F}
-abbrev(fit_sem_IE_TE_tau, begin = "Model Test User Model", end = "Parameter Estimates", fit.measures = T, rsq = T)
-```
-
-Sowie folgenden Ergebnisse für die Messmodelle:
-
-```{r, echo = F}
-abbrev(fit_sem_IE_TE_tau, begin = "Latent Variables", end = "Regressions")
-```
-
-Wir erkennen durch die gleiche Bennenung, dass es sich hier um restringierte Koeffizienten handelt. Auch erkennen wir, dass die Faktorladungen von `ZD` alle gleich sind und alle Faktorladungen von `BOEE` auf 1 gesetzt wurden. 
-
-Dem Modellfit ist zu entnehmen, dass das Modell immer noch zu den Daten passt: der $\chi^2$-Wert liegt bei `r round(fitmeasures(fit_sem_IE_TE_tau)[3], 3)` bei $df=$ `r round(fitmeasures(fit_sem_IE_TE_tau)[4], 3)` mit zugehörigem $p$-Wert von `r round(fitmeasures(fit_sem_IE_TE_tau)[5], 3)`. Demnach verwerfen unsere Daten das Modell nicht. Außerdem sind die $df$ genau um `r round(fitmeasures(fit_sem_IE_TE_tau)[4] - fitmeasures(fit_sem_IE_TE)[4], 3)` größer als im unrestringierten Modell (ohne die Annahme der essentiellen $\tau$-Äquivalenz pro latenter Variable). Wir können diese Differrenz leicht prüfen: es mussten 2 Faktorladungen weniger für `ZD` geschätzt werden und weniger für `BOEE` - aus diesem Grund unterscheiden sich die $df$ gerade um 5! Da das Modell nicht durch die Daten verworfen wird, müssen wir uns auch nicht unbedingt die Fit-Indizes ansehen. Diese sind hier nämlich auch unauffällig. Ob sie überhaupt im Bezug zu diesem Modell interpretiert werden sollten wird im [Appendix A](#AppendixA) näher beleuchtet.
-
-
-Auch wenn die Daten unser Modell nicht verwerfen, können wir die beiden Modelle mit und ohne essentielle $\tau$-Äquivalenzannahme inferenzstatistisch miteinander vergleichen. Dazu verwenden wir wieder die Funktion `lavTestLRT` und führen also einen Likelihood-Ratio-Test ($\chi^2$-Differenzentest) durch. Probieren Sie den Modellvergleichstest selbst aus:
-
-
-```{r, test_lavTestLRT_tau, exercise = TRUE, exercise.setup = "exercise_setup2", exercise.eval = FALSE}
-
-```
-
-```{r test_lavTestLRT_tau-check}
-## Skalen bilden
-StressAtWork$ZDs <- rowMeans(StressAtWork[,paste0("zd",c(1, 2, 6))])
-StressAtWork$BOEEs <- rowMeans(StressAtWork[,paste0("bo",c(1, 6, 12, 19))])
-StressAtWork$BFs <- rowMeans(StressAtWork[,paste0("bf",1:20)])
-
-## Modell spezifizieren
-model_paths <- '
-BOEEs ~ ZDs
-BFs ~  BOEEs + ZDs
-'
-
-## Modell fitten
-fit_paths <- sem(model_paths, data = StressAtWork)
-
-#### SEM:
-# Modell
-model_sem_IE_TE <- '
-# Messmodelle
-ZD =~ zd1 + zd2 + zd6
-BOEE =~ bo1 + bo6 + bo12 + bo19
-
-# Strukturmodell
-BOEE ~ a*ZD
-BFs ~  b*BOEE + c*ZD
-
-# Neue Parameter
-IE := a*b
-TE := IE + c
-'
-fit_sem_IE_TE <- sem(model_sem_IE_TE, StressAtWork)
-
-## Modell für essentielle tau-Äquvivalenz
-model_sem_IE_TE_tau <- '
-# Messmodelle
-ZD =~ (l1)*zd1 + (l1)*zd2 + (l1)*zd6
-BOEE =~ (l2)*bo1 + (l2)*bo6 + (l2)*bo12 + (l2)*bo19
-
-# Strukturmodell
-BOEE ~ a*ZD
-BFs ~  b*BOEE + c*ZD
-
-# Neue Parameter
-IE := a*b
-TE := IE + c
-'
-
-fit_sem_IE_TE_tau <- sem(model_sem_IE_TE_tau, StressAtWork)
-
-# Begin grading:
-res <- lavTestLRT(fit_sem_IE_TE_tau, fit_sem_IE_TE) # 2 Faktoren passen besser zu den Daten!
-sol2 <-  lavTestLRT(fit_sem_IE_TE, fit_sem_IE_TE_tau) # 2 Faktoren passen besser zu den Daten!
-
-grade_result(
-  fail_if(~ (!identical(.result, res) & !identical(.result, sol2)), 'Der Befehl lavTestLRT muss in diesem Zusammenhang zwei Argumente entgegennehmen: die zwei Objekte der ML-Schätzung unserer SEM-Modelle, welche wir zuvor erstellt haben! Das eine Modell ist jenes mit der Annahme der essentiellen tau-Äquivalenz, das andere ist das unrestringierte Modell. Die Modelle hießen `fit_sem_IE_TE` und `fit_sem_IE_TE_tau`.'),
-  pass_if(~ identical(.result, res) | identical(.result, sol2)),
-  correct = 'Sehr gut! Dies ist der Modellvergleich des Modells mit der Annahme der essentiellen tau-Äquivalenz, das andere ist das unrestringierte Modell!',
-  incorrect = 'Leider falsch.',
-  glue_correct = '{.correct}',
-  glue_incorrect = '{.incorrect} {.message}')
-```
-
-```{r, include=F}
-resLRT_tau <- lavTestLRT(fit_sem_IE_TE_tau, fit_sem_IE_TE) # 2 Faktoren passen besser zu den Daten!
-```
-
-Dem Modellvergleich ist zu entnehmen, dass das $\tau$-Äquivalenz-Modell signifikant schlechter zu den Daten passt. Der $p$-Wert liegt bei `r round(resLRT_tau[[7]][2], 3)` und ist somit  $<.05$. Auch die Differenz der $df$ lässt sich diesem Output entnehmen. Die zeigt erneut, dass die Annahme der essentiellen $\tau$-Äquivalenz, auf welcher das Pfadanalysemodell untersucht wurde, auf dem 5% Signifikanzniveau nicht haltbar ist.
-
-Auf die gleiche Art und Weise können wir auch Invarianz über die Zeit oder über Gruppen hinweg untersuchen. Über die Zeit würden wir zwei latente Variablen formulieren, welche einmal $t_1$ und einmal $t_2$ symbolisiert. Die Annahme, dass zu beiden Zeitpunkte die Messmodelle gleich sind, ist tatsächlich in vielen Situation sinnvoll. Wie das Ganze über Gruppen hinweg funktioniert schauen wir uns im nächsten Abschnitt zur Multi Sample Analysis an.
+Durch Gleichsetzen von Parametern in Modellen können verschiedene Annahmen überprüft werden. Zum einen können wir so, wie auch schon im Appendix der vergangenen Sitzung angesprochen (`PsyMSc1::Sitzung_3()`), auf essentielle $\tau$-Äquivalenz prüfen. Auch kann eine Gruppierungvariable verwendet werden, um Unterschiede zwischen Gruppen zu untersuchen. Wir wollen uns nun Invarianz über hinweg Gruppen ansehen. Diese Analyseform wird unter Multi Sample Analysis (Multi-Gruppen-Analyse) zusammengefasst.
 
 ### Multi Sample Analysis
-Wir könnten uns bspw. fragen, ob die gleichen Beziehungen, so wie wir sie gerade beobachtet haben gleichermaßen für Männer und Frauen gilt. Im Datensatz `StressAtWork` ist die Variable `sex` enthalten. Hier sind Frauen mit `1` und Männer mit `2` kodiert. Wenn wir diese Variable als Gruppierung verwenden, können wir die Invarianz der Parameter über das Geschlecht untersuchen. Um die Gruppierung in das Modell mit aufzunehmen, können wir in `sem` einfach dem Argument `group` den Namen der Gruppierungsvariable übergeben.
+Wir könnten uns bspw. fragen, ob die gleichen Beziehungen, so wie wir sie gerade beobachtet haben gleichermaßen für Männer und Frauen gelten. Im Datensatz `StressAtWork` ist die Variable `sex` enthalten. Hier sind Frauen mit `1` und Männer mit `2` kodiert. Wenn wir diese Variable als Gruppierung verwenden, können wir die Invarianz der Parameter über das Geschlecht untersuchen. Um die Gruppierung in das Modell mit aufzunehmen, können wir in `sem` einfach dem Argument `group` den Namen der Gruppierungsvariable übergeben.
 
 ```{r}
 fit_sem_IE_TE_MSA <- sem(model_sem_IE_TE, data = StressAtWork, group = "sex")
@@ -1580,6 +1352,239 @@ srmr    0.027500985            0.04021870")
 ```
 
 `Emprircal fit` ist hier gerade der Modelfit, den wir auch in unseren Daten beobachtet haben. Der $\chi^2$-Wert von 18.444 kommt uns auch sehr bekannt vor! In der Spalte `Cutoff (alpha = 0.05)` steht der zugehörige Cut-Off-Wert, ab welchem von keinem guten Fit mehr zu sprechen wäre. Hierbei ist zu beachten, dass für $TLI$ und $CFI$ kleine Werte (also kleiner als der Cut-Off-Wert) für einen schlechten Fit sprechen, während für $RMSEA$ und $SRMR$ große Werte (also größer als der Cut-Off-Wert) für einen schlechten Fit sprechen.
+
+## Appendix B {#AppendixB}
+
+
+
+## Appendix C {#AppendixC}
+### Essentielle $\tau$-Äquivalenz
+Das Pfadanalysemodell hatte als Voraussetzung, dass alle Variablen essentiell $\tau$-Äquivalent sind, also alle $\lambda$s gleich sind pro latenter Variable. Dies können wir in unserem Modell prüfen, indem wir den Faktorladungen Namen geben, analog zur Bennenung der gerichteten Beziehungen zwischen den latenten Variablen, die wir zur Berechnung des indirekten etc. Effekts gebraucht haben. Das letzte Modell sah so aus:
+
+```{r, eval = F}
+model_sem_IE_TE <- '
+# Messmodelle
+ZD =~ zd1 + zd2 + zd6
+BOEE =~ bo1 + bo6 + bo12 + bo19
+
+# Strukturmodell
+BOEE ~ a*ZD
+BFs ~  b*BOEE + c*ZD
+
+# Neue Parameter
+IE := a*b
+TE := IE + c
+'
+```
+
+Wenn wir weiterhin die Defaulteinstellungen der Funktion `sem` nutzen wollen (1. Faktorladung = 1, etc.), dann müssen wir bei der Bennenung der Faktorladungen etwas aufpassen. Bspw. schätzen wir die erste Faktorladung von Zeitdruck frei via `NA*zd1`, um dies bezubehalten müssen wir dahinter noch einmal schreiben `(l1)*zd1`, wobei `l1` hier als Platzhalter für $\lambda_1$ stehen soll. Nun wollen wir, dass die anderen Faktorladungen äquivalent dazu sind. Bei Emotionaler Erschöpfung können wir es uns etwas leichter machen. Hier benutzten wir die erste Faktorladung als Skalierer. Wenn nun alle Faktorladungen gleich sein sollen, so können wir einfach den Präfix `1*` vor alle Faktorladungen schreiben, was zum äquivalenten Ergebnis kommt, als wenn wir vor alle bspw. `(l2)*` schreiben würden: alle Faktorladungen würden so per Default auf 1 gesetzt. Achtung, wenn wir hier auch `(l1)` verwendet hätten, so wären die Faktorladungen gleich mit denen des Zeitdruck, was wir allerdings nicht wollen. Die essentielle $\tau$-Äquivalenzannahme gilt nur pro latenter Variable.
+
+
+```{r exercise_model_SEM_tau, exercise = TRUE, exercise.setup = "exercise_setup2", exercise.eval = FALSE}
+model_sem_IE_TE_tau <- '
+# Messmodelle
+ZD =~ zd1 + zd2 + zd6
+BOEE =~ bo1 + bo6 + bo12 + bo19
+
+# Strukturmodell
+BOEE ~ a*ZD
+BFs ~  b*BOEE + c*ZD
+
+# Neue Parameter
+IE := a*b
+TE := IE + c
+'
+
+
+fit_sem_IE_TE_tau <- sem(model_sem_IE_TE_tau, StressAtWork)
+summary(fit_sem_IE_TE_tau, fit.measures = T)
+```
+
+```{r exercise_model_SEM_tau-hint-1}
+model_sem_IE_TE_tau <- '
+# Messmodelle
+ZD =~ (l1)*zd1  + (l1)*zd2 + ...*zd6
+BOEE =~ (l2)*bo1 + ...*bo6 + bo12 + bo19
+
+# Strukturmodell
+BOEE ~ a*ZD
+BFs ~  b*BOEE + c*ZD
+
+# Neue Parameter
+IE := a*b
+TE := IE + c
+'
+
+
+fit_sem_IE_TE_tau <- sem(model_sem_IE_TE_tau, StressAtWork)
+summary(fit_sem_IE_TE_tau, fit.measures = T)
+```
+
+
+```{r, include=F}
+model_sem_IE_TE_tau <- '
+# Messmodelle
+ZD =~ (l1)*zd1 + (l1)*zd2 + (l1)*zd6
+BOEE =~ (l2)*bo1 + (l2)*bo6 + (l2)*bo12 + (l2)*bo19
+
+# Strukturmodell
+BOEE ~ a*ZD
+BFs ~  b*BOEE + c*ZD
+
+# Neue Parameter
+IE := a*b
+TE := IE + c
+'
+
+fit_sem_IE_TE_tau <- sem(model_sem_IE_TE_tau, StressAtWork)
+```
+
+
+```{r exercise_setup3, include = F}
+## Skalen bilden
+StressAtWork$ZDs <- rowMeans(StressAtWork[,paste0("zd",c(1, 2, 6))])
+StressAtWork$BOEEs <- rowMeans(StressAtWork[,paste0("bo",c(1, 6, 12, 19))])
+StressAtWork$BFs <- rowMeans(StressAtWork[,paste0("bf",1:20)])
+
+## Modell spezifizieren
+model_paths <- '
+BOEEs ~ ZDs
+BFs ~  BOEEs + ZDs
+'
+
+## Modell fitten
+fit_paths <- sem(model_paths, data = StressAtWork)
+
+#### SEM:
+# Modell
+model_sem_IE_TE <- '
+# Messmodelle
+ZD =~ zd1 + zd2 + zd6
+BOEE =~ bo1 + bo6 + bo12 + bo19
+
+# Strukturmodell
+BOEE ~ a*ZD
+BFs ~  b*BOEE + c*ZD
+
+# Neue Parameter
+IE := a*b
+TE := IE + c
+'
+fit_sem_IE_TE <- sem(model_sem_IE_TE, StressAtWork)
+
+## Modell für essentielle tau-Äquvivalenz
+model_sem_IE_TE_tau <- '
+# Messmodelle
+ZD =~ (l1)*zd1 + (l1)*zd2 + (l1)*zd6
+BOEE =~ (l2)*bo1 + (l2)*bo6 + (l2)*bo12 + (l2)*bo19
+
+# Strukturmodell
+BOEE ~ a*ZD
+BFs ~  b*BOEE + c*ZD
+
+# Neue Parameter
+IE := a*b
+TE := IE + c
+'
+
+fit_sem_IE_TE_tau <- sem(model_sem_IE_TE_tau, StressAtWork)
+```
+
+
+Sollten Sie alles richtig formuliert haben (und die Zusatzeinstellungen in der summary als `fit.measures = T, rsq = T` gewählt haben), so sollten Sie folgenden Modellfit erhalten:
+
+```{r, echo = F}
+abbrev(fit_sem_IE_TE_tau, begin = "Model Test User Model", end = "Parameter Estimates", fit.measures = T, rsq = T)
+```
+
+Sowie folgenden Ergebnisse für die Messmodelle:
+
+```{r, echo = F}
+abbrev(fit_sem_IE_TE_tau, begin = "Latent Variables", end = "Regressions")
+```
+
+Wir erkennen durch die gleiche Bennenung, dass es sich hier um restringierte Koeffizienten handelt. Auch erkennen wir, dass die Faktorladungen von `ZD` alle gleich sind und alle Faktorladungen von `BOEE` auf 1 gesetzt wurden. 
+
+Dem Modellfit ist zu entnehmen, dass das Modell immer noch zu den Daten passt: der $\chi^2$-Wert liegt bei `r round(fitmeasures(fit_sem_IE_TE_tau)[3], 3)` bei $df=$ `r round(fitmeasures(fit_sem_IE_TE_tau)[4], 3)` mit zugehörigem $p$-Wert von `r round(fitmeasures(fit_sem_IE_TE_tau)[5], 3)`. Demnach verwerfen unsere Daten das Modell nicht. Außerdem sind die $df$ genau um `r round(fitmeasures(fit_sem_IE_TE_tau)[4] - fitmeasures(fit_sem_IE_TE)[4], 3)` größer als im unrestringierten Modell (ohne die Annahme der essentiellen $\tau$-Äquivalenz pro latenter Variable). Wir können diese Differrenz leicht prüfen: es mussten 2 Faktorladungen weniger für `ZD` geschätzt werden und weniger für `BOEE` - aus diesem Grund unterscheiden sich die $df$ gerade um 5! Da das Modell nicht durch die Daten verworfen wird, müssen wir uns auch nicht unbedingt die Fit-Indizes ansehen. Diese sind hier nämlich auch unauffällig. Ob sie überhaupt im Bezug zu diesem Modell interpretiert werden sollten wird im [Appendix A](#AppendixA) näher beleuchtet.
+
+
+Auch wenn die Daten unser Modell nicht verwerfen, können wir die beiden Modelle mit und ohne essentielle $\tau$-Äquivalenzannahme inferenzstatistisch miteinander vergleichen. Dazu verwenden wir wieder die Funktion `lavTestLRT` und führen also einen Likelihood-Ratio-Test ($\chi^2$-Differenzentest) durch. Probieren Sie den Modellvergleichstest selbst aus:
+
+
+```{r, test_lavTestLRT_tau, exercise = TRUE, exercise.setup = "exercise_setup2", exercise.eval = FALSE}
+
+```
+
+```{r test_lavTestLRT_tau-check}
+## Skalen bilden
+StressAtWork$ZDs <- rowMeans(StressAtWork[,paste0("zd",c(1, 2, 6))])
+StressAtWork$BOEEs <- rowMeans(StressAtWork[,paste0("bo",c(1, 6, 12, 19))])
+StressAtWork$BFs <- rowMeans(StressAtWork[,paste0("bf",1:20)])
+
+## Modell spezifizieren
+model_paths <- '
+BOEEs ~ ZDs
+BFs ~  BOEEs + ZDs
+'
+
+## Modell fitten
+fit_paths <- sem(model_paths, data = StressAtWork)
+
+#### SEM:
+# Modell
+model_sem_IE_TE <- '
+# Messmodelle
+ZD =~ zd1 + zd2 + zd6
+BOEE =~ bo1 + bo6 + bo12 + bo19
+
+# Strukturmodell
+BOEE ~ a*ZD
+BFs ~  b*BOEE + c*ZD
+
+# Neue Parameter
+IE := a*b
+TE := IE + c
+'
+fit_sem_IE_TE <- sem(model_sem_IE_TE, StressAtWork)
+
+## Modell für essentielle tau-Äquvivalenz
+model_sem_IE_TE_tau <- '
+# Messmodelle
+ZD =~ (l1)*zd1 + (l1)*zd2 + (l1)*zd6
+BOEE =~ (l2)*bo1 + (l2)*bo6 + (l2)*bo12 + (l2)*bo19
+
+# Strukturmodell
+BOEE ~ a*ZD
+BFs ~  b*BOEE + c*ZD
+
+# Neue Parameter
+IE := a*b
+TE := IE + c
+'
+
+fit_sem_IE_TE_tau <- sem(model_sem_IE_TE_tau, StressAtWork)
+
+# Begin grading:
+res <- lavTestLRT(fit_sem_IE_TE_tau, fit_sem_IE_TE) # 2 Faktoren passen besser zu den Daten!
+sol2 <-  lavTestLRT(fit_sem_IE_TE, fit_sem_IE_TE_tau) # 2 Faktoren passen besser zu den Daten!
+
+grade_result(
+  fail_if(~ (!identical(.result, res) & !identical(.result, sol2)), 'Der Befehl lavTestLRT muss in diesem Zusammenhang zwei Argumente entgegennehmen: die zwei Objekte der ML-Schätzung unserer SEM-Modelle, welche wir zuvor erstellt haben! Das eine Modell ist jenes mit der Annahme der essentiellen tau-Äquivalenz, das andere ist das unrestringierte Modell. Die Modelle hießen `fit_sem_IE_TE` und `fit_sem_IE_TE_tau`.'),
+  pass_if(~ identical(.result, res) | identical(.result, sol2)),
+  correct = 'Sehr gut! Dies ist der Modellvergleich des Modells mit der Annahme der essentiellen tau-Äquivalenz, das andere ist das unrestringierte Modell!',
+  incorrect = 'Leider falsch.',
+  glue_correct = '{.correct}',
+  glue_incorrect = '{.incorrect} {.message}')
+```
+
+```{r, include=F}
+resLRT_tau <- lavTestLRT(fit_sem_IE_TE_tau, fit_sem_IE_TE) # 2 Faktoren passen besser zu den Daten!
+```
+
+Dem Modellvergleich ist zu entnehmen, dass das $\tau$-Äquivalenz-Modell signifikant schlechter zu den Daten passt. Der $p$-Wert liegt bei `r round(resLRT_tau[[7]][2], 3)` und ist somit  $<.05$. Auch die Differenz der $df$ lässt sich diesem Output entnehmen. Die zeigt erneut, dass die Annahme der essentiellen $\tau$-Äquivalenz, auf welcher das Pfadanalysemodell untersucht wurde, auf dem 5% Signifikanzniveau nicht haltbar ist.
+
+Auf die gleiche Art und Weise können wir auch Invarianz über die Zeit oder über Gruppen hinweg untersuchen. Über die Zeit würden wir zwei latente Variablen formulieren, welche einmal $t_1$ und einmal $t_2$ symbolisiert. Die Annahme, dass zu beiden Zeitpunkte die Messmodelle gleich sind, ist tatsächlich in vielen Situation sinnvoll. Wie das Ganze über Gruppen hinweg funktioniert schauen wir uns im nächsten Abschnitt zur Multi Sample Analysis an.
+
 
 ## Literatur
 [Eid, M., Gollwitzer, M., & Schmitt, M. (2017).](https://hds.hebis.de/ubffm/Record/HEB366849158) *Statistik und Forschungsmethoden* (5. Auflage, 1. Auflage: 2010). Weinheim: Beltz. 
