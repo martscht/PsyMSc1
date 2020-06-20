@@ -613,9 +613,13 @@ Durch Gleichsetzen von Parametern in Modellen können verschiedene Annahmen übe
 ### Multi Sample Analysis
 Wir könnten uns bspw. fragen, ob die gleichen Beziehungen, so wie wir sie gerade beobachtet haben gleichermaßen für Männer und Frauen gelten. Im Datensatz `StressAtWork` ist die Variable `sex` enthalten. Hier sind Frauen mit `1` und Männer mit `2` kodiert. Wenn wir diese Variable als Gruppierung verwenden, können wir die Invarianz der Parameter über das Geschlecht untersuchen. Um die Gruppierung in das Modell mit aufzunehmen, können wir in `sem` einfach dem Argument `group` den Namen der Gruppierungsvariable übergeben.
 
-```{r}
+```{r, results = "hide"}
 fit_sem_IE_TE_MSA <- sem(model_sem_IE_TE, data = StressAtWork, group = "sex")
 summary(fit_sem_IE_TE_MSA)
+```
+
+```{r, echo = F}
+lavaan::summary(fit_sem_IE_TE_MSA)
 ```
 
 Wir sehen, dass im Output nun für jede Gruppe das Modell einzeln geschätzt wurde. Alle Parameter werden sowohl für Frauen als auch für Männer geschätzt. Wir entnehmen
