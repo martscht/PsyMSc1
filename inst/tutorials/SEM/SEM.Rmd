@@ -688,10 +688,10 @@ abbrev(X = fit_sem_IE_TE_MSA_abc, begin = "Defined Parameters", end = NULL, shif
 hat sich nichts am Output geändert. Wir haben ja auch nur Labels vergeben und neu definierte Parameter hinzugefügt, die allerdings, wie zuvor schon erwähnt, die Modellstruktur (und somit auch die $df$) nicht tangieren. Die totalen und die indirekten Effekte scheinen sich kaum über die Gruppen hinweg zu unterscheiden. 
 
 #### Short-Cut Invarianztestung
-Dieses ganze Prozedere erscheint recht aufwendig. Allerdings kann so in jedem Schritt überprüft werden, dass die Parameter richtig restringiert wurden. Auch lassen sich so auch leicht partielle Invarianz einbauen, in welchen bspw. nicht alle Faktorladungen über die Gruppen hinweg gleich sind. Auch könnten Invarianzen nur für bestimmte Variablen angenommen werden. Trotzdem gibt es in `lavaan` die extrem hilfreiche Funktion, dies automatisiert durchzuführen. Dazu müssen wir lediglich in der Schätzung unserer Modelle das Zusatzargument `group.equal` spezifizieren. Lassen wir es weg oder setzte es auf `group.equal = c("")`, so landen wir im konfiguralen Fall. Spezifizieren wir `group.equal = c("loadings")` so wird das metrisch invariante Modell geschätzt. Genauso lassen sich auch das skalar (`group.equal = c("loadings", "intercepts")`) und das strikt (`group.equal = c("loadings", "intercepts", "residuals")`) invariante Modell schätzen. Das struktur-invariante Modell erhalten wir mit `group.equal = c("loadings", "intercepts", "residuals",` ` "means", "lv.variances", "lv.covariances", "regressions")`. Hierbei restringiert `"means"` die latenten Mittelwerte ($\kappa$), `"lv.variances"` die latenten (Residual-)Varianzen ($\phi$s und $\psi$s exogen und endogen) und `"regressions"` die Strukturpfadkoeffizienten ($\gamma$s und $\beta$s). Hätten wir Residualkovarianzen bei den manifesten oder latenten Variablen gehabt, so müssten wir diese auch mit `"residual.covariances"` sowie mit `"lv.covariances"` restringieren. Außerdem hätten wir gar keine neue Modelldefinition gebraucht, wir hätten einfach `model_sem_IE_TE` verwenden können, wenn wir dort nicht schon labels vergeben hätten. **Aus diesem Grund nehmen wir die Bezeichnungen für den indirekten Effekt heraus.** 
+So wie wir die indirekten Effekte bestimmt und die Koeffizienten für beide Gruppen benannt haben, lassen sich auch Invarianzen händisch prüfen. Wenn zwei Koeffizienten das selbe Label gegeben wird, wird dieser Parameter auf den gleichen Wert gesetzt. Dieses ganze Prozedere erscheint recht aufwendig. Allerdings kann so in jedem Schritt überprüft werden, dass die Parameter richtig restringiert wurden. Auch lassen sich so auch leicht partielle Invarianz einbauen, in welchen bspw. nicht alle Faktorladungen über die Gruppen hinweg gleich sind. Auch könnten Invarianzen nur für bestimmte Variablen angenommen werden. Trotzdem gibt es in `lavaan` die extrem hilfreiche Funktion, dies automatisiert durchzuführen. Dazu müssen wir lediglich in der Schätzung unserer Modelle das Zusatzargument `group.equal` spezifizieren. Lassen wir es weg oder setzten es auf `group.equal = c("")`, so landen wir im konfiguralen Fall (gleiche Modellstruktur wird über die Gruppen hinweg angenommen). Spezifizieren wir `group.equal = c("loadings")` so wird das metrisch invariante Modell geschätzt. Genauso lassen sich auch das skalar (`group.equal = c("loadings", "intercepts")`) und das strikt (`group.equal = c("loadings", "intercepts", "residuals")`) invariante Modell schätzen. Das vollständig-invariante Modell erhalten wir mit `group.equal = c("loadings", "intercepts", "residuals",` ` "means", "lv.variances", "lv.covariances", "regressions")`. Hierbei restringiert `"means"` die latenten Mittelwerte ($\kappa$), `"lv.variances"` die latenten (Residual-)Varianzen ($\phi$s und $\psi$s exogen und endogen) und `"regressions"` die Strukturpfadkoeffizienten ($\gamma$s und $\beta$s). Hätten wir Residualkovarianzen bei den manifesten oder latenten Variablen gehabt, so müssten wir diese auch mit `"residual.covariances"` sowie mit `"lv.covariances"` restringieren. Damit wir die `sem` Funktion nicht durch unsere vergebenen Labels verwirren und somit die Einstellungen mit `group.equal` überschreiben, **nehmen wir die Bezeichnungen für den indirekten Effekt heraus.** Wir nennen das Modell ohne Labels einfach `model_sem`.
 
 ```{r}
-model_sem_IE_TE_no_label <- '
+model_sem <- '
 # Messmodelle
 ZD =~ zd1 + zd2 + zd6
 BOEE =~ bo1 + bo6 + bo12 + bo19
@@ -702,59 +702,59 @@ BFs ~  BOEE + ZD
 '
 ```
 
-Probieren wir dies doch gleich einmal aus. Um `BFs` auch hier wieder wie eine latente Variable zu behandeln, müssen wir bestimmen, dass das Interzept und die Residualvarianz nicht mit zusammen den manifesten Variablen gleichgesetzt wird, sondern erst mit den latenten Variablen. Dazu müssen wir zusätzlich die partielle Invarianzeinstellung verwenden: `group.partial = c("BFs ~ 1", "BFs ~~BFs")`. Hiermit wird bestimmt, welche Koeffizienten nicht von den Invarianzeinstellungen betroffen sein sollen.
+Probieren wir dies doch gleich einmal aus. Um `BFs` hier wie eine latente Variable zu behandeln, müssen wir bestimmen, dass das Interzept und die Residualvarianz nicht mit den manifesten Variablen zusammen gleichgesetzt wird, sondern erst mit den latenten Variablen über die Gruppen restringiert wird. Dazu müssen wir zusätzlich die partielle Invarianzeinstellung verwenden: `group.partial = c("BFs ~ 1", "BFs ~~BFs")`. Hiermit wird bestimmt, welche Koeffizienten nicht von den Invarianzeinstellungen betroffen sein sollen.
 
 ```{r}
-fit_sem_IE_TE_sex_konfigural2 <- sem(model_sem_IE_TE_no_label, data = StressAtWork, group = "sex", 
+fit_sem_sex_konfigural <- sem(model_sem, data = StressAtWork, group = "sex", 
                                      group.equal = c(""), group.partial = c("BFs ~ 1", "BFs ~~*BFs"))
 
-fit_sem_IE_TE_sex_metrisch2 <- sem(model_sem_IE_TE_no_label, data = StressAtWork, group = "sex",
+fit_sem_sex_metrisch <- sem(model_sem, data = StressAtWork, group = "sex",
                                    group.equal = c("loadings"), group.partial = c("BFs ~ 1", "BFs ~~BFs"))
 
-fit_sem_IE_TE_sex_skalar2 <- sem(model_sem_IE_TE_no_label, data = StressAtWork, group = "sex",
+fit_sem_sex_skalar <- sem(model_sem, data = StressAtWork, group = "sex",
                                  group.equal = c("loadings", "intercepts"), group.partial = c("BFs ~ 1", "BFs ~~BFs"))
 
-fit_sem_IE_TE_sex_strikt2 <- sem(model_sem_IE_TE_no_label, data = StressAtWork, group = "sex",
+fit_sem_sex_strikt <- sem(model_sem, data = StressAtWork, group = "sex",
                                  group.equal = c("loadings", "intercepts", "residuals"), group.partial = c("BFs ~ 1", "BFs ~~BFs"))
 
-fit_sem_IE_TE_sex_struktur2 <- sem(model_sem_IE_TE_no_label, data = StressAtWork, group = "sex",
+fit_sem_sex_struktur <- sem(model_sem, data = StressAtWork, group = "sex",
                                    group.equal = c("loadings", "intercepts", "residuals", "means", "lv.variances", "regressions"))
 ```
 
 ```{r, eval = F}
-lavTestLRT(fit_sem_IE_TE_sex_metrisch2, fit_sem_IE_TE_sex_konfigural2)
+lavTestLRT(fit_sem_sex_metrisch, fit_sem_sex_konfigural)
 ```
 
 ```{r, echo = F}
-res_metrisch <- lavTestLRT(fit_sem_IE_TE_sex_metrisch2, fit_sem_IE_TE_sex_konfigural2)
+res_metrisch <- lavTestLRT(fit_sem_sex_metrisch, fit_sem_sex_konfigural)
 print(res_metrisch)
 ```
 
 ```{r, eval = F}
-lavTestLRT(fit_sem_IE_TE_sex_skalar2, fit_sem_IE_TE_sex_metrisch2)
+lavTestLRT(fit_sem_sex_skalar, fit_sem_sex_metrisch)
 ```
 
 ```{r, echo = F}
-res_skalar <- lavTestLRT(fit_sem_IE_TE_sex_skalar2, fit_sem_IE_TE_sex_metrisch2)
+res_skalar <- lavTestLRT(fit_sem_sex_skalar, fit_sem_sex_metrisch)
 print(res_skalar)
 ```
 
 ```{r, eval = F}
-lavTestLRT(fit_sem_IE_TE_sex_strikt2, fit_sem_IE_TE_sex_skalar2)
+lavTestLRT(fit_sem_sex_strikt, fit_sem_sex_skalar)
 ```
 
 ```{r, echo = F}
-res_strikt <- lavTestLRT(fit_sem_IE_TE_sex_strikt2, fit_sem_IE_TE_sex_skalar2)
+res_strikt <- lavTestLRT(fit_sem_sex_strikt, fit_sem_sex_skalar)
 print(res_strikt)
 ```
 
 
 ```{r, eval = F}
-lavTestLRT(fit_sem_IE_TE_sex_struktur2, fit_sem_IE_TE_sex_strikt2)
+lavTestLRT(fit_sem_sex_struktur, fit_sem_sex_strikt)
 ```
 
 ```{r, echo = F}
-res_struktur <- lavTestLRT(fit_sem_IE_TE_sex_struktur2, fit_sem_IE_TE_sex_strikt2)
+res_struktur <- lavTestLRT(fit_sem_sex_struktur, fit_sem_sex_strikt)
 print(res_struktur)
 ```
 
