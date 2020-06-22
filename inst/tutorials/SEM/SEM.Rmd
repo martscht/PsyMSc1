@@ -1361,7 +1361,7 @@ Erneut erkennen wir keine Unterschiede zwischen den Modellen. Beide Vorgehenswei
 
 ## Appendix C {#AppendixC}
 ### Essentielle $\tau$-Äquivalenz
-Das Pfadanalysemodell hatte als Voraussetzung, dass alle Variablen essentiell $\tau$-Äquivalent sind, also alle $\lambda$s gleich sind pro latenter Variable. Dies können wir in unserem Modell prüfen, indem wir den Faktorladungen Namen geben, analog zur Bennenung der gerichteten Beziehungen zwischen den latenten Variablen, die wir zur Berechnung des indirekten etc. Effekts gebraucht haben. Das letzte Modell sah so aus:
+Das Pfadanalysemodell hatte als Voraussetzung, dass alle Variablen essentiell $\tau$-äquivalent sind, also alle $\lambda$s gleich sind pro latenter Variable. Dies können wir in unserem Modell prüfen, indem wir den Faktorladungen Namen geben, analog zur Bennenung der gerichteten Beziehungen zwischen den latenten Variablen, die wir zur Berechnung des indirekten etc. Effekts gebraucht haben. Das letzte Modell sah so aus:
 
 ```{r, eval = F}
 model_sem_IE_TE <- '
@@ -1379,7 +1379,7 @@ TE := IE + c
 '
 ```
 
-Wenn wir weiterhin die Defaulteinstellungen der Funktion `sem` nutzen wollen (1. Faktorladung = 1, etc.), dann müssen wir bei der Bennenung der Faktorladungen etwas aufpassen. Bspw. schätzen wir die erste Faktorladung von Zeitdruck frei via `NA*zd1`, um dies bezubehalten müssen wir dahinter noch einmal schreiben `(l1)*zd1`, wobei `l1` hier als Platzhalter für $\lambda_1$ stehen soll. Nun wollen wir, dass die anderen Faktorladungen äquivalent dazu sind. Bei Emotionaler Erschöpfung können wir es uns etwas leichter machen. Hier benutzten wir die erste Faktorladung als Skalierer. Wenn nun alle Faktorladungen gleich sein sollen, so können wir einfach den Präfix `1*` vor alle Faktorladungen schreiben, was zum äquivalenten Ergebnis kommt, als wenn wir vor alle bspw. `(l2)*` schreiben würden: alle Faktorladungen würden so per Default auf 1 gesetzt. Achtung, wenn wir hier auch `(l1)` verwendet hätten, so wären die Faktorladungen gleich mit denen des Zeitdruck, was wir allerdings nicht wollen. Die essentielle $\tau$-Äquivalenzannahme gilt nur pro latenter Variable.
+Wenn wir weiterhin die Defaulteinstellungen der Funktion `sem` nutzen wollen (1. Faktorladung = 1, etc.), dann müssen wir bei der Bennenung der Faktorladungen etwas aufpassen. Wenn nun alle Faktorladungen gleich sein sollen, so können wir einfach den Präfix `1*` vor alle Faktorladungen schreiben, was zum äquivalenten Ergebnis kommt, als wenn wir vor alle bspw. `l1*` für alle Messungen von Zeitdruck schreiben würden: alle Faktorladungen würden so per Default auf 1 gesetzt. Achtung, wenn wir hier die gleichen Labels über die latenten Variablen (auch `l1`) verwendet hätten, so wären die Faktorladungen gleich mit denen des Zeitdruck, was wir allerdings nicht wollen. Die essentielle $\tau$-Äquivalenzannahme gilt nur pro latenter Variable.
 
 
 ```{r exercise_model_SEM_tau, exercise = TRUE, exercise.setup = "exercise_setup2", exercise.eval = FALSE}
@@ -1405,8 +1405,8 @@ summary(fit_sem_IE_TE_tau, fit.measures = T)
 ```{r exercise_model_SEM_tau-hint-1}
 model_sem_IE_TE_tau <- '
 # Messmodelle
-ZD =~ (l1)*zd1  + (l1)*zd2 + ...*zd6
-BOEE =~ (l2)*bo1 + ...*bo6 + bo12 + bo19
+ZD =~ l1*zd1  + l1*zd2 + ...*zd6
+BOEE =~ l2*bo1 + ...*bo6 + bo12 + bo19
 
 # Strukturmodell
 BOEE ~ a*ZD
@@ -1426,8 +1426,8 @@ summary(fit_sem_IE_TE_tau, fit.measures = T)
 ```{r, include=F}
 model_sem_IE_TE_tau <- '
 # Messmodelle
-ZD =~ (l1)*zd1 + (l1)*zd2 + (l1)*zd6
-BOEE =~ (l2)*bo1 + (l2)*bo6 + (l2)*bo12 + (l2)*bo19
+ZD =~ l1*zd1 + l1*zd2 + l1*zd6
+BOEE =~ l2*bo1 + l2*bo6 + l2*bo12 + l2*bo19
 
 # Strukturmodell
 BOEE ~ a*ZD
@@ -1477,8 +1477,8 @@ fit_sem_IE_TE <- sem(model_sem_IE_TE, StressAtWork)
 ## Modell für essentielle tau-Äquvivalenz
 model_sem_IE_TE_tau <- '
 # Messmodelle
-ZD =~ (l1)*zd1 + (l1)*zd2 + (l1)*zd6
-BOEE =~ (l2)*bo1 + (l2)*bo6 + (l2)*bo12 + (l2)*bo19
+ZD =~ l1*zd1 + l1*zd2 + l1*zd6
+BOEE =~ l2*bo1 + l2*bo6 + l2*bo12 + l2*bo19
 
 # Strukturmodell
 BOEE ~ a*ZD
@@ -1505,9 +1505,9 @@ Sowie folgenden Ergebnisse für die Messmodelle:
 abbrev(fit_sem_IE_TE_tau, begin = "Latent Variables", end = "Regressions")
 ```
 
-Wir erkennen durch die gleiche Bennenung, dass es sich hier um restringierte Koeffizienten handelt. Auch erkennen wir, dass die Faktorladungen von `ZD` alle gleich sind und alle Faktorladungen von `BOEE` auf 1 gesetzt wurden. 
+Wir erkennen durch die gleiche Bennenung, dass es sich hier um restringierte Koeffizienten handelt. Auch erkennen wir, dass die Faktorladungen von `ZD` und `BOEE` alle gleich heißen und auf 1 gesetzt wurden. 
 
-Dem Modellfit ist zu entnehmen, dass das Modell immer noch zu den Daten passt: der $\chi^2$-Wert liegt bei `r round(fitmeasures(fit_sem_IE_TE_tau)[3], 3)` bei $df=$ `r round(fitmeasures(fit_sem_IE_TE_tau)[4], 3)` mit zugehörigem $p$-Wert von `r round(fitmeasures(fit_sem_IE_TE_tau)[5], 3)`. Demnach verwerfen unsere Daten das Modell nicht. Außerdem sind die $df$ genau um `r round(fitmeasures(fit_sem_IE_TE_tau)[4] - fitmeasures(fit_sem_IE_TE)[4], 3)` größer als im unrestringierten Modell (ohne die Annahme der essentiellen $\tau$-Äquivalenz pro latenter Variable). Wir können diese Differrenz leicht prüfen: es mussten 2 Faktorladungen weniger für `ZD` geschätzt werden und weniger für `BOEE` - aus diesem Grund unterscheiden sich die $df$ gerade um 5! Da das Modell nicht durch die Daten verworfen wird, müssen wir uns auch nicht unbedingt die Fit-Indizes ansehen. Diese sind hier nämlich auch unauffällig. Ob sie überhaupt im Bezug zu diesem Modell interpretiert werden sollten wird im [Appendix A](#AppendixA) näher beleuchtet.
+Dem Modellfit ist zu entnehmen, dass das Modell immer noch zu den Daten passt: der $\chi^2$-Wert liegt bei `r round(fitmeasures(fit_sem_IE_TE_tau)[3], 3)` bei $df=$ `r round(fitmeasures(fit_sem_IE_TE_tau)[4], 3)` mit zugehörigem $p$-Wert von `r round(fitmeasures(fit_sem_IE_TE_tau)[5], 3)`. Demnach verwerfen unsere Daten das Modell nicht. Außerdem sind die $df$ genau um `r round(fitmeasures(fit_sem_IE_TE_tau)[4] - fitmeasures(fit_sem_IE_TE)[4], 3)` größer als im unrestringierten Modell (ohne die Annahme der essentiellen $\tau$-Äquivalenz pro latenter Variable). Wir können diese Differrenz leicht prüfen: es mussten 2 Faktorladungen weniger für `ZD` geschätzt werden und 3 weniger für `BOEE` - aus diesem Grund unterscheiden sich die $df$ gerade um 5! Da das Modell nicht durch die Daten verworfen wird, müssen wir uns auch nicht unbedingt die Fit-Indizes ansehen. Diese sind hier nämlich auch unauffällig. Ob sie überhaupt im Bezug zu diesem Modell interpretiert werden sollten, wurde im [Appendix A](#AppendixA) näher beleuchtet.
 
 
 Auch wenn die Daten unser Modell nicht verwerfen, können wir die beiden Modelle mit und ohne essentielle $\tau$-Äquivalenzannahme inferenzstatistisch miteinander vergleichen. Dazu verwenden wir wieder die Funktion `lavTestLRT` und führen also einen Likelihood-Ratio-Test ($\chi^2$-Differenzentest) durch. Probieren Sie den Modellvergleichstest selbst aus:
@@ -1583,9 +1583,9 @@ grade_result(
 resLRT_tau <- lavTestLRT(fit_sem_IE_TE_tau, fit_sem_IE_TE) # 2 Faktoren passen besser zu den Daten!
 ```
 
-Dem Modellvergleich ist zu entnehmen, dass das $\tau$-Äquivalenz-Modell signifikant schlechter zu den Daten passt. Der $p$-Wert liegt bei `r round(resLRT_tau[[7]][2], 3)` und ist somit  $<.05$. Auch die Differenz der $df$ lässt sich diesem Output entnehmen. Die zeigt erneut, dass die Annahme der essentiellen $\tau$-Äquivalenz, auf welcher das Pfadanalysemodell untersucht wurde, auf dem 5% Signifikanzniveau nicht haltbar ist.
+Dem Modellvergleich ist zu entnehmen, dass das $\tau$-Äquivalenz-Modell signifikant schlechter zu den Daten passt. Der $p$-Wert liegt bei `r round(resLRT_tau[[7]][2], 3)` und ist somit  $<.05$. Auch die Differenz der $df$ lässt sich diesem Output entnehmen. Dies zeigt erneut, dass die Annahme der essentiellen $\tau$-Äquivalenz, auf welcher das Pfadanalysemodell untersucht wurde, auf dem 5% Signifikanzniveau nicht haltbar ist.
 
-Auf die gleiche Art und Weise können wir auch Invarianz über die Zeit oder über Gruppen hinweg untersuchen. Über die Zeit würden wir zwei latente Variablen formulieren, welche einmal $t_1$ und einmal $t_2$ symbolisiert. Die Annahme, dass zu beiden Zeitpunkte die Messmodelle gleich sind, ist tatsächlich in vielen Situation sinnvoll. Wie das Ganze über Gruppen hinweg funktioniert schauen wir uns im nächsten Abschnitt zur Multi Sample Analysis an.
+Auf die gleiche Art und Weise können wir auch Invarianz über die Zeit oder über Gruppen hinweg untersuchen. Über die Zeit würden wir zwei latente Variablen formulieren, welche einmal $t_1$ und einmal $t_2$ symbolisiert. Die Annahme, dass zu beiden Zeitpunkte die Messmodelle gleich sind, ist tatsächlich in vielen Situation sinnvoll. 
 
 
 ## Literatur
