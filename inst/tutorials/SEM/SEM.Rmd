@@ -773,9 +773,9 @@ summary(fit_sem_sex_skalar, fit.measures = T)
 ```
 
 ```{r, echo = F}
-abbrev(X = fit_sem_sex_metrisch, begin = "Group 1", end = "Variances")
+abbrev(X = fit_sem_sex_skalar, begin = "Group 1", end = "Variances")
 
-abbrev(X = fit_sem_sex_metrisch, begin = "Group 2", end = "Variances")
+abbrev(X = fit_sem_sex_skalar, begin = "Group 2", end = "Variances")
 ```
 
 Hier greift nun tatsächlich die Einstellung `"BFs~1"` in `group.partial`. `BFs` hat zwei unterschiedlichte Interzepte. Bei `ZD` und `BOEE` fällt auf, dass diese in Gruppe 1 auf 0 gesetzt sind (ohne Unsicherheit) und in Gruppe 2 hier eine Effektkodierung durchgeführt wurde: hier wurden die Interzepte geschätzt. Unterscheidet sich dieser Interzept nun von 0, so unterscheiden sich die Gruppe in ihren Interzepten ([möglicherweise bedingten] Mittelwerten). Dazu später mehr!
