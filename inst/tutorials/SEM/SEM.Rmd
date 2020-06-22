@@ -1168,7 +1168,7 @@ Wir erkennen keine Unterschiede, was nicht verwunderlich ist, hier wurde noch ni
 
 
 #### Metrische Invarianz
-Wir müssen nun ein neues Modell spezifizieren, in welchem wir alle Faktorladungen ($\lambda$s) über die Gruppen hinweg das gleiche Label geben. Hierbei verwenden wir `l` als Label für die Faktorladungen und nummerieren alle Faktorladungen nach einander durch (wie genau hier vorgegangen wird, ist immer dem Anwender überlassen). 
+Wir müssen nun ein neues Modell spezifizieren, in welchem wir alle Faktorladungen ($\lambda$s) jeweils über die Gruppen hinweg das gleiche Label geben. Hierbei verwenden wir `l` als Label für die Faktorladungen und nummerieren alle Faktorladungen nach einander durch (wie genau hier vorgegangen wird, ist immer dem Anwender überlassen, es muss lediglich darauf geachtet werden, nicht mehrfach das gleiche Label für unterschiedliche Parameter zu verwenden, wenn dies nicht explizit gewünscht ist). 
 
 ```{r}
 model_sem_metrisch <- '
