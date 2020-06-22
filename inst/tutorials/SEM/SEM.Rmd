@@ -606,12 +606,12 @@ semPaths(object = fit_sem_IE_TE, what = "est", layout = "tree2",
          curvePivot = T,  edge.label.cex=1.2, sizeMan = 5, sizeLat = 8)
 ```
 
-_`curve = T` und `curvePivot = T` hat in diesem Modell **keinen Effekt**, da es hierbei um Kovarianzen geht und wird nur der Vollständigkeit halber aufgeführt._ Der Effekt dieser beiden kann im [Appendix A](#AppendixA) der ersten Grafik des $H_0$-Modells entnommen werden: diese Einstellungen bewirken die nicht vollständig runde Kurve der Fehlerkovarianz (durch `curvePivot = T`), welche vor allem dann die Übersichtlichkeit erhöht, wenn mehrere Kovarianzen vorhanden sind. Mit `curve = F` würden alle Fehlerkovarianzen und Kovarianzen (wenn vorhanden) als gerade Linien eingezeichnet werden.
+_`curve = T` und `curvePivot = T` haben in diesem Modell **keinen Effekt**, da es hierbei um die Kovarianzen geht, und wird nur der Vollständigkeit halber aufgeführt._ Der Effekt dieser beiden kann im [Appendix A](#AppendixA) der ersten Grafik des $H_0$-Modells entnommen werden: diese Einstellungen bewirken die nicht vollständig runde Kurve der Fehlerkovarianz (durch `curvePivot = T`), welche vor allem dann die Übersichtlichkeit erhöht, wenn mehrere Kovarianzen vorhanden sind. Mit `curve = F` würden alle Fehlerkovarianzen und Kovarianzen (wenn vorhanden) als gerade Linien eingezeichnet werden.
 
 <mark style="background-color: orange"> `BFs` wird hier als Viereck dargestellt, da wir hier Werte gemittelt haben. Somit handelt  es sich hierbei um eine direkt beobachtbare (also eine manifeste) Variable. Wir hatten hier kein Messmodell formuliert, da wir den Psychosomatischen Beschwerden eher ein formatives Messmodell (anstatt eines reflexiven Messmodells) unterstellen. </mark>
 
 ## Invarianztestungen und Gleichsetzen von Parametern
-Durch Gleichsetzen von Parametern in Modellen können verschiedene Annahmen überprüft werden. Zum einen können wir so, wie auch schon im Appendix der vergangenen Sitzung angesprochen (`PsyMSc1::Sitzung_3()`), auf essentielle $\tau$-Äquivalenz prüfen. Auch kann eine Gruppierungvariable verwendet werden, um Unterschiede zwischen Gruppen zu untersuchen. Wir wollen uns nun Invarianz über hinweg Gruppen ansehen. Diese Analyseform wird unter Multi Sample Analysis (Multi-Gruppen-Analyse) zusammengefasst.
+Durch Gleichsetzen von Parametern in Modellen können verschiedene Annahmen überprüft werden. Zum einen können wir so, wie auch schon im Appendix der vergangenen Sitzung angesprochen (`PsyMSc1::Sitzung_3()`), auf essentielle $\tau$-Äquivalenz prüfen. Auch kann eine Gruppierungvariable verwendet werden, um Unterschiede zwischen Gruppen zu untersuchen. Wir wollen uns nun Invarianz über Gruppen hinweg ansehen. Diese Analyseform wird unter Multi Sample Analysis (Multi-Gruppen-Analyse) zusammengefasst.
 
 ### Multi Sample Analysis
 Wir könnten uns bspw. fragen, ob die gleichen Beziehungen, so wie wir sie gerade beobachtet haben gleichermaßen für Männer und Frauen gelten. Im Datensatz `StressAtWork` ist die Variable `sex` enthalten. Hier sind Frauen mit `1` und Männer mit `2` kodiert. Wenn wir diese Variable als Gruppierung verwenden, können wir die Invarianz der Parameter über das Geschlecht untersuchen. Um die Gruppierung in das Modell mit aufzunehmen, können wir in `sem` einfach dem Argument `group` den Namen der Gruppierungsvariable übergeben (hierbei sind die "Gänsefüßchen" wichtig!).
@@ -638,7 +638,7 @@ dass insgesamt `r sum(StressAtWork$sex == 1)` der Probanden Frauen und `r sum(St
 abbrev(X = fit_sem_IE_TE_MSA, begin = "Model Test User Model", end = "Parameter Estimates")
 ```
 
-Der $\chi^2$-Wert für das gesamte Modell liegt bei `r round(fitmeasures(fit_sem_IE_TE_MSA)[3], 3)` bei $df=$ `r round(fitmeasures(fit_sem_IE_TE_MSA)[4], 3)` mit zugehörigem $p$-Wert von `r round(fitmeasures(fit_sem_IE_TE_MSA)[5], 3)`. Demnach verwerfen unsere Daten das Modell nicht. Die Freiheitsgrade sind doppelt so hoch, wie im Ein-Stichprobenfall, da wir alle Parameter für beide Stichproben schätzen müssen. Die $\chi^2$-Werte der beiden Stichproben waren 21.400 für die Frauen und 14.403 für die Männer. 
+Der $\chi^2$-Wert für das gesamte Modell liegt bei `r round(fitmeasures(fit_sem_IE_TE_MSA)[3], 3)` bei $df=$ `r round(fitmeasures(fit_sem_IE_TE_MSA)[4], 3)` mit zugehörigem $p$-Wert von `r round(fitmeasures(fit_sem_IE_TE_MSA)[5], 3)`. Demnach verwerfen unsere Daten das Modell nicht. Die Freiheitsgrade sind doppelt so hoch, wie im Ein-Stichprobenfall, da wir alle Parameter für beide Stichproben schätzen müssen. Die $\chi^2$-Werte der beiden Stichproben waren 21.400 für die Frauen und 14.403 für die Männer. Der $\chi^2$-Wert für das gesamte Modell ist also einfach die Summe der subpopulationsspezifischen $\chi^2$-Werte.
 
 In der gesamten summary fällt uns auf, dass nur in Gruppe 1 die Bennenungen der Pfadkoeffizienten mit $a, b$ und $c$ vorkommen und in Gruppe 2 keine Benennung mehr auftaucht. 
 ```{r, echo = F}
@@ -691,8 +691,10 @@ abbrev(X = fit_sem_IE_TE_MSA_abc, begin = "Defined Parameters", end = NULL, shif
 hat sich nichts am Output geändert. Wir haben ja auch nur Labels vergeben und neu definierte Parameter hinzugefügt, die allerdings, wie zuvor schon erwähnt, die Modellstruktur (und somit auch die $df$) nicht tangieren. 
 <mark style="background-color: orange"> Die totalen und die indirekten Effekte scheinen sich kaum über die Gruppen hinweg zu unterscheiden. Wir könnten hier eine Signifikanztestung durchführen, indem wir wieder via Bootstrapping Konfidenzintervalle für die beiden indirekten Effekte erstellen und dann untersuchen, ob diese überlappen. Diese Untersuchung wird dem/der motivierten Lesenden überlassen. </mark>
 
-### Short-Cut Invarianztestungen
-<mark style="background-color: orange"> So wie wir die indirekten Effekte bestimmt und die Koeffizienten für beide Gruppen benannt haben, lassen sich auch Invarianzen händisch prüfen. Wenn zwei Koeffizienten das selbe Label tragen, werden diese Parameter auf den gleichen Wert gesetzt. Wir könnten nun für die jeweiligen Invarianzstufen die Parameter händisch gleichsetzen. Dieses ganze Prozedere erscheint recht aufwendig. Allerdings kann so in jedem Schritt überprüft werden, dass die Parameter richtig restringiert wurden. Auch lassen sich so auch leicht partielle Invarianz einbauen, in welchen bspw. nicht alle Faktorladungen über die Gruppen hinweg gleich sind. Auch könnten Invarianzen nur für bestimmte Variablen angenommen werden. Trotzdem gibt es in `lavaan` die extrem hilfreiche Funktion, dies automatisiert durchzuführen. Dazu müssen wir lediglich in der Schätzung unserer Modelle in `sem` das Zusatzargument `group.equal` spezifizieren. </mark> Lassen wir es weg oder setzten es auf `group.equal = c("")`, so landen wir im konfiguralen Fall (gleiche Modellstruktur wird über die Gruppen hinweg angenommen). Spezifizieren wir `group.equal = c("loadings")` so wird das metrisch invariante Modell geschätzt. Genauso lassen sich auch das skalar (`group.equal = c("loadings", "intercepts")`) und das strikt (`group.equal = c("loadings", "intercepts", "residuals")`) invariante Modell schätzen. Das vollständig-invariante Modell erhalten wir mit `group.equal = c("loadings", "intercepts", "residuals",` ` "means", "lv.variances", "lv.covariances", "regressions")`. Hierbei restringiert `"means"` die latenten Mittelwerte ($\kappa$), `"lv.variances"` die latenten (Residual-)Varianzen ($\phi$s und $\psi$s exogen und endogen) und `"regressions"` die Strukturpfadkoeffizienten ($\gamma$s und $\beta$s). Hätten wir Residualkovarianzen bei den manifesten oder latenten Variablen gehabt, so müssten wir diese auch mit `"residual.covariances"` sowie mit `"lv.covariances"` restringieren. 
+### Invarianztestungen über das Geschlecht
+<mark style="background-color: orange"> So wie wir die indirekten Effekte bestimmt und die Koeffizienten für beide Gruppen benannt haben, lassen sich auch Invarianzen händisch prüfen. Wenn zwei Koeffizienten das selbe Label tragen, werden diese Parameter auf den gleichen Wert gesetzt. Wir könnten nun für die jeweiligen Invarianzstufen die Parameter händisch gleichsetzen. Dieses ganze Prozedere erscheint recht aufwendig. Allerdings kann so in jedem Schritt überprüft werden, dass die Parameter richtig restringiert wurden. Auch lassen sich so auch leicht partielle Invarianz einbauen, in welchen bspw. nicht alle Faktorladungen über die Gruppen hinweg gleich sind. Auch könnten Invarianzen nur für bestimmte Variablen angenommen werden. 
+
+Trotzdem gibt es in `lavaan` die extrem hilfreiche Funktion, dies automatisiert durchzuführen. Dazu müssen wir lediglich in der Schätzung unserer Modelle in `sem` das Zusatzargument `group.equal` spezifizieren. </mark> Lassen wir es weg oder setzten es auf `group.equal = c("")`, so landen wir im konfiguralen Fall (gleiche Modellstruktur wird über die Gruppen hinweg angenommen). Spezifizieren wir `group.equal = c("loadings")` so wird das metrisch invariante Modell geschätzt. Genauso lassen sich auch das skalar (`group.equal = c("loadings", "intercepts")`) und das strikt (`group.equal = c("loadings", "intercepts", "residuals")`) invariante Modell schätzen. Das vollständig-invariante Modell erhalten wir mit `group.equal = c("loadings", "intercepts", "residuals",` ` "means", "lv.variances", "lv.covariances", "regressions")`. Hierbei restringiert `"means"` die latenten Mittelwerte ($\kappa$), `"lv.variances"` die latenten (Residual-)Varianzen ($\phi$s und $\psi$s exogen und endogen) und `"regressions"` die Strukturpfadkoeffizienten ($\gamma$s und $\beta$s). Hätten wir Residualkovarianzen bei den manifesten oder latenten Variablen gehabt, so müssten wir diese auch mit `"residual.covariances"` sowie mit `"lv.covariances"` restringieren. 
 <mark style="background-color: orange"> Damit wir die `sem` Funktion nicht durch unsere vergebenen Labels verwirren und somit die Einstellungen mit `group.equal` überschreiben, **nehmen wir die Bezeichnungen für den indirekten Effekt heraus.** Wir nennen das Modell ohne Labels einfach `model_sem`. Für die aufwendigere händische Durchführung sowie simple grafische Repräsentationen siehe [Appendix B](#AppendixB). </mark>
 
 ```{r}
@@ -722,11 +724,11 @@ Dem Modell-Fit Teil der Summary entnehmen wir, dass das Modell gut zu den Daten 
 ```{r, echo = F}
 abbrev(X = fit_sem_sex_konfigural, begin = "Model Test User Model", end = "Parameter Estimates", fit.measures = T)
 ```
-Der $\chi^2$-Wert ist nicht signifikant und auch die Fit-Indizes CFI, TLI, RMSEA und SRMR sind unauffällig und deuten auf guten Modell-Fit hin.
+Der $\chi^2$-Wert ist nicht signifikant und auch die Fit-Indizes CFI, TLI, RMSEA und SRMR sind unauffällig und deuten auf guten Modell-Fit hin. Dies bedeutet, dass wir frohen Mutes das Modell einschränken können, um zu prüfen, welche Invarianz über das Geschlecht hinweg gilt.
 
 
 #### Metrische Invarianz
-Unter metrischer oder schwacher Invarianz verstehen wir, dass die Faktorladungen ($\lambda$, bzw. $\Lambda$) über die Gruppen hinweg gleich sind. Somit ist der Anteil jedes Item, der auf die latenten Variablen zurückzuführen ist, über die Gruppen hinweg gleichen. Wir erreichen dies, indem wir `group.equal = c("loadings")` spezifizieren.
+Unter metrischer oder schwacher Invarianz verstehen wir, dass die Faktorladungen ($\lambda$, bzw. $\Lambda$) über die Gruppen hinweg gleich sind. Somit ist der Anteil jedes Items, der auf die latenten Variablen zurückzuführen ist, über die Gruppen hinweg gleichen. Dies ist wichtig, um zu prüfen, ob die Konstrukte über die beiden Gruppen hinweg die gleiche Bedeutung haben. Wir erreichen dies, indem wir `group.equal = c("loadings")` spezifizieren.
 
 ```{r, results="hide"}
 fit_sem_sex_metrisch <- sem(model_sem, data = StressAtWork, group = "sex",
@@ -747,7 +749,7 @@ abbrev(X = fit_sem_sex_metrisch, begin = "Group 1", end = "Intercepts")
 abbrev(X = fit_sem_sex_metrisch, begin = "Group 2", end = "Intercepts")
 ```
 
-Wir erkennen, dass "einfach" nur die Parameter durchnummeriert werden, wobei Parameter, die auf 1 restringiert sind mitgezählt werden, aber nicht ihr eigenes Label erhalten. So heißt $\lambda_2$, der Ladungskoeffizient von `zd2` hier `.p2.`, wobei das `p` für Parameter steht und die Punkte andeuten, dass es sich hierbei um ein intern vergebenes (alsoein durch die Funktion selbst vergebenes) Label handelt. Wollen wir nun wissen, ob sich die Modelle statistisch signifikant von einander underscheiden, können wir wieder den Likelihood-Ratio-Test ($\chi^2$-Differenzentest) heranziehen.
+Wir erkennen, dass "einfach" nur die Parameter durchnummeriert werden, wobei Parameter, die auf 1 restringiert sind mitgezählt werden, aber nicht ihr eigenes Label erhalten. So heißt $\lambda_2$, der Ladungskoeffizient von `zd2` hier `.p2.`, wobei das `p` für Parameter steht und die Punkte andeuten, dass es sich hierbei um ein intern vergebenes (also ein durch die Funktion selbst vergebenes) Label handelt. Wollen wir nun wissen, ob sich die Modelle statistisch signifikant von einander underscheiden, können wir wieder den Likelihood-Ratio-Test ($\chi^2$-Differenzentest) heranziehen.
 
 ```{r, eval = F}
 lavTestLRT(fit_sem_sex_metrisch, fit_sem_sex_konfigural)
@@ -758,7 +760,7 @@ res_metrisch <- lavTestLRT(fit_sem_sex_metrisch, fit_sem_sex_konfigural)
 print(res_metrisch)
 ```
 
-Die $\chi^2$-Differenz liegt bei `r round(res_metrisch[[5]][2], 4)` bei $\Delta df=$ `r res_metrisch[[6]][2]` mit dem zugehörigen $p$-Wert von `r round(res_metrisch[[7]][2], 4)`. Somit können wir weiter von metrischer Invarianz ausgehen. Dies beudeutet, dass über das Geschlecht hinweg die Items zu gleichen Teilen sich aus den latenten Variabeln zusammensetzten.
+Die $\chi^2$-Differenz liegt bei `r round(res_metrisch[[5]][2], 4)` bei $\Delta df=$ `r res_metrisch[[6]][2]` mit dem zugehörigen $p$-Wert von `r round(res_metrisch[[7]][2], 4)`. Somit können wir weiter von metrischer Invarianz ausgehen. Dies beudeutet, dass über das Geschlecht hinweg die Items zu gleichen Teilen sich aus den latenten Variabeln zusammensetzten und somit die Konstrukte über das Geschlecht hinweg die gleichen Bedeutungen haben.
 
 
 #### Skalare Invarianz
@@ -769,7 +771,16 @@ fit_sem_sex_skalar <- sem(model_sem, data = StressAtWork, group = "sex",
                                  group.equal = c("loadings", "intercepts"), group.partial = c("BFs ~ 1", "BFs ~~BFs"))
 summary(fit_sem_sex_skalar, fit.measures = T)
 ```
-Hier greift nun tatsächlich die Einstellung `"BFs~~1"` in `group.partial`. Nun wollen wir untersuchen, ob das metrisch- und das skalar-invariante Modell sich signifikant in der Modellbeschreibung unterscheiden.
+
+```{r, echo = F}
+abbrev(X = fit_sem_sex_metrisch, begin = "Group 1", end = "Variances")
+
+abbrev(X = fit_sem_sex_metrisch, begin = "Group 2", end = "Variances")
+```
+
+Hier greift nun tatsächlich die Einstellung `"BFs~1"` in `group.partial`. `BFs` hat zwei unterschiedlichte Interzepte. Bei `ZD` und `BOEE` fällt auf, dass diese in Gruppe 1 auf 0 gesetzt sind (ohne Unsicherheit) und in Gruppe 2 hier eine Effektkodierung durchgeführt wurde: hier wurden die Interzepte geschätzt. Unterscheidet sich dieser Interzept nun von 0, so unterscheiden sich die Gruppe in ihren Interzepten ([möglicherweise bedingten] Mittelwerten). Dazu später mehr!
+
+Nun wollen wir untersuchen, ob das metrisch- und das skalar-invariante Modell sich signifikant in der Modellbeschreibung unterscheiden.
 
 ```{r, eval = F}
 lavTestLRT(fit_sem_sex_skalar, fit_sem_sex_metrisch)
