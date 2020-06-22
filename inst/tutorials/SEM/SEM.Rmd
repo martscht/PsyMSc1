@@ -1369,7 +1369,7 @@ Erneut erkennen wir keine Unterschiede zwischen den Modellen. Beide Vorgehenswei
 
 ## Appendix C {#AppendixC}
 ### Essentielle $\tau$-Äquivalenz
-Das Pfadanalysemodell hatte als Voraussetzung, dass alle Variablen essentiell $\tau$-äquivalent sind, also alle $\lambda$s gleich sind pro latenter Variable. Dies können wir in unserem Modell prüfen, indem wir den Faktorladungen Namen geben, analog zur Bennenung der gerichteten Beziehungen zwischen den latenten Variablen, die wir zur Berechnung des indirekten etc. Effekts gebraucht haben. Das letzte Modell sah so aus:
+Das Pfadanalysemodell auf Basis von Skalenmittelwerten hatte als Voraussetzung, dass alle Messunger der selben latenten Variable essentiell $\tau$-äquivalent sind, also alle $\lambda$s gleich sind pro latenter Variable. Dies können wir in unserem Modell prüfen, indem wir den Faktorladungen Namen geben, analog zur Bennenung der gerichteten Beziehungen zwischen den latenten Variablen, die wir zur Berechnung des indirekten etc. Effekts gebraucht haben. Das letzte Modell sah so aus:
 
 ```{r, eval = F}
 model_sem_IE_TE <- '
@@ -1521,7 +1521,7 @@ Dem Modellfit ist zu entnehmen, dass das Modell immer noch zu den Daten passt: d
 Auch wenn die Daten unser Modell nicht verwerfen, können wir die beiden Modelle mit und ohne essentielle $\tau$-Äquivalenzannahme inferenzstatistisch miteinander vergleichen. Dazu verwenden wir wieder die Funktion `lavTestLRT` und führen also einen Likelihood-Ratio-Test ($\chi^2$-Differenzentest) durch. Probieren Sie den Modellvergleichstest selbst aus:
 
 
-```{r, test_lavTestLRT_tau, exercise = TRUE, exercise.setup = "exercise_setup2", exercise.eval = FALSE}
+```{r, test_lavTestLRT_tau, exercise = TRUE, exercise.setup = "exercise_setup3", exercise.eval = FALSE}
 
 ```
 
