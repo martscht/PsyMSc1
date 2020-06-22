@@ -1209,7 +1209,7 @@ Erneut müssen wir ein neues Modell spezifizieren, in welchem wir alle Faktorlad
 model_sem_skalar <- '
 # Messmodelle
 ZD =~ zd1 + c(l1, l1)*zd2 + c(l2, l2)*zd6
-BOEE =~ bo1 + c(l3,l3)*bo6 + c(l4, l4)*bo12 + c(l4, l4)*bo19
+BOEE =~ bo1 + c(l3,l3)*bo6 + c(l4, l4)*bo12 + c(l5, l5)*bo19
 
 zd1 ~ c(tau1, tau1)*1
 zd2 ~ c(tau2, tau2)*1
@@ -1252,7 +1252,7 @@ Wieder müssen wir ein neues Modell spezifizieren, in welchem wir alle Faktorlad
 model_sem_strikt <- '
 # Messmodelle
 ZD =~ zd1 + c(l1, l1)*zd2 + c(l2, l2)*zd6
-BOEE =~ bo1 + c(l3,l3)*bo6 + c(l4, l4)*bo12 + c(l4, l4)*bo19
+BOEE =~ bo1 + c(l3,l3)*bo6 + c(l4, l4)*bo12 + c(l5, l5)*bo19
 
 zd1 ~ c(tau1, tau1)*1
 zd2 ~ c(tau2, tau2)*1
@@ -1305,7 +1305,7 @@ Zum letzten Mal müssen wir ein neues Modell spezifizieren, in welchem wir alle 
 model_sem_voll <- '
 # Messmodelle
 ZD =~ zd1 + c(l1, l1)*zd2 + c(l2, l2)*zd6
-BOEE =~ bo1 + c(l3,l3)*bo6 + c(l4, l4)*bo12 + c(l4, l4)*bo19
+BOEE =~ bo1 + c(l3,l3)*bo6 + c(l4, l4)*bo12 + c(l5, l5)*bo19
 
 zd1 ~ c(tau1, tau1)*1
 zd2 ~ c(tau2, tau2)*1
@@ -1358,11 +1358,6 @@ print(round(fitmeasures(fit_sem_sex_voll2, c("chisq", 'df', "pvalue")), 3))
 ```
 
 Erneut erkennen wir keine Unterschiede zwischen den Modellen. Beide Vorgehensweisen kommen zum selben Ergenis! Final wird die vollständige Invarianz verworfen und wir entscheiden uns für strikte Invarianz über das Geschlecht.
-
-
-
-
-
 
 ## Appendix C {#AppendixC}
 ### Essentielle $\tau$-Äquivalenz
