@@ -1203,7 +1203,7 @@ Erneut erkennen wir keine Unterschiede zwischen den Modellen. Beide Vorgehenswei
 
 
 #### Skalare Invarianz
-Erneut müssen wir ein neues Modell spezifizieren, in welchem wir alle Faktorladungen und Interzepte ($\lambda$s und $\tau$s) über die Gruppen hinweg das gleiche Label geben. Hierbei verwenden wir `tau` als Label für die Interzepte und nummerieren alle Interzepte der manifesten Variablen nach einander durch. Wir erweitern das Modell `model_sem_metrisch`: 
+Erneut müssen wir ein neues Modell spezifizieren, in welchem wir alle Faktorladungen und Interzepte ($\lambda$s und $\tau$s) über die Gruppen hinweg das gleiche Label geben. Hierbei verwenden wir `tau` als Label für die Interzepte und nummerieren alle Interzepte der manifesten Variablen nach einander durch. Wir fügen außerdem die Effektkodierung ein via `ZD ~ c(0, NA)*1` und `BOEE ~c(0, NA)*1`, womit der latente Mittelwert in einer Gruppe auf 0 gesetzt und in der zweiten frei geschätzt wird und erweitern das Modell `model_sem_metrisch` zu: 
 
 ```{r}
 model_sem_skalar <- '
@@ -1222,7 +1222,11 @@ bo19 ~ c(tau7, tau7)*1
 
 # Strukturmodell
 BOEE ~ ZD
-BFs ~  BOEE + ZD'
+BFs ~  BOEE + ZD
+
+BOEE ~ c(0, NA)*1
+ZD ~ c(0, NA)*1
+'
 ```
 
 ```{r, results="hide"}
@@ -1246,7 +1250,7 @@ Erneut erkennen wir keine Unterschiede zwischen den Modellen. Beide Vorgehenswei
 
 
 #### Strikte Invarianz
-Wieder müssen wir ein neues Modell spezifizieren, in welchem wir alle Faktorladungen, Interzepte und Fehlervarianzen ($\lambda$s, $\tau$s und $\theta$s) über die Gruppen hinweg das gleiche Label geben. Hierbei verwenden wir `t` als Label für die Fehlervarianzen und nummerieren alle Fehlervarianzen der manifesten Variablen nach einander durch. Wir erweitern das Modell `model_sem_skalar`. Wir fügen außerdem die Effektkodierung ein via `ZD ~ c(0, NA)*1` und `BOEE ~c(0, NA)*1`, womit der latente Mittelwert in einer Gruppe auf 0 gesetzt und in der zweiten frei geschätzt wird: 
+Wieder müssen wir ein neues Modell spezifizieren, in welchem wir alle Faktorladungen, Interzepte und Fehlervarianzen ($\lambda$s, $\tau$s und $\theta$s) über die Gruppen hinweg das gleiche Label geben. Hierbei verwenden wir `t` als Label für die Fehlervarianzen und nummerieren alle Fehlervarianzen der manifesten Variablen nach einander durch. Wir erweitern das Modell `model_sem_skalar`. 
 
 ```{r}
 model_sem_strikt <- '
@@ -1274,7 +1278,11 @@ bo19 ~~ c(t7, t7)*bo19
 
 # Strukturmodell
 BOEE ~ ZD
-BFs ~  BOEE + ZD'
+BFs ~  BOEE + ZD
+
+BOEE ~ c(0, NA)*1
+ZD ~ c(0, NA)*1
+'
 ```
 
 ```{r, results="hide"}
