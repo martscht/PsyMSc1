@@ -1174,7 +1174,7 @@ Wir müssen nun ein neues Modell spezifizieren, in welchem wir alle Faktorladung
 model_sem_metrisch <- '
 # Messmodelle
 ZD =~ zd1 + c(l1, l1)*zd2 + c(l2, l2)*zd6
-BOEE =~ bo1 + c(l3,l3)*bo6 + c(l4, l4)*bo12 + c(l4, l4)*bo19
+BOEE =~ bo1 + c(l3,l3)*bo6 + c(l4, l4)*bo12 + c(l5, l5)*bo19
 
 # Strukturmodell
 BOEE ~ ZD
