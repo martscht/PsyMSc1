@@ -778,7 +778,7 @@ abbrev(X = fit_sem_sex_skalar, begin = "Group 1", end = "Variances")
 abbrev(X = fit_sem_sex_skalar, begin = "Group 2", end = "Variances")
 ```
 
-Hier greift nun tatsächlich die Einstellung `"BFs~1"` in `group.partial`. `BFs` hat zwei unterschiedlichte Interzepte. Bei `ZD` und `BOEE` fällt auf, dass diese in Gruppe 1 auf 0 gesetzt sind (ohne Unsicherheit) und in Gruppe 2 hier eine Effektkodierung durchgeführt wurde: hier wurden die Interzepte geschätzt. Unterscheidet sich dieser Interzept nun von 0, so unterscheiden sich die Gruppe in ihren Interzepten ([möglicherweise bedingten] Mittelwerten). Dazu später mehr!
+Wir erkennen, dass nun `lavaan` sogar nur Zahlen zwischen zwei Punkten als Labels vergibt. Diese Nummer enspricht weiterhin der Parameternummer. Hier greift nun tatsächlich die Einstellung `"BFs~1"` in `group.partial`. `BFs` hat zwei unterschiedlichte Interzepte. Bei `ZD` und `BOEE` fällt auf, dass diese in Gruppe 1 auf 0 gesetzt sind (ohne Unsicherheit) und in Gruppe 2 hier eine Effektkodierung durchgeführt wurde: hier wurden die Interzepte geschätzt. Unterscheidet sich dieser Interzept nun von 0, so unterscheiden sich die Gruppe in ihren Interzepten ([möglicherweise bedingten] Mittelwerten). Dazu später mehr!
 
 Nun wollen wir untersuchen, ob das metrisch- und das skalar-invariante Modell sich signifikant in der Modellbeschreibung unterscheiden.
 
@@ -817,7 +817,7 @@ Die $\chi^2$-Differenz ist erneut klein (`r round(res_strikt[[5]][2], 3)`) und d
 #### Vollständige Invarianz
 
 Unter vollständiger <mark style="background-color: orange"> oder struktureller </mark> Invarianz verstehen wir das Gleichsetzten aller Strukturparameter. Hier werden nun alle Varianzen, Residualvarianzen, ungerichteten und gerichteten Effekte des Strukturmodells über die Gruppen hinweg gleich gesetzt.
-(insgesamt also $\lambda$s, $\tau$s, $\theta$s, $\gamma$s, $\beta$s, $\kappa$s $\phi$s und $\psi$s gleich über die Gruppen hinweg). Wir passen entsprechend das Modell an.  Außerdem müssen wir nun das Interzept und die Residualvarianz von `BFs` invariant zwischen den Gruppen setzen, was wir erreichen, indem wir die `group.partial` Option rausnnehmen.
+(insgesamt also $\lambda$s, $\tau$s, $\theta$s, $\gamma$s, $\beta$s, $\kappa$s, $\phi$s und $\psi$s gleich über die Gruppen hinweg). Wir passen entsprechend das Modell an.  Außerdem müssen wir nun das Interzept und die Residualvarianz von `BFs` invariant zwischen den Gruppen setzen, was wir erreichen, indem wir die `group.partial` Option rausnnehmen.
 ```{r}
 fit_sem_sex_voll <- sem(model_sem, data = StressAtWork, group = "sex",
                                  group.equal = c("loadings", "intercepts", "residuals",
@@ -834,7 +834,7 @@ res_voll <- lavTestLRT(fit_sem_sex_voll, fit_sem_sex_strikt)
 print(res_voll)
 ```
 
-erhalten wir diesmal einen großen $\chi^2$-Differenz  (`r round(res_voll[[5]][2], 3)`) und der p-Wert zeigt hier an, dass es sich um eine signifikante Verschlechterung des Modells handelt p = `r round(res_voll[[7]][2], 3)` $< 0.05$, wenn wir  die Restriktion der vollständigen Invarianz in das Modell aufnehmen. Die Null-Hypothese, dass alle Parameter im Modell über das Geschlecht hinweg gleich sind, wird somit verworfen. Dies bedeutet also, dass es Geschlechtsunterschiede in den Beziehungen zwischen den latenten Variablen gibt. Wir schauen uns dies an, indem wir uns den Output der Summary des strikt-invarianten Modells ansehen:
+erhalten wir diesmal einen großen $\chi^2$-Differenz  (`r round(res_voll[[5]][2], 3)`) und der p-Wert zeigt hier an, dass es sich um eine signifikante Verschlechterung des Modells handelt p = `r round(res_voll[[7]][2], 3)` $< 0.05$, wenn wir  die Restriktion der vollständigen Invarianz in das Modell aufnehmen. Die Null-Hypothese, dass alle Parameter im Modell über das Geschlecht hinweg gleich sind, wird somit verworfen. Dies bedeutet also, dass es Geschlechtsunterschiede in den Beziehungen zwischen den latenten Variablen gibt. Wir schauen uns dies an, indem wir uns den Output der Summary des strikt-invarianten Modells ansehen, da sich hier Pfadkoeffizienten, sowie die Mittelwerte und Varianzen der latenten Variablen (bzw. von `BFs`, was wir als latente Variable mitführen) noch unterscheiden:
 
 ```{r, eval = F}
 summary(fit_sem_sex_strikt)
@@ -846,7 +846,9 @@ abbrev(X = fit_sem_sex_strikt, begin = "Group 1", end = "Variances")
 abbrev(X = fit_sem_sex_strikt, begin = "Group 2", end = "Variances")
 ```
 
-<mark style="background-color: orange"> Dem jeweiligen Unterpunkt `Regressions` in beiden Gruppen entnehmen wir, dass die Pfadkoeffizienten  recht ähnlich groß zu sein scheinen. Die Standardfehler der Koeffizienten in beiden Gruppen überlappen sich stark, wenn wir jeweils `Estimate` $\pm$ `Std.Err` für einen Koeffizienten rechnen. Schauen wir uns jeweils die Interzepte in den Unterpunkten `Intercepts` in den beiden Gruppen an, erkennen wir an der Effektkodierung für `ZD` und `BOEE`, dass die latenten Interzepte ($\kappa$) in der einen Gruppe auf 0 gesetzt und in der anderen Gruppe frei geschätzt wurden. Das Interzept in Gruppe 2 (den Männern) von Zeitdruck ist signifikant von 0 verschieden, das von Emotionaler Erschöpfung nicht. Dies bedeutet, dass sich Männer und Frauen in ihrem latenten Mittelwert von Zeitdruck unterscheiden, da der Mittelwert von Zeitdruck in der Gruppe der Frauen auf 0 gesetzt war und der Mittelwert von Zeitdruck der Männer signifikant von 0 abweicht (`Est` = `r round(parameterEstimates(fit_sem_sex_strikt)[59,7], 3)`, $p < .05$). Das negative Vorzeichen verrät uns, dass Männer im Durchschnitt weniger Zeitdruck erleben. Dieser signifikante Unterschied könnte der Grund gewesen sein, dass die vollständige Invarianz verworfen wurde. Um dies genauer zu prüfen, müssten wir sukzessive alle Parameter über die Gruppen gleichsetzen und schauen, für welchen Parameter diese Gleichsetzung zu einer signifikanten Verschlechterung des Modells führt. </mark>
+<mark style="background-color: orange"> Dem jeweiligen Unterpunkt `Regressions` in beiden Gruppen entnehmen wir, dass die Pfadkoeffizienten  recht ähnlich groß zu sein scheinen. Die Standardfehler der Koeffizienten in beiden Gruppen überlappen sich stark, wenn wir jeweils `Estimate` $\pm$ `Std.Err` für einen Koeffizienten rechnen (zur Erinnerung: ein 95% Konfidenzintervall würden wir mit $Est \pm 1.96SE$ erhalten, was noch viel größer wäre und sich diese also "noch stärker" überlappen würden). Schauen wir uns jeweils die Interzepte in den Unterpunkten `Intercepts` in den beiden Gruppen an, erkennen wir an der Effektkodierung für `ZD` und `BOEE`, dass die latenten Interzepte ($\kappa$) in der einen Gruppe auf 0 gesetzt und in der anderen Gruppe frei geschätzt wurden. Das Interzept in Gruppe 2 (den Männern) von Zeitdruck ist signifikant von 0 verschieden, das von Emotionaler Erschöpfung nicht. Dies bedeutet, dass sich Männer und Frauen in ihrem latenten Mittelwert von Zeitdruck unterscheiden, da der Mittelwert von Zeitdruck in der Gruppe der Frauen auf 0 gesetzt war und der Mittelwert von Zeitdruck der Männer signifikant von 0 abweicht (`Est` = `r round(parameterEstimates(fit_sem_sex_strikt)[59,7], 3)`, $p < .05$). Das negative Vorzeichen verrät uns, dass Männer im Durchschnitt weniger Zeitdruck erleben. Dieser signifikante Unterschied könnte der Grund gewesen sein, dass die vollständige Invarianz verworfen wurde. Um dies genauer zu prüfen, müssten wir sukzessive alle Parameter über die Gruppen gleichsetzen und schauen, für welchen Parameter diese Gleichsetzung zu einer signifikanten Verschlechterung des Modells führt. </mark>
+
+Zusammenfassend können wir also nur von strikter Invarianz des Modells über das Geschlecht ausgehen.
 
 
 
@@ -860,7 +862,7 @@ Der $\chi^2$-Wert ergibt sie wie folgt:
 $$\chi^2:=(n-1)F(\hat{\Sigma}_M,S)$$
 Somit wirkt es so, dass der $\chi^2$-Wert zwangsläufig mit der Stichprobengröße wachsen muss. Allerdings ist es so, dass für wachsendes ($n\to\infty$) $F(\hat{\Sigma}_M,S)\to0$ solange die Null-Hypothese gilt. Dies liegt daran, dass $F(\hat{\Sigma}_M,S)$ gerade die Differenz zwischen den beiden Matrizen quantifiziert und diese Differenz unter der Null-Hypothese im Mittel gegen 0 konvergiert. Diese Differenz geht für steigende Stichprobengröße gegen den Wert 0, wird also kleiner mit steigender Stichprobengröße. Um eine Verteilung als Referenz verwenden zu können (hier: die kritischen Werte der $\chi^2$-Verteilung) ist eine Reskalierung von Nöten. Aus diesem Grund wird $F(\hat{\Sigma}_M,S)$ mit $n-1$ multipliziert und die bekannte $\chi^2$-Verteilung entsteht. Gilt nun eine Alternativ-Hypothese: 
 $$H_1:S\neq\Sigma_M$$
-dann konvergiert $F(\hat{\Sigma}_M,S)$ im Mittel nicht mehr gegen Null; es gilt also  ($n\to\infty$) $F(\hat{\Sigma}_M,S)\nrightarrow0$, sondern $F(\hat{\Sigma}_M,S)\to d$, wobei $d>0$ gerade die wahre Differenz zwischen den beiden Modellen quantifiziert. Das bedeutet gleichzeitig, dass für den zugehörige mittlere $\chi^2$-Wert unter $H_1$ gilt: $\chi^2_{H_1}\to dn \to \infty$, der $\chi^2$-Wert also mit der Stichprobengröße wächst! Wir wollen uns dies an folgendem Modell klar machen:
+dann konvergiert $F(\hat{\Sigma}_M,S)$ im Mittel nicht mehr gegen Null; es gilt also  ($n\to\infty$) $F(\hat{\Sigma}_M,S)\nrightarrow0$, sondern $F(\hat{\Sigma}_M,S)\to d$, wobei $d>0$ gerade die wahre Differenz zwischen den beiden Modellen quantifiziert. Das bedeutet gleichzeitig, dass für den zugehörige mittlere $\chi^2$-Wert unter $H_1$ gilt: $\chi^2_{H_1}\to dn \to \infty$, der $\chi^2$-Wert also mit der Stichprobengröße wächst (da $dn$ gerade proportional zu $n$ wächst)! Wir wollen uns dies an folgendem Modell klar machen:
 
 ```{r, fig.align="center", fig.height=6, echo=F}
 ## Example of a Full LISREL model path diagram with the same number of
@@ -938,7 +940,7 @@ print(head(data))
 ```
 
 
-In `data` liegen nun simulierte Daten mit $n=200$. Wir verwenden das $H0$ Modell auch um die Daten zu analysieren (dies ist das Modell von oben ohne jeglichen Zahlen, also in dem Format, welches wir bereits kennen!):
+In `data` liegen nun simulierte Daten mit $n=200$. Wir verwenden das $H_0$ Modell auch um die Daten zu analysieren (dies ist das Modell von oben ohne jeglichen Zahlen, also in dem Format, welches wir bereits kennen!):
 
 ```{r}
 model_H0 <- '
@@ -956,20 +958,28 @@ x1 ~~ x2
 '
 ```
 
-Das Pfaddiagramm sieht so aus
+Das Pfaddiagramm sieht so aus (hier wurden die Zusatzeinstellungen `curve = T, curvePivot = T` im `semPlot` verwenden)
 
-```{r, echo = F}
+```{r}
 fitH0 <- sem(model = model_H0, data = data)
 semPaths(fitH0, curve = T, curvePivot = T)
 ```
 
 Schätzen wir nun das Modell und gucken uns den den $\chi^2$-Wert an.
-```{r}
+```{r, results = "hide"}
 fitH0 <- sem(model = model_H0, data = data)
 summary(fitH0)
-fitmeasures(fitH0)[3:5]
 ```
 
+```{r, echo = F}
+lavaan::summary(fitH0)
+```
+
+Besonders von Interesse ist der $\chi^2$-Wert, den wir auch so erhalten:
+
+```{r}
+fitmeasures(fitH0)[3:5]
+```
 
 Außerdem wollen wir zwei fehlspezifizierte Modell betrachten. Unter `model_H1_kov` speichern wir ein Modell, welches äquivalent zu `model_H0` bis auf die fehleende Fehlerkovarianz ist.
 
