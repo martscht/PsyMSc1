@@ -1339,7 +1339,7 @@ BFs ~  c(b, b)*BOEE + c(c, c)*ZD
 
 BOEE ~ c(0, 0)*1
 ZD ~ c(0, 0)*1
-BFs ~ c(nu1, nu1)*1
+BFs ~ c(kappa, kappa)*1
 
 ZD ~~ c(phi, phi)*ZD
 BOEE ~~ c(psi1, psi1)*BOEE
