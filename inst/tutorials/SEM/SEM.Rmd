@@ -1203,7 +1203,7 @@ Erneut erkennen wir keine Unterschiede zwischen den Modellen. Beide Vorgehenswei
 
 
 #### Skalare Invarianz
-Erneut müssen wir ein neues Modell spezifizieren, in welchem wir alle Faktorladungen und Interzepte ($\lambda$s und $\tau$s) über die Gruppen hinweg das gleiche Label geben. Hierbei verwenden wir `tau` als Label für die Interzepte und nummerieren alle Interzepte der manifesten Variablen nach einander durch. Wir fügen außerdem die Effektkodierung ein via `ZD ~ c(0, NA)*1` und `BOEE ~c(0, NA)*1`, womit der latente Mittelwert in einer Gruppe auf 0 gesetzt und in der zweiten frei geschätzt wird und erweitern das Modell `model_sem_metrisch` zu: 
+Erneut müssen wir ein neues Modell spezifizieren, in welchem wir jeweils allen Faktorladungen und Interzepten ($\lambda$s und $\tau$s) über die Gruppen hinweg das gleiche Label geben. Hierbei verwenden wir `tau` als Label für die Interzepte und nummerieren alle Interzepte der manifesten Variablen nach einander durch. Wir fügen außerdem die Effektkodierung ein via `ZD ~ c(0, NA)*1` und `BOEE ~c(0, NA)*1`, womit der latente Mittelwert in einer Gruppe auf 0 gesetzt und in der zweiten frei geschätzt wird und erweitern das Modell `model_sem_metrisch` zu: 
 
 ```{r}
 model_sem_skalar <- '
@@ -1250,7 +1250,7 @@ Erneut erkennen wir keine Unterschiede zwischen den Modellen. Beide Vorgehenswei
 
 
 #### Strikte Invarianz
-Wieder müssen wir ein neues Modell spezifizieren, in welchem wir alle Faktorladungen, Interzepte und Fehlervarianzen ($\lambda$s, $\tau$s und $\theta$s) über die Gruppen hinweg das gleiche Label geben. Hierbei verwenden wir `t` als Label für die Fehlervarianzen und nummerieren alle Fehlervarianzen der manifesten Variablen nach einander durch. Wir erweitern das Modell `model_sem_skalar`. 
+Wieder müssen wir ein neues Modell spezifizieren, in welchem wir jeweils allen Faktorladungen, Interzepten und Fehlervarianzen ($\lambda$s, $\tau$s und $\theta$s) über die Gruppen hinweg das gleiche Label geben. Hierbei verwenden wir `t` als Label für die Fehlervarianzen und nummerieren alle Fehlervarianzen der manifesten Variablen nach einander durch. Wir erweitern das Modell `model_sem_skalar`. 
 
 ```{r}
 model_sem_strikt <- '
@@ -1306,7 +1306,7 @@ Erneut erkennen wir keine Unterschiede zwischen den Modellen. Beide Vorgehenswei
 
 
 #### Vollständige Invarianz
-Zum letzten Mal müssen wir ein neues Modell spezifizieren, in welchem wir alle Parameter des Modells (insgesamt also $\lambda$s, $\tau$s, $\theta$s, $\gamma$s, $\beta$s, $\kappa$s, $\phi$s und $\psi$s) über die Gruppen hinweg das gleiche Label geben. Wir müssen die Effektkodierung der latenten Mittelwert wieder herausnehmen und setzten die Mittelwerte in beiden Gruppen auf 0. Als Label verwenden wir wieder die Notation, die wir schon aus den Mediationanalysen kennen (`a`, `b` und `c`). Für die latenten Residualvarianzen führen wir `psi` als Label ein (hierbei zählen wir weiterhin `BFs` zu den latenten Variablen). Für die latente Varianz von `ZD` verwenden wir `phi` als Label. Für den Mittelwert von `BFs` verwenden wir ausnahmsweise `kappa`.
+Zum letzten Mal müssen wir ein neues Modell spezifizieren, in welchem wir alle Parameter des Modells (insgesamt also $\lambda$s, $\tau$s, $\theta$s, $\gamma$s, $\beta$s, $\kappa$s, $\phi$s und $\psi$s) über die Gruppen hinweg das gleiche Label geben. Wir müssen die Effektkodierung der latenten Mittelwert wieder herausnehmen und setzten die Mittelwerte in beiden Gruppen auf 0. Als Label verwenden wir wieder die Notation, die wir schon aus den Mediationanalysen kennen (`a`, `b` und `c`). Für die latenten Residualvarianzen führen wir `psi` als Label ein (hierbei zählen wir weiterhin `BFs` zu den latenten Variablen). Für die latente Varianz von `ZD` verwenden wir `phi` als Label. Für den Mittelwert von `BFs` verwenden wir ausnahmsweise `kappa`, da wir `BFs` wie zuvor erwähnt weiter als latente Variable zählen wollen.
 
 
 ```{r}
@@ -1365,7 +1365,7 @@ cat("zu Fuß/händisch:")
 print(round(fitmeasures(fit_sem_sex_voll2, c("chisq", 'df', "pvalue")), 3))
 ```
 
-Erneut erkennen wir keine Unterschiede zwischen den Modellen. Beide Vorgehensweisen kommen zum selben Ergenis! Final wird die vollständige Invarianz verworfen und wir entscheiden uns für strikte Invarianz über das Geschlecht.
+Erneut erkennen wir keine Unterschiede zwischen den Modellen. Beide Vorgehensweisen kommen zum selben Ergenis! Zuvor hatten wir gesehen, dass ein Modellvergleich zwischen der strikten und der vollständigen Invarianz zu Gunsten der strikten Invarianz ausfällt. Somit wird die vollständige Invarianz verworfen und wir entscheiden uns final für die strikte Invarianz über das Geschlecht.
 
 ## Appendix C {#AppendixC}
 ### Essentielle $\tau$-Äquivalenz
