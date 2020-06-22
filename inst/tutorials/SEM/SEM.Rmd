@@ -1081,7 +1081,7 @@ Wir sehen deutlich, dass in beiden $H_1$-Bedingungen der mittlere $\chi^2$-Wert 
 Beispielhaft gucken wir uns nun das Verhalten des $CFI$ und des $RMSEA$ an. Die Definition der Fit-Indizes ist:
 $$CFI:= 1- \frac{\max(\chi^2_t-df_t,0)}{\max(\chi^2_t-df_t,\chi^2_i-df_i,0)},$$
 wobei die Subskripts $t$ und $i$ für das $target$-Modell, also unser Modell und das $independence$-Modell stehen, welches keine Beziehung zwischen den manifesten Variablen annimmt (das am schlechtesten passende Modell). Einen Ausdruck wie $\max(\chi^2_t-df_t,0)$ bzw. $\max(\chi^2_t-df_t,\chi^2_i-df_i,0)$  oder einfacher $\max(a,0)$ bzw. $\max(a,b,0)$ lesen wir so: hier wir das Maximum zwischen 2 bzw. 3 Ausdrücken bestimmt und damit weitergerechnet; dadurch das einer der 2 bzw. 3 Ausdrücke gerade die 0 ist, bedeutet dies, dass dieses Maximum immer größer oder gleich 0 sein wird ($\ge0$). 
-Der $CFI$ ist ein Vergleich zwischen dem schlechtesten und dem betrachteten Modell. Der mittlere $CFI$ unter der $H_0$-Hypothese sollte bei 1 liegen für große $n$, da für große $n$ der $\chi^2$-Wert im Mittel bei den $df$ liegt und somit $\chi^2_t-df_t=0$, also der Bruch im Mittel bei 0 liegt. Dies erkennen wir in der Grafik daran, dass im $H_0$-Modell der mittlere $CFI$-Wert gegen 1 geht (dies bedeutet gleichzeitig, dass kleine $CFI$s gerade für einen schlechten Fit sprechen!):
+Der $CFI$ ist ein Vergleich zwischen dem schlechtesten und dem betrachteten Modell. Der mittlere $CFI$ unter der $H_0$-Hypothese sollte bei 1 liegen für große $n$, da für große $n$ der $\chi^2$-Wert im Mittel bei den $df$ liegt und somit $\chi^2_t-df_t=0$, also der Bruch im Mittel bei 0 liegt (somit wird von der 1 im Mittel nichts abgezogen unter der $H_0$). Dies erkennen wir in der Grafik daran, dass im $H_0$-Modell der mittlere $CFI$-Wert gegen 1 geht (dies bedeutet gleichzeitig, dass kleine $CFI$s gerade für einen schlechten Fit sprechen!):
 <center> <img src="https://raw.githubusercontent.com/martscht/PsyMSc1/master/inst/tutorials/SEM/images/CFI_vs_n.png" width="80%"/> </center>
 
 Der $RMSEA$
@@ -1096,11 +1096,11 @@ Die gestrichelten Linien geben jeweils die Grenze an, ab welchen Wert nicht mehr
 Die Abweichungen von 0 bzw. 1 beim $RMSEA$ sowie bei $CFI$ sind allerdings nur für eines der beiden $H_1$ Modelle "extrem". Nur in diesem würde von keinem guten Fit mehr gesprochen werden: nämlich beim Modell, in welchem fälschlicherweise eine vollständige Mediation angenommen wird (keine gerichtete Beziehung zwischen $\xi_1$ und $\eta_2$).
 
 
-Wann genau die Fit-Indizes für eine deutliche Abweichung zwischen Daten und Modell sprechen, hängt von vielen Dingen ab. Im Artikel von Schermelleh et al. (2003) wurden Cut-Kriterien für spezifische Modelle entwickelt ($CFI < .97$ und $RMSEA > .05$), welche nicht notwendigerweise auf alle anderen Modelle mit unterschiedlicher Komplexität, Stichprobengröße und Anzahl manifester Variablen, etc. übertragbar sind. Diesem Umstand geschuldet wurde das `R`-Paket `ezCutoffs` entwickelt, welches simulationsbasierte Cut-Kriterien speziell angepasst an das vorliegende Modell berechnet. Die `ezCutoffs`-Funktion müssten wir dazu einfach unser angenommenes Modell sowie die Daten übergeben; z.B. 
+Wann genau die Fit-Indizes für eine deutliche Abweichung zwischen Daten und Modell sprechen, hängt von vielen Dingen ab. Im Artikel von Schermelleh et al. (2003) wurden Cut-Kriterien für spezifische Modelle entwickelt ($CFI < .97$ und $RMSEA > .05$), welche nicht notwendigerweise auf alle anderen Modelle mit unterschiedlicher Komplexität, Stichprobengröße und Anzahl manifester Variablen, etc. übertragbar sind. Diesem Umstand geschuldet wurde das `R`-Paket `ezCutoffs` entwickelt, welches simulationsbasierte Cut-Kriterien speziell angepasst an das vorliegende Modell berechnet. Die `ezCutoffs`-Funktion müssten wir dazu einfach unser angenommenes Modell sowie die Daten übergeben. Schauen wir uns dem Output zu unserem `model_sem` Modell, in welchem die Mediation von Zeitdruck über Emotionale Erschöpfung auf Burnout modelliert wurde, an: 
 
 ```{r, eval = F}
 library(ezCutoffs)
-ezCutoffs(model = model_sem_IE_TE, data = StressAtWork)
+ezCutoffs(model = model_sem, data = StressAtWork)
 ```
 
 ```{r, echo = F}
