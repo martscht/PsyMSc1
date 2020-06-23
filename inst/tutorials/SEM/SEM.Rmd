@@ -638,7 +638,8 @@ dass insgesamt `r sum(StressAtWork$sex == 1)` der Probanden Frauen und `r sum(St
 abbrev(X = fit_sem_IE_TE_MSA, begin = "Model Test User Model", end = "Parameter Estimates")
 ```
 
-Der $\chi^2$-Wert für das gesamte Modell liegt bei `r round(fitmeasures(fit_sem_IE_TE_MSA)[3], 3)` bei $df=$ `r round(fitmeasures(fit_sem_IE_TE_MSA)[4], 3)` mit zugehörigem $p$-Wert von `r round(fitmeasures(fit_sem_IE_TE_MSA)[5], 3)`. Demnach verwerfen unsere Daten das Modell nicht. Die Freiheitsgrade sind doppelt so hoch, wie im Ein-Stichprobenfall, da wir alle Parameter für beide Stichproben schätzen müssen. Die $\chi^2$-Werte der beiden Stichproben waren 21.400 für die Frauen und 14.403 für die Männer. Der $\chi^2$-Wert für das gesamte Modell ist also einfach die Summe der subpopulationsspezifischen $\chi^2$-Werte.
+Der $\chi^2$-Wert für das gesamte Modell liegt bei `r round(fitmeasures(fit_sem_IE_TE_MSA)[3], 3)` bei $df=$ `r round(fitmeasures(fit_sem_IE_TE_MSA)[4], 3)` mit zugehörigem $p$-Wert von `r round(fitmeasures(fit_sem_IE_TE_MSA)[5], 3)`. Demnach verwerfen unsere Daten das Modell nicht. Die Freiheitsgrade sind doppelt so hoch, wie im Ein-Stichprobenfall, da wir alle Parameter für beide Stichproben schätzen müssen. Die $\chi^2$-Werte der beiden Stichproben waren 21.400 für die Frauen und 14.403 für die Männer. Der $\chi^2$-Wert für das gesamte Modell ist also einfach die Summe der subpopulationsspezifischen $\chi^2$-Werte ($\chi^2_{g=1}$ und $\chi^2_{g=2}$, wobei $g=1$ und $g=2$ für die erste und zweite Gruppe steht):
+$$\chi^2=\chi^2_{g=1}+\chi^2_{g=2}.$$
 
 In der gesamten summary fällt uns auf, dass nur in Gruppe 1 die Bennenungen der Pfadkoeffizienten mit $a, b$ und $c$ vorkommen und in Gruppe 2 keine Benennung mehr auftaucht. 
 ```{r, echo = F}
