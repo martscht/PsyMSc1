@@ -1629,7 +1629,7 @@ Auf die gleiche Art und Weise können wir auch Invarianz über die Zeit oder üb
 [Eid, M., Gollwitzer, M., & Schmitt, M. (2017).](https://hds.hebis.de/ubffm/Record/HEB366849158) *Statistik und Forschungsmethoden* (5. Auflage, 1. Auflage: 2010). Weinheim: Beltz. 
 
 Gregorich, S. E. (2006). Do self-report instruments allow meaningful comparisons across diverse population groups? Testing measurement invariance using the confirmatory factor analysis framework. _Medical Care_, _44_(11), 78-94.
-Chicago	
+	
 
 
 Schermelleh-Engel, K., Moosbrugger, H., & Müller, H. (2003). Evaluation the fit of structural equation models: tests of significance and descriptive goodness-of-fit measures. _Methods of Psychological Research Online,_ *8*(2), 23-74.
