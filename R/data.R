@@ -17,3 +17,12 @@
 #' @source Der Originaldatensatz ist ein Onlinedatensatz, wird seit 2012 erfasst und ist auf [openpsychometrics.org](https://openpsychometrics.org/_rawdata/) als *.zip* downloadbar.
 "Big5"
 
+
+#' Stress At Work Datensatz
+#' 
+#' Selbstberichte von Call-Center Mitarbeitern zu Geschlecht, Zeitdruck, arbeitsorganisationalen Problemen, psychosomatischen Beschwerden, emotionaler Erschöpfung und Leistungserfüllung, welche im Rahmen der Stressforschungs im Arbeitskontext von Relevanz sind.
+#' 
+#'  @format Geschlecht der Probanden (`sex`, `1`=weiblich, `2`=männlich) sowie ausgewählte Messungen der Variablen _Zeitdruck_ (`zd1`, `zd2` und `zd6`) und _Arbeitsorganisationale Probleme_ (`aop3`, `aop4` und `aop8`) aus dem Instrument zu stressbezogenen Tätigkeitsanalyse (ISTA) von Semmer, Zapf und Dunckel (1999), _Psychosomatische Beschwerden_ (auch Befindlichkeit: `bf1`,...,`bf20`) aus der Psychosomatische Bschwerdenliste von Mohr (1986) sowie Messungen zu Subskalen von Burnout: _Emotionale Erschöpfung_ (`bo1`, `bo6`, `b12` und `b19`) und _Leistungserfüllung_ (`bo7`, `bo8` und `bo21`) aus Maslachs Burnout-Inventar (Maslach & Jackson, 1986) in der deutschen Übersetzung von Büssing und Perrar (1992). 
+#' 
+#' @source Der Datensatz `StressAtWork` ist eine Zusammenstellung aus mehreren Studien der Arbeits- und Organisationspsychologie Abteilung der Goethe-Universität, in welchen Call-Center-Mitarbeiter untersucht wurden.
+"StressAtWork"
