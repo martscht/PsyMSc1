@@ -748,7 +748,7 @@ Die folgende Tabelle dient der Übersicht der Invarianzstufen sowie ihrer Implik
 ```{r, echo = F}
 df <- data.frame(Invarianzstufe = c("konfigural", "metrisch/schwach", "skalar/stark", "strikt", "vollständig"), Annahme = c("gleiche Modellstruktur", "gleiche Modellstruktur und Faktorladungen", "gleiche Modellstruktur, Faktorladungen und Interzepte", "gleiche Modellstruktur, Faktorladungen, Interzepte und Residualvarianzen", "gleiche Modellstruktur und alle Modellparameter sind identisch"), Implikation = c("gleichen Beziehungen zwischen Variablen", "latenten Variablen haben gleiche Bedeutung; wahre Anteile vergleichbar, durch Restriktion latenten Varianzen vergleichbar", "Unterschiede in den beobachteten Mittelwerten lassen sich auf Unterschiede in den latenten Mittelwerten zurückführen, Gleichheit latenter Mittelwerte testbar durch Restriktion", "Unterschiede in beobachteten Varianzen oder Reliabilitäten zurückzuführen auf unterschiede in den latenten Varianzen", "keine Unterschiede zwischen den Gruppen"))
 library(htmlTable)
-htmlTable(df,caption="Itemwortlaut", align = "cll")
+htmlTable(df,caption="Invarianzstufen und deren Implikationen", align = "cll")
 ```
 
 <mark style="background-color: orange"> Damit wir die `sem` Funktion nicht durch unsere vergebenen Labels verwirren und somit die Einstellungen mit `group.equal` überschreiben, _**nehmen wir die Bezeichnungen für den indirekten Effekt heraus.**_ Wir nennen das Modell ohne Labels einfach `model_sem`. Für die aufwendigere Durchführung der MSA zu Fuß sowie simple grafische Repräsentationen siehe [Appendix B](#AppendixB). </mark>
