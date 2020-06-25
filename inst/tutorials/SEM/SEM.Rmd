@@ -745,7 +745,7 @@ $$\textbf{konfigural}\quad<\quad\textbf{metrisch/schwach}\quad<\quad\textbf{skal
 
 Likelihood-Ratio-Tests ($\chi^2$-Differenzentests) werden herangezogen, um zu prüfen, ob die Invarianzeinschränkungen das Modell signifikant hinsichtlich der Passung zu den Daten verschlechtern. 
 
-<mark style="background-color: orange">  Die folgende Tabelle dient der Übersicht der Invarianzstufen sowie ihrer Implikationen: </mark>
+<mark style="background-color: orange">  Die folgende Tabelle dient der Übersicht der Invarianzstufen sowie ihrer</mark> Implikationen: 
 
 ```{r, echo = F}
 df <- data.frame(Invarianzstufe = c("konfigural", "metrisch/ schwach", "skalar/ stark", "strikt", "vollständig"), Annahme = paste0(c("gleiche Modellstruktur", "gleiche Modellstruktur und Faktorladungen", "gleiche Modellstruktur, Faktorladungen und Interzepte", "gleiche Modellstruktur, Faktorladungen, Interzepte und Residualvarianzen", "gleiche Modellstruktur und alle Modellparameter sind identisch"),"\n"), Implikation = paste0(c("gleiche Beziehungen zwischen Variablen", "latente Variablen haben gleiche Bedeutung; wahre Anteile vergleichbar, durch Restriktion latenten Varianzen vergleichbar", "Unterschiede in den beobachteten Mittelwerten lassen sich auf Unterschiede in den latenten Mittelwerten zurückführen, Gleichheit latenter Mittelwerte testbar durch Restriktion", "Unterschiede in beobachteten Varianzen oder Reliabilitäten zurückzuführen auf Unterschiede in den latenten Varianzen", "keine Unterschiede zwischen den Gruppen"), "\n"))
