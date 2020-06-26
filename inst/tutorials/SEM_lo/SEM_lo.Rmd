@@ -258,7 +258,7 @@ _Hierbei ist zu beachten, dass nur die angenommenen Effekte spezifiziert werden.
 
 _AOP $\longrightarrow$ ZD_
 
-_AOP $\longrightarrow$ BFs_
+_AOP $\longrightarrow$ BOEE_
 
 _ZD $\longrightarrow$ BOEE_
 
