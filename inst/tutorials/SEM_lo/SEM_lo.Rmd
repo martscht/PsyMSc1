@@ -308,7 +308,7 @@ _(AOP --> ZD --> BOEE --> BFs) + (AOP --> BOEE --> BFs) in `R`: `T_AP := IE_AZEP
 Wie groß ist der direkte Effekt von Arbeitsorganisationalen Problemen auf die Psychosomatischen Beschwerden? Antwort = **0**. Ist dieser Effekt in diesem Modell mit Unsicherheit verbunden (kann man diesen Effekt auf Signifikanz prüfen)? Antwort = **nein**  ("ja" vs. "nein").
 
 ```{r, results = "hide"}
-fit_boot = sem(model_sem_test, StressAtWork, se = "boot", bootstrap = 100) # bootstrap = 1000
+fit_boot = sem(model_sem, StressAtWork, se = "boot", bootstrap = 100) # bootstrap = 1000
 parameterEstimates(fit_boot)
 ```
 
