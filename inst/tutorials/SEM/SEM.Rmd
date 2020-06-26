@@ -37,7 +37,7 @@ library(lavaan)
 library(semPlot) # grafische Darstellung von Pfadanalyse- und Strukturgleichungsmodellen
 ```
 
-Den gesamten R-Code, der in dieser Sitzung genutzt wird, können Sie [`r fontawesome::fa("download")` hier herunterladen](https://raw.githubusercontent.com/martscht/PsyMSc1/master/inst/scripts/SEM.R). 
+Den gesamten R-Code, der in dieser Sitzung genutzt wird, können Sie [`r fontawesome::fa("download")` hier herunterladen](https://raw.githubusercontent.com/martscht/PsyMSc1/master/inst/scripts/SEM.R).
 
 ## Datensatz
 Der Datensatz `StressAtWork`, den wir im Folgenden untersuchen wollen, ist eine Zusammenstellung aus mehreren Studien der Arbeits- und Organisationspsychologie Abteilung der Goethe-Universität, in welchen Call-Center-Mitarbeiter untersucht wurden. Wir können diesen wie gewohnt laden:
@@ -48,7 +48,7 @@ data("StressAtWork", package = "PsyMSc1")
 
 
 
-Der Datensatz enthält das Geschlecht der Probanden (`sex`, `1`=weiblich, `2`=männlich) sowie ausgewählte Messungen der Variablen _Zeitdruck_ (`zd1`, `zd2` und `zd6`) und _Arbeitsorganisationale Probleme_ (`aop3`, `aop4` und `aop8`) aus dem Instrument zu stressbezogenen Tätigkeitsanalyse (ISTA) von Semmer, Zapf und Dunckel (1999), _Psychosomatische Beschwerden_ (auch Befindlichkeit: `bf1`,...,`bf20`) aus der Psychosomatische Bschwerdenliste von Mohr (1986) sowie Messungen zu Subskalen von Burnout: _Emotionale Erschöpfung_ (`bo1`, `bo6`, `b12` und `b19`) und _Leistungserfüllung_ (`bo7`, `bo8` und `bo21`) aus Maslachs Burnout-Inventar (Maslach & Jackson, 1986) in der deutschen Übersetzung von Büssing und Perrar (1992). 
+Der Datensatz enthält das Geschlecht der Probanden (`sex`, `1`=weiblich, `2`=männlich) sowie ausgewählte Messungen der Variablen _Zeitdruck_ (`zd1`, `zd2` und `zd6`) und _Arbeitsorganisationale Probleme_ (`aop3`, `aop4` und `aop8`) aus dem Instrument zu stressbezogenen Tätigkeitsanalyse (ISTA) von Semmer, Zapf und Dunckel (1999), _Psychosomatische Beschwerden_ (auch Befindlichkeit: `bf1`,...,`bf20`) aus der Psychosomatische Bschwerdenliste von Mohr (1986) sowie Messungen zu Subskalen von Burnout: _Emotionale Erschöpfung_ (`bo1`, `bo6`, `b12` und `b19`) und _Leistungserfüllung_ (`bo7`, `bo8` und `bo21`) aus Maslachs Burnout-Inventar (Maslach & Jackson, 1986) in der deutschen Übersetzung von Büssing und Perrar (1992).
 
 ```{r}
 head(StressAtWork)
@@ -71,7 +71,7 @@ Pfadanalysen und Strukturgleichungsmodelle gehören, wie auch die CFA, zu den ko
 
 <center> <img src="https://raw.githubusercontent.com/martscht/PsyMSc1/master/inst/tutorials/SEM/images/Wolken.png" width="50%"/> </center>
 
-Das hier dargestellte schematische Modell postuliert also eine sogenannte *vollständige Mediation* (dazu mehr im nächsten Abschnitt zur [Pfadanalyse](#Pfadanalyse)) vom Stressor über die kurzfristige (Erschöpfung) auf die langfristige (Beschwerden) Stressfolge. 
+Das hier dargestellte schematische Modell postuliert also eine sogenannte *vollständige Mediation* (dazu mehr im nächsten Abschnitt zur [Pfadanalyse](#Pfadanalyse)) vom Stressor über die kurzfristige (Erschöpfung) auf die langfristige (Beschwerden) Stressfolge.
 Der Einfachheit halber wollen wir diese Hypothesen zunächst nur mit drei Variablen untersuchen: Zeitdruck, Emotionale Erschöpfung und Psychosomatische Beschwerden.
 
 ## Pfadanalyse {#Pfadanalyse}
@@ -85,7 +85,7 @@ StressAtWork$BFs <- rowMeans(StressAtWork[,paste0("bf",1:20)])
 
 Hierbei hilft uns `paste0`, die Schreibweise abzukürzen: wir müssen nicht alle Itemnamen einzeln tippen, sondern die "Strings" werden automatisch erzeugt. Um dies genauer zu verstehen, könnten wir bspw. `paste0("zd",c(1, 2, 6))` einmal ausführen. Dies kommt zum gleichen Ergebnis, wie als wenn wir `c("zd1", "zd2", "zd6")` getippt hätten. Das Modell wird nun, ähnlich dem Regressionsmodell aus der ersten Sitzung, aufgestellt. In `lavaan` werden gerichtete Beziehung zwischen Variablen mit `~` dargestellt, wobei links der *Tilde* die abhängige Variable (das Kriterium) und rechts der *Tilde* die unabhängige Variable (der Prädiktor) steht. Für unser angenommenes Modell gibt es folgende Beziehung: Zeitdruck wirkt auf Emotionale Erschöpfung und auf Psychosomatische Beschwerden. Emotionale Erschöpfung wirkt auf Psychosomatische Beschwerden. In diesem Modell wird Zeitdruck die **unabhängige Variable** genannt, Emotionale Erschöpfung ist der **Mediator**, der die Beziehung der unabhängigen auf die **abhängige Variable** Psychosomatische Beschwerden mediiert. Hier hat Zeitdruck eine direkte Beziehung mit Emotionaler Erschöpfung. Emotionale Erschöpfung hat eine direkte Beziehung mit Psychosomatischen Beschwerden und Zeitdruck hat eine direkte und eine indirekte (über Emotionale Erschöpfung) Beziehung mit Psychosomatischen Beschwerden.
 
-Es muss folglich zwei Gleichungen geben: in einer Gleichung ist `BOEEs` die abhängige Variable und wird durch `ZDs` vorhergesagt. In der zweiten Gleichung ist `BFs` die abhängige Variable und wird  durch `BOEEs` und `ZDs` vorhergesagt. Nun hängt es außerdem von der Schätzfunktion ab, welche weiteren Beziehungen wir in unserem Modell spezifizieren müssen.  <mark style="background-color: orange"> Wir wollen die `sem` Funktion verwenden, um das Modell zu schätzen: `sem` ist,  wie `cfa` (diese kennen Sie aus `PsyMSc1::Sitzung_3()`, um CFAs zu schätzen) auch, eine "Convenience"-Funktion, die gewisse Voreinstellungen verwendet und diese an die `lavaan`-Funktion, die Sie in der ersten Sitzung kennengelernt hatten, übergibt. Sie hatten damals eine Regression mit `lavaan` geschätzt und mussten dabei bspw. mit `Y ~ 1 + X` die Regression anfodern, mit welcher durch `X` die abhängige Variable `Y` vorhergesagt wurde. Sie mussten hierbei explizit das Interzept (also den durch X bedingten Mittelwert von Y) sowie die Resiudalvarianz von `Y` anfordern via `Y ~~ Y` (für eine Wiederholung schauen Sie gerne in `PsyMSc1::Sitzung_1()` vorbei). Wie auch die `cfa`-Funktion übernimmt die `sem` Funktion einige dieser Einstellungen für uns. So müssen wir bspw. Residualvarianzen nicht explizit anfragen. Die Mittelwertsstruktur wird in `sem` per Default nicht mitmodelliert. Wenn wir Mittelwerte betrachten wollen, können wir allerdings der `sem`-Funktion die Zusatzeinstellung `meanstructure = TRUE` übergeben. Die Default-Einstellungen für Messmodelle sind identisch mit jenen der Funktion `cfa`. Wir wiederholen diese, wenn es soweit ist. Somit landen wir bei dieser sehr effizienten Schreibweise für unser Modell: </mark>
+Es muss folglich zwei Gleichungen geben: in einer Gleichung ist `BOEEs` die abhängige Variable und wird durch `ZDs` vorhergesagt. In der zweiten Gleichung ist `BFs` die abhängige Variable und wird  durch `BOEEs` und `ZDs` vorhergesagt. Nun hängt es außerdem von der Schätzfunktion ab, welche weiteren Beziehungen wir in unserem Modell spezifizieren müssen.  Wir wollen die `sem` Funktion verwenden, um das Modell zu schätzen: `sem` ist,  wie `cfa` (diese kennen Sie aus `PsyMSc1::Sitzung_3()`, um CFAs zu schätzen) auch, eine "Convenience"-Funktion, die gewisse Voreinstellungen verwendet und diese an die `lavaan`-Funktion, die Sie in der ersten Sitzung kennengelernt hatten, übergibt. Sie hatten damals eine Regression mit `lavaan` geschätzt und mussten dabei bspw. mit `Y ~ 1 + X` die Regression anfodern, mit welcher durch `X` die abhängige Variable `Y` vorhergesagt wurde. Sie mussten hierbei explizit das Interzept (also den durch X bedingten Mittelwert von Y) sowie die Resiudalvarianz von `Y` anfordern via `Y ~~ Y` (für eine Wiederholung schauen Sie gerne in `PsyMSc1::Sitzung_1()` vorbei). Wie auch die `cfa`-Funktion übernimmt die `sem` Funktion einige dieser Einstellungen für uns. So müssen wir bspw. Residualvarianzen nicht explizit anfragen. Die Mittelwertsstruktur wird in `sem` per Default nicht mitmodelliert. Wenn wir Mittelwerte betrachten wollen, können wir allerdings der `sem`-Funktion die Zusatzeinstellung `meanstructure = TRUE` übergeben. Die Default-Einstellungen für Messmodelle sind identisch mit jenen der Funktion `cfa`. Wir wiederholen diese, wenn es soweit ist. Somit landen wir bei dieser sehr effizienten Schreibweise für unser Modell:
 
 ```{r}
 model_paths <- '
@@ -105,7 +105,7 @@ BFs ~~ BFs
 '
 ```
 
-Wir können dieses Modell nun schätzen, indem wir die Funktion `sem` verwenden und ihr unser Modell sowie die Daten übergeben. 
+Wir können dieses Modell nun schätzen, indem wir die Funktion `sem` verwenden und ihr unser Modell sowie die Daten übergeben.
 
 Mit `summary` erhalten wir detaillierte Informationen über Modellfit, Parameterschätzungen und deren Signifikanz.
 
@@ -134,7 +134,7 @@ BFs ~  BOEEs + ZDs
 fit_paths <- sem(model_paths, data = StressAtWork)
 ```
 
-An 
+An
 ```{r, echo = F}
 abbrev(X = fit_paths, begin = "Model Test User Model", end = "Model Test Baseline Model", fit.measures = T)
 ```
@@ -149,9 +149,9 @@ Alle Fit-Indizes zeigen perfekten Fit an (CFI = 1, TLI = 1, RMSEA = 0, SRMR = 0)
 ```{r, echo = F}
 abbrev(X = fit_paths, begin = "Regressions", end = "Variances", fit.measures = T)
 ```
-Im Gegensatz zur CFA wird uns nun ein Block in der Summary gezeigt, welcher die Regressionskoeffizienten unseres Modells enthält (ohne Interzept). Hier ist zu erkennen, dass alle Koeffizienten auf dem 5% Niveau signifikant von 0 verschieden sind. Es kann sich also maximal um eine partielle Mediation handeln, da die direkte Beziehung zwischen Zeitdruck und Psychsomatischen Beschwerden laut dieser Signifikanzentscheidung mit einer Irrtumswahrscheinlichkeit von 5% auch in der Population besteht und somit der Effekt von Zeitdruck auf die Psychosomatischen Beschwerden nicht vollständig über die Emotionale Erschöpfung mediiert wird. 
+Im Gegensatz zur CFA wird uns nun ein Block in der Summary gezeigt, welcher die Regressionskoeffizienten unseres Modells enthält (ohne Interzept). Hier ist zu erkennen, dass alle Koeffizienten auf dem 5% Niveau signifikant von 0 verschieden sind. Es kann sich also maximal um eine partielle Mediation handeln, da die direkte Beziehung zwischen Zeitdruck und Psychsomatischen Beschwerden laut dieser Signifikanzentscheidung mit einer Irrtumswahrscheinlichkeit von 5% auch in der Population besteht und somit der Effekt von Zeitdruck auf die Psychosomatischen Beschwerden nicht vollständig über die Emotionale Erschöpfung mediiert wird.
 
-Von einer vollständigen Mediation würden wir sprechen, wenn die direkte Beziehung zwischen Zeitdruck und Psychosomatischen Beschwerden (also zwischen unabhängiger und abhängiger Variable) nicht bedeutsam von 0 verschieden ist und der indirekte Effekt von Zeitdruck über Emtionale Erschöpfung auf Psychsomatische Beschwerden signifikant von Null verschieden ist (dies war unsere Hypothese, die wir im [vorherigen Abschnitt](#Hypothesen) postuliert hatten).  <mark style="background-color: orange"> Für die Population würden wir also bei einer vollständigen Mediation davon ausgehen, dass die unabhängige Variable nur über den Mediator mit der abhängigen Variable zusammenhängt, also jegliche Veränderung in der unabhängigen Variable mit Veränderungen im Mediator zusammenhängt und durch diese Beziehung auch mit der abhängigen Variable kovariiert. </mark>
+Von einer vollständigen Mediation würden wir sprechen, wenn die direkte Beziehung zwischen Zeitdruck und Psychosomatischen Beschwerden (also zwischen unabhängiger und abhängiger Variable) nicht bedeutsam von 0 verschieden ist und der indirekte Effekt von Zeitdruck über Emtionale Erschöpfung auf Psychsomatische Beschwerden signifikant von Null verschieden ist (dies war unsere Hypothese, die wir im [vorherigen Abschnitt](#Hypothesen) postuliert hatten). Für die Population würden wir also bei einer vollständigen Mediation davon ausgehen, dass die unabhängige Variable nur über den Mediator mit der abhängigen Variable zusammenhängt, also jegliche Veränderung in der unabhängigen Variable mit Veränderungen im Mediator zusammenhängt und durch diese Beziehung auch mit der abhängigen Variable kovariiert.
 
 ```{r, echo = F}
 abbrev(X = fit_paths, begin = "R-Square", end = NULL, shift = 1, rsq = T)
@@ -159,7 +159,7 @@ abbrev(X = fit_paths, begin = "R-Square", end = NULL, shift = 1, rsq = T)
 Insgsamt ist die Vorhersage der Emotionalen Erschöpfung und der Psychosomatischen Beschwerden zwar statistisch signifikant, allerdings werden "nur" ca. `r round(inspect(fit_paths, "r2")[1], 4)*100`% der Variation von `BOEEs` erklärt sowie ca. `r round(inspect(fit_paths, "r2")[2], 4)*100`% der Variation von
 `BFs`.
 
-Im nächsten Abschnitt wollen wir unser Modell grafisch veranschaulichen. In der darauf folgenden Sektion wollen wir zusätzlich prüfen, ob der indirekte Effekt von Zeitdruck auf die Psychosomatischen Beschwerden signfikant ist. 
+Im nächsten Abschnitt wollen wir unser Modell grafisch veranschaulichen. In der darauf folgenden Sektion wollen wir zusätzlich prüfen, ob der indirekte Effekt von Zeitdruck auf die Psychosomatischen Beschwerden signfikant ist.
 
 
 ### Grafische Veranschaulichung des Modells und der Ergebnisse
@@ -170,7 +170,8 @@ Das Paket `semPlot` bietet die Möglichkeit Regressionen, CFAs, Pfadanalysen und
 semPaths(fit_paths)
 ```
 
-Der Default stellt also einfach nur das Modell grafisch dar, was sehr praktisch ist, um bspw. zu prüfen, ob alle wichtigen Beziehung im Modell enthalten sind. Gestrichelte Pfeile stehen hierbei für Restriktionen, hier wird also nichts geschätzt: in unserem Bespiel wird die Varianz von `ZDs` nicht geschätzt, da die Varianz der unabhängigen Variable nur implizit in die Regressionskoeffizenten einfließt, aber kein Koeffizient des Modells darstellen. <mark style="background-color: orange"> Würden wir wollen, dass die Varianz von `ZDs` geschätzt wird, so könnten wir prinzipiell `ZDs ~~ ZDs` in unser Modell mit aufnehmen. Das Problem hierbei ist allerdings, dass wir keine Freiheitsgrade mehr haben, um weitere Parameter zu schätzen. </mark> 
+Der Default stellt also einfach nur das Modell grafisch dar, was sehr praktisch ist, um bspw. zu prüfen, ob alle wichtigen Beziehung im Modell enthalten sind. Gestrichelte Pfeile stehen hierbei für Restriktionen, hier wird also nichts geschätzt: in unserem Bespiel wird die Varianz von `ZDs` nicht geschätzt, da die Varianz der unabhängigen Variable nur implizit in die Regressionskoeffizenten einfließt, aber kein Koeffizient des Modells darstellen. Würden wir wollen, dass die Varianz von `ZDs` geschätzt wird, so könnten wir prinzipiell `ZDs ~~ ZDs` in unser Modell mit aufnehmen.
+
 Gerichtete Pfeile sind regressive Beziehung (also Regressionsparameter, Pfadkoeffizienten oder Faktorladungen). Ungerichtete Pfeile stellen Kovarianzen oder Residualvarianzen dar. Hierbei wird immer dann von einer Kovarianz im Gegensatz zu einer Residualkovarianz gesprochen, wenn es sich um eine exogene (unabhängige) Variable handelt. Salopp gesprochen: *hier kommen keine gerichteten Pfeile an!* Ein weiteres wichtiges Argument, welches `semPaths` entgegen nimmt ist `what`. Hiermit wird festgelegt, was genau geplottet werden soll. Wählen wir `what = "model"`, so wird das Modell ohne Parameterschätzungen und Einfärbungen grafisch dargestellt - dies ist der Default, welchen wir bereits oben gesehen haben. Wählen wir hingegen `what = "est"`, so werden alle geschätzten Parameter in das Modell eingezeichnet; diese werden auch farblich hinsichtlich ihrere Ausprägung kodiert.
 
 ```{r, fig.align="center", fig.height=6}
@@ -187,11 +188,11 @@ semPaths(object = fit_paths, what = "model", layout = "tree2", rotation = 2,
 Sie können die Argumente der Funktion `semPaths` nachlesen, indem sie `??semPaths` in einem neuen `R`-Studio Fenster ausführen und dann `semPlot::semPaths` in der Übersicht auswählen oder sie schauen sich die [Dokumentation online hier an](https://www.rdocumentation.org/packages/semPlot/versions/1.1.2/topics/semPaths).
 
 ```{r exercise_semPaths_est, fig.align="center", fig.height=6,  exercise = TRUE, exercise.eval = FALSE, exercise.setup = "exercise_setup1"}
-semPaths(object = fit_paths, what = "est", layout = "tree2", rotation = 2, 
+semPaths(object = fit_paths, what = "est", layout = "tree2", rotation = 2,
          col = list(man = "skyblue"),  edge.label.cex=1, sizeMan = 5)
 ```
 
-<mark style="background-color: orange"> Wenn Sie eine solche Grafik in `R`-Studio erzeugen (*nicht hier im HTML*), gibt es viele Möglichkeiten, diese abzuspeichern. Bspw. können Sie mit `dev.print(device = pdf, "MeinPlot.pdf")` die Grafik als PDF abspeichern und ihr den Namen "MeinPlot.pdf" geben. Die Endung ".pdf" ist hierbei obligatorisch. Eine andere Möglichkeit ist in `R`-Studio im Grafikfenster auf "Export" zu klicken und dann den Anweisungen zu folgen. </mark>
+Wenn Sie eine solche Grafik in `R`-Studio erzeugen (*nicht hier im HTML*), gibt es viele Möglichkeiten, diese abzuspeichern. Bspw. können Sie mit `dev.print(device = pdf, "MeinPlot.pdf")` die Grafik als PDF abspeichern und ihr den Namen "MeinPlot.pdf" geben. Die Endung ".pdf" ist hierbei obligatorisch. Eine andere Möglichkeit ist in `R`-Studio im Grafikfenster auf "Export" zu klicken und dann den Anweisungen zu folgen.
 
 ### Berechnen und Testen des indirekten Effektes von Zeitdruck über Emotionale Erschöpfung auf Psychosomatische Beschwerden
 Der indirekte Effekt ist der Effekt der von der unabhängigen Variable über den Mediator auf die abhängige Variable wirkt. Der Effekt der unabhängigen Variable auf den Mediator wird häufig mit **a** bezeichnet. Der Effekt des Mediators wird häufig  **b** genannt. Der verbleibende direkte Effekte der unabhängigen auf die abhänige Variable wird, sie haben es sich womöglich schon gedacht, mit **c** bezeichnet. Nach diesem Schema wollen wir auch die Koeffizienten in unserem Modell benennen. Schauen wir uns dazu einmal die Gleichungen an (der Vollständigkeit halber führen wir auch die Interzepts $a_0$ und $c_0$ mit):
@@ -271,9 +272,7 @@ Der Output zeigt die Konfidenzintervalle (sowie weitere Informationen) für alle
 
 
 
-<mark style="background-color: orange">
 Dem Output zu Folge scheint es also in der Population einen indirekten Effekt zu geben. Der totale Effekt ist auch signifikant. Die zugehörigen Grafiken unterscheiden sich kaum von denen, die wir uns zuvor angesehen hatten. Schauen wir uns die Modellstruktur an, so werden uns allerdings die Parameternamen mit eingezeichnet, was durchaus von Nutzen sein kann. Der indireke oder der totale Effekt sind keine Modellparameter, weswegen sie auch nicht in der Grafik dargestellt werden können.
-</mark>
 
 ```{r, fig.align="center", fig.height=6}
 semPaths(object = fit_paths_IE_TE, what = "model", layout = "tree2", rotation = 2,  
@@ -281,7 +280,7 @@ semPaths(object = fit_paths_IE_TE, what = "model", layout = "tree2", rotation = 
 ```
 
 Die hier durchgeführten Analysen unterliegen leider einigen Einschränkenungen. Bspw. wird beim Mitteln zu Skalenwerten davon ausgegangen, dass jede Messung (jede Variable pro Skala) gleichermaßen aus der dahinterliegende latenten Variable besteht. Dies hatten wir in der letzten Sitzung im Anhang unter essentieller $\tau$-Äquivalenz kennengelernt (gleiche $\lambda$s in einem [CFA-] Messmodell). Essentielle $\tau$-Äquivalenz ist eine strenge Annahme, welche wir prüfen müssten, um den Analysen mit Skalenwerten komplett vertrauen zu können. Außerdem werden durch das Mitteln die Messfehler nicht vollständig modeliert, auch wenn die Analysen somit reliabler als *Einzelitemanalysen* (z.B. hätten wir auch jeweils ein Item pro Skala verwenden können) sind.
-<mark style="background-color: orange"> Hierbei ist es nun so, dass Effekte messfehlerbehafteter (stochastischer) Regressoren konsistent unterschätzt werden. Wären also  die Variablen also Messfehler frei, würden die Effekte (die Regressionparameter) größer ausfallen. Leider können wir nicht davon ausgehen, dass unsere beobachteten Variablen messfehlerfrei sind! Die relativ kleinen $R^2$-Werte könnten folglich auf Grund der Messfehler aufgetreten sein. Aus diesem Grund ist in der multiplen Regression bspw. auch eine der Voraussetzungen die Messfehlerfreiheit der (stochastischen) Regressoren (siehe [Eid, et al., 2017](https://hds.hebis.de/ubffm/Record/HEB366849158), Kapitel 19.13). </mark>
+Hierbei ist es nun so, dass Effekte stochastischer Regressoren konsistent unterschätzt werden, wenn diese messfehlerbehaftet sind. Wären die Variablen messfehlerfrei, würden die Effekte (die Regressionparameter) größer ausfallen. Leider können wir nicht davon ausgehen, dass unsere beobachteten Variablen messfehlerfrei sind, wenn wir sie mit Fragebögen erheben! Aus diesem Grund ist in der multiplen Regression bspw. auch eine der Voraussetzungen die Messfehlerfreiheit der (stochastischen) Regressoren (siehe [Eid, et al., 2017](https://hds.hebis.de/ubffm/Record/HEB366849158), Kapitel 19.13).
 
 Wir können die Analysen auf die latente Ebene heben und Messmodelle für die latenten Variablen aufstellen, welche dann die unterschiedlichen Messgenauigkeiten pro Messung berücksichtigen und die Beziehung zwischen den latenten Variablen um die Ungenauigkeit der Einzelitems bereinigen.
 
@@ -289,20 +288,21 @@ Wir können die Analysen auf die latente Ebene heben und Messmodelle für die la
 Strukturgleichungsmodelle (SEM) kombinieren Pfadanalysen mit Messmodellen, also CFAs. Wir können mit SEM in unseren Analysen Messfehler berücksichtigen, aber dennoch gerichtete Beziehungen zwischen den latenten Variablen untersuchen. Bevor wir Messmodelle für unsere latenten Variablen aufstellen, müssen wir uns überlegen, ob dies denn für alle Variablen sinnvoll ist.
 
 ### Reflexive vs. formative Messmodelle {#formvsreflMessmodell}
-Wenn es um Messmodelle geht, kann zwischen **reflexiven** und **formativen** Messmodellen unterschieden werden. Reflexive Messmodelle sind jene Messmodelle, die wir uns vorstellen, wenn wir von latenten Variablen sprechen. Items sind Messungen ein und der selben latenten Variable und werden durch diese beeinflusst. Dies kann auch als eine Art zweistufiges Experiment aufgefasst werden: eine Person besitzt einen latenten (festen) Wert einer Variable, z.B. der Intelligenz. 
-<mark style="background-color: orange">Nun messen wir mit verschiedenen (möglicherweise unterschiedlich reliablen) Items das gleiche Konstrukt, nämlich die Intelligenz (durch unterschiedliche Intelligenztests oder unterschiedliche Items in einem Intelligenztest, z.B. durch einen Zahlenreihentest und durch einen Analogientest, etc.). Hierbei ist es so, dass die gewählten Items eine zufällige Auswahl aller möglichen Messungen des latenten Konstrukts (z.B. ist die Zahlenreihe 1,2,? mit der Antwort *3* ein zufällig ausgewähltes Zahlenreihenitem; wir könnten auch 3,3,? verwenden oder 9,6,? oder 5,4,?). Unterschiede zwischen den Items kommen zu stande, da sowohl Messfehler als auch unterschiedliche Messgenauigkeiten hinzukommen. Unterschiede zwischen Personen sollten jedoch auf Unterschiede in der latenten Variable zurückzuführen sein: eine intelligentere Person sollte im Mittel höhere Ausprägungen auf den Items zeigen, als eine weniger intelligente Person. Unterschiede innerhalb einer Person (durch bspw. Mehrfachmessung) kommen (wobei wir Erinnerungseffekte und andere Biases hier ignorieren) durch einen (testsituationsspezifischen) Messfehler zu stande. </mark> Als Pfaddiagramm sieht dies so aus:
+Wenn es um Messmodelle geht, kann zwischen **reflexiven** und **formativen** Messmodellen unterschieden werden. Reflexive Messmodelle sind die Messmodelle, die wir in der letzten Sitzung detailliert besprochen haben. Darin sind Eigenschaften von Personen latente Variable, die sich nicht direkt Beobachten lassen, sich aber in Verhalten und Aussagen niederschlagen. "Konservativismus" ist eine Einstellung von Personen (latente Variable), die sich z.B. darin äußert, dass Personen einer Aussage wie "Ein noch so geschulter und kritischer Verstand kann letzten Endes doch keine echte innere Befriedigung geben." eher zustimmen (Item 36 der [Machiavellismus-Konservatismus Skala](https://zis.gesis.org/skala/Cloetta-Machiavellismus-Konservatismus); Cloetta, 2014). Die Annahme ist also, dass die latente Variable ursächlich für die Ausprägung bestimmter beobachtbarer (manifester) Variablen ist. Wie wir in Sitzung 3 gesehen haben, sieht ein entsprechendes Pfaddiagramm so aus:
 
 <center> <img src="https://raw.githubusercontent.com/martscht/PsyMSc1/master/inst/tutorials/SEM/images/Reflexiv.png" width="40%"/> </center>
 
-Die Variable $X_1$ hängt von der Ausprägung der latenten Variable $\xi$ und vom Messfehler $\delta_1$ ab: $X_1=\lambda\xi + \delta_1$, wobei $\lambda$ die Reliabilität quantifiziert. Demnach besteht eine regressive Beziehung zwischen $X_1$ und $\xi$: ist $\xi$ groß so ist $X_1$ im Mittel groß (siehe dazu auch `PsyMSc1::Sitzung_3()` im Abschnitt *Modellschätzung und Ergebnisse - Zweiter Versuch*, in welchem diese regressive Beziehung für 3 Items in einem Diagramm dargestellt sind)! Diese Beziehung wird im Diagramm durch die Pfeile so dargestellt, dass die Pfeile der latenten Variable und des Messfehlers bei $X_1$ ankommen. $X_1$ besteht aus diesen beiden Variablen.
+Die Variable $X_1$ ist also eine abhängige Variable, deren Ausprägung von der Ausprägung der latenten Variable $\xi$ und vom Messfehler $\delta_1$ abhängt: $X_1=\lambda\xi + \delta_1$. Deswegen gehen die Pfeile im Pfaddiagramm von den latenten Variablen (UV) zu den Items (AVs).
 
-Bei formativen Messmodellen ist es so, dass die latente Variable erst "geformt" wird. Sie ist eine Zusammensetzung aus den manifesten (beobachteten) Items. <mark style="background-color: orange"> Hier ist es nun so, dass die Items keine Zufallsauswahl an alle möglichen Items zur Messung der latenten Variable darstellen, sondern, dass die latente Variable durch die getroffene Auswahl der Items "geformt" wird. Demnach kann die latente Variable als die (gewichtete) Summe (oder [gewichteter] Mittelwert) ihrer Items aufgefasst werden. Das zugehörige Pfaddiagramm sieht folgendermaßen aus: </mark>
+Bei formativen Messmodellen ist es so, dass die latente Variable erst "geformt" wird. Sie ist eine Zusammensetzung aus den manifesten (beobachteten) Items, die als die (gewichtete) Summe (oder [gewichteter] Mittelwert) ihrer Items aufgefasst wird. Das zugehörige Pfaddiagramm sieht folgendermaßen aus:
+
 <center> <img src="https://raw.githubusercontent.com/martscht/PsyMSc1/master/inst/tutorials/SEM/images/Formativ.png" width="38%"/> </center>
-Es können keine Messfehler berücksichtigt werden und die "Kompositvariable" (deshalb auch die Benennung $\mathcal{C}$, engl. composite) ist eine Linearkombination der Items: $\mathcal{C}=X_1+X_2+X_3$ oder $\mathcal{C}=\lambda_1^\mathcal{C}X_1+\lambda_2^\mathcal{C}X_2+\lambda_3^\mathcal{C}X_3$ (also auch: $\mathcal{C}=\frac{X_1+X_2+X_3}{3}$)). <mark style="background-color: orange">  Somit wirken sich Unterschiede zwischen Personen in bspw. $X_1$ (und gleichen $X_2$ und $X_3$) auf Unterschiede in $\mathcal{C}$ aus. Es lassen sich also Unterschiede in der latenten Variable auf unterschiedliche Kombinationen von Ausprägungen  der Beobachtungen zurückführen. </mark>
 
-_Wem dies nun bekannt vorkommt, der/die hat sich wahrscheinlich an die Unterscheidung zwischen EFA und PCA zurückerinnert: Hier war es so, dass bei der PCA die Hauptkomponenten Linearkombinationen, also gewichtete Summen, der beobachteten Items waren, während bei EFA ein Messmodell mit dahinterliegenden latenten Variablen formuliert wurde und somit Messfehler modeliert werden konnten._
+Es können keine Messfehler berücksichtigt werden und die "Kompositvariable" (deshalb auch die Benennung $\mathcal{C}$, engl. composite) ist eine Linearkombination der Items: $\mathcal{C}=X_1+X_2+X_3$ oder $\mathcal{C}=\lambda_1^\mathcal{C}X_1+\lambda_2^\mathcal{C}X_2+\lambda_3^\mathcal{C}X_3$ (also auch: $\mathcal{C}=\frac{X_1+X_2+X_3}{3}$)). Somit wirken sich Unterschiede zwischen Personen in bspw. $X_1$ (und gleichen $X_2$ und $X_3$) auf Unterschiede in $\mathcal{C}$ aus. Es lassen sich also Unterschiede in der latenten Variable auf unterschiedliche Kombinationen von Ausprägungen  der Beobachtungen zurückführen. Gerade in den Wirtschaftswissenschaften und der Soziologie sind solche formativen Variablen sehr verbreitet. Ein bekanntes Beispiel ist der [Human Development Index](http://hdr.undp.org/en/content/human-development-index-hdi), der aus verschiedenen Komponenten wie Lebenserwartung, Schulbildung und Bruttoinlandsprodukt eine Kennzahl für den Entwicklungsstand eines Landes ermittelt.
 
-Ein gutes Beispiel für ein formatives Messmodell ist die Variable _Umgebungsbelastung_, welche auch mit dem ISTA erhoben werden kann (Semmer, et al., 1999). Mit dieser Variable sollen Umwelteinflüsse erfasst werden, die die Arbeit erschweren. Dies könnten z.B. schlechte Lichtverhältnisse oder Lärmbelästigung sein. Allerdings ist es in der Regel nicht so, dass an einem Arbeitsplatz immer dann Lärm auftritt, wenn auch die Lichtverhältnisse schlecht sind. Wenn jedoch beides auftritt, so ist die Umgebungsbelastung an diesem Arbeitsplatz besonders ausgeprägt. Demnach müssen beide Aspekte berücksichtigt werden, um eine gute Schätzung für die Umgebungsbelastung eines Arbeitsplatzes zu erhalten. Die beiden Variablen haben allerdings nicht notwendigerweise eine Gemeinsamkeit (Kovariation). Bei einem reflexiven Messmodell würden wir davon ausgehen, dass beide Belastungen in der Regel (zu unterschiedlichen Ausprägungen) zusammen auftreten, da sie auf das gemeinsame latente Konstrukt zurückzuführen wären.
+_Wem dieses Konzept bekannt vorkommt hat sich wahrscheinlich an die Unterscheidung zwischen EFA und PCA zurückerinnert: Hier war es so, dass bei der PCA die Hauptkomponenten Linearkombinationen, also gewichtete Summen, der beobachteten Items waren, während bei EFA ein Messmodell mit dahinterliegenden latenten Variablen formuliert wurde und somit Messfehler modeliert werden konnten._
+
+<!-- Ein gutes Beispiel für ein formatives Messmodell ist die Variable _Umgebungsbelastung_, welche auch mit dem ISTA erhoben werden kann (Semmer, et al., 1999). Mit dieser Variable sollen Umwelteinflüsse erfasst werden, die die Arbeit erschweren. Dies könnten z.B. schlechte Lichtverhältnisse oder Lärmbelästigung sein. Allerdings ist es in der Regel nicht so, dass an einem Arbeitsplatz immer dann Lärm auftritt, wenn auch die Lichtverhältnisse schlecht sind. Wenn jedoch beides auftritt, so ist die Umgebungsbelastung an diesem Arbeitsplatz besonders ausgeprägt. Demnach müssen beide Aspekte berücksichtigt werden, um eine gute Schätzung für die Umgebungsbelastung eines Arbeitsplatzes zu erhalten. Die beiden Variablen haben allerdings nicht notwendigerweise eine Gemeinsamkeit (Kovariation). Bei einem reflexiven Messmodell würden wir davon ausgehen, dass beide Belastungen in der Regel (zu unterschiedlichen Ausprägungen) zusammen auftreten, da sie auf das gemeinsame latente Konstrukt zurückzuführen wären. -->
 
 Bei Zeitdurck und Emotionaler Erschöpfung handelt es sich um reflexive Messmodelle. Bei Psychosomatischen Beschwerden werden unterschiedliche Beschwerden wie bspw. Kopfschmerzen und Rückenschmerzen abgefragt. Demnach handelt es sich bei dieser Variable eher um ein ein formatives Messmodell. Entsprechend könnten wir die Kompositformulierung in `lavaan` (`<~`) nutzen, um eine latente Kompositvariable zu erzeugen oder wir behalten der Einfachheit halber unseren Skalenmittelwert `BFs` bei.
 
@@ -316,15 +316,18 @@ $$\begin{pmatrix}BO_1\\BO_6\\BO_{12}\\BO_{19}\end{pmatrix}=\begin{pmatrix}\tau_1
 - Strukturmodell in Matrixnotation (wobei wir $BFs$ als latente Variable mitführen)
 $$\begin{pmatrix}\eta_\text{BOEE}\\BF_s\end{pmatrix}=\begin{pmatrix}\gamma_{11}\\\gamma_{21}\end{pmatrix}\xi_\text{ZD} + \begin{pmatrix}0&0\\\beta_{21}&0\end{pmatrix}\begin{pmatrix}\eta_\text{BOEE}\\BF_s\end{pmatrix} + \begin{pmatrix}\zeta_\text{BOEE}\\\zeta_{BF_s}\end{pmatrix}$$
 
-<mark style="background-color: orange">  Wenn wir die Matrizengleichung des Strukturmodells ausrechnen, erhalten wir: </mark>
+Für die einzelnen abhängigen latenten Variablen erhalten wir also:
 
 $$\eta_\text{BOEE}=\gamma_{11}\xi_\text{ZD} + \zeta_\text{BOEE}$$
-und 
+und
+
 $$BFs = \gamma_{21}\xi_\text{ZD} + \beta_{21}\eta_\text{BOEE} + \zeta_{BFs}.$$
+
 Durch Einsetzten folgt:
 $$BFs = \gamma_{21}\xi_\text{ZD} + \beta_{21}\gamma_{11}\xi_\text{ZD}+ \beta_{21}\zeta_\text{BOEE} + \zeta_{BFs}.$$
 
-<mark style="background-color: orange"> Wenn wir nun genauer hinschauen, erkennen wir, dass $\gamma_{11}$ dem Pfad $a$, $\beta_{21}$ dem Pfad $b$ und $\gamma_{21}$ dem Pfad $c$  aus dem Mediationspfadmodell entspricht! Entsprechend quantifiziert $\beta_{21}\gamma_{11}$ den indirekten Effekt  von $\xi_\text{ZD}$ über $\eta_\text{BOEE}$ auf $BFs$.  </mark> Wir wollen das Modell `model_paths_IE_TE`, welches so aussah:
+Wenn wir nun genauer hinschauen, erkennen wir, dass $\gamma_{11}$ dem Pfad $a$, $\beta_{21}$ dem Pfad $b$ und $\gamma_{21}$ dem Pfad $c$  aus dem Mediationspfadmodell entspricht! Entsprechend quantifiziert $\beta_{21}\gamma_{11}$ den indirekten Effekt  von $\xi_\text{ZD}$ über $\eta_\text{BOEE}$ auf $BFs$. Wir wollen das Modell `model_paths_IE_TE`, welches so aussah:
+
 ```{r}
 model_paths_IE_TE <- '
 BOEEs ~ a*ZDs
@@ -335,7 +338,7 @@ IE := a*b
 TE := IE + c
 '
 ```
-so manipulieren, dass es auch die latente Ebene enthält. Messmodelle wurden mit `=~` bestimmt, wobei links davon die neu definierte latente Variable steht (der Name der latenten Variable ist beliebig). Nennen Sie die latente Variable für Zeitdruck `ZD` (Items: `zd1`, `zd2` und `zd6`) und die latente Variable Emotionale Erschöpfung `BOEE` (Items: `bo1`, `bo6`, `bo12` und `bo19`); Achtung: ohne "s" - diese Variablen gibt es nämlich im Datensatz - das waren die Skalenmittelwerte für Zeitdruck und Emotionale Erschöpfung. <mark style="background-color: orange"> Lassen Sie die `sem`-Funktion die Default-Skalierer auf die 1. Faktorladung pro latentem Konstrukt setzten, indem Sie nichts weiter unternehmen, als `R` zu sagen, welche Messungen zu welchem latenten Konstrukt gehören (Sie überschreiben diesen Default, indem Sie `NA*` vor das erste Item der latenten Variable schreiben und anschließend Varianz der latenten Variable auf 1 setzen). Außerdem werden per Default alle Residualvarianzen der Messungen geschätzt, Sie müssen diese also nicht explizit formulieren. Inkludieren Sie auch die Berechnung des indirekten und des totalen Effekts mit den gleichen Bezeichungen. Sie brauchen folglich 2 Messmodellsgleichungen, eine Gleichung für die Beziehung zwischen `ZD` und `BOEE`, sowie eine Gleichung für die Beziehung zwischen `ZD`, `BOEE` und `BFs`. Zum Schluss brauchen Sie noch die neu definierten Koeffizienten für den indirekten und den totalen Effekt (vgl. oben). </mark> Schätzen Sie anschließend das Modell mit `sem` und schauen sich die Summary an.
+so umstellen, dass es nicht mehr die Beziehung von manifesten Skalenwerten, sondern die Beziehungen zwischen latenten Variablen untersucht. Probieren Sie unten aus, ein solches Modell aufzustellen indem Sie Ihr Wissen um die CFA aus der letzten Sitzung mit dem kombinieren, was gerade in der [Pfadaanalyse](#Pfadanalyse) besprochen wurde. Nennen Sie die latente Variable für Zeitdruck am besten `ZD` (Items: `zd1`, `zd2` und `zd6`) und die latente Variable Emotionale Erschöpfung `BOEE` (Items: `bo1`, `bo6`, `bo12` und `bo19`; *Achtung: ohne "s" - diese Variablen gibt es nämlich im Datensatz - das waren die Skalenmittelwerte für Zeitdruck und Emotionale Erschöpfung*). Nehmen Sie als Platzhalter der Psychosomatischen Beschwerden die Variable `BFs` in das Modell auf. Inkludieren Sie auch die Berechnung des indirekten und des totalen Effekts mit den gleichen Bezeichnungen. Sie brauchen folglich 2 Messmodelle, eine Regression für die Beziehung zwischen `ZD` und `BOEE`, sowie eine Regression für die Beziehung zwischen `ZD`, `BOEE` und `BFs`. Zum Schluss brauchen Sie noch die neu definierten Koeffizienten für den indirekten und den totalen Effekt (vgl. oben). Schätzen Sie anschließend das Modell mit `sem` und schauen sich die Summary an! (*In den Tips finden Sie Schrittweise mehr und mehr Vorgaben dazu, wie dieses Modell aussehen soll*)
 
 
 ```{r exercise_model_SEM, exercise = TRUE, exercise.setup = "exercise_setup1", exercise.eval = FALSE}
@@ -372,7 +375,7 @@ ZD =~ ... + ...
 
 '
 
-fit_sem_IE_TE <- 
+fit_sem_IE_TE <-
 ...
 ```
 
@@ -392,7 +395,7 @@ ZD =~ zd1 + ...
 
 '
 
-fit_sem_IE_TE <- 
+fit_sem_IE_TE <-
 ...
 ```
 
@@ -411,7 +414,7 @@ BFs ~ ... + ...
 
 '
 
-fit_sem_IE_TE <- 
+fit_sem_IE_TE <-
 ...
 ```
 
@@ -430,7 +433,7 @@ IE := a*b
 TE := ...
 '
 
-fit_sem_IE_TE <- 
+fit_sem_IE_TE <-
 ...
 ```
 
@@ -537,33 +540,39 @@ Sollten Sie alles richtig formuliert haben (und die Zusatzeinstellungen in der s
 abbrev(fit_sem_IE_TE, begin = "Model Test User Model", end = "Parameter Estimates", fit.measures = T, rsq = T)
 ```
 
-Sowie folgenden Ergebnisse für die Messmodelle:
+Falls dem so ist - herzlichen Glückwunsch, Sie haben gerade ein vollständiges Strukturgleichungsmodell formuliert und geschätzt! Jetzt bleibt nur noch die leichteste Übung: Ergebnisse korrekte interpretieren.
+
+Dem Modelfit ist zu entnehmen, dass wir, anders als im Beispiel der Pfadanalyse,  nun die Passung zwischen Modell und Daten untersuchen können: der $\chi^2$-Wert liegt bei `r round(fitmeasures(fit_sem_IE_TE)[3], 3)` bei $df=$ `r round(fitmeasures(fit_sem_IE_TE)[4], 3)` mit zugehörigem $p$-Wert von `r round(fitmeasures(fit_sem_IE_TE)[5], 3)`. Demnach verwerfen unsere Daten das Modell nicht.
+
+Die Fit-Indizes zeigen hier alle samt einen guten Fit des Modells an. Dies war Aufgrund des $\chi^2$-Wertes zu erwarten, da die Stichprobengröße ausreichend Power liefert (sodass das Modell sinnvoll geschätzt werden kann) und der $\chi^2$-Wert trotzdem nicht signifikant auf dem 5%-Niveau war. Es gibt also keinen Grund an der $H_0$ (auf Modellpassung zwischen Daten und Modell) zu zweifeln. Denn **nur in solchen Modellen**, in denen tatsächlich die $H_1$-Hypothese gilt, wächst der $\chi^2$-Wert tatsächlich mit der Stichprobengröße (dies steht im Widerspruch zu einigen Textbüchern, welche propagieren, dass der $\chi^2$-Wert immer mit der Stichprobengröße wächst!). _Es empfiehlt sich sehr über die Beziehung zwischen Stichprobengröße, $\chi^2$-Wert und den Fit-Indizes noch einmal im [Appendix A](#AppendixA) nachzulesen!_
+
+Für die Messmodelle ergibt sich Folgendes:
 
 ```{r, echo = F}
 abbrev(fit_sem_IE_TE, begin = "Latent Variables", end = "Regressions")
 ```
 
-Dem ist zu entnehmen, dass wir, anders als im Beispiel der Pfadanalyse,  nun die Passung zwischen Modell und Daten untersuchen können: der $\chi^2$-Wert liegt bei `r round(fitmeasures(fit_sem_IE_TE)[3], 3)` bei $df=$ `r round(fitmeasures(fit_sem_IE_TE)[4], 3)` mit zugehörigem $p$-Wert von `r round(fitmeasures(fit_sem_IE_TE)[5], 3)`. Demnach verwerfen unsere Daten das Modell nicht. 
-<mark style="background-color: orange"> Die Fit-Indizes zeigen hier alle samt einen guten Fit des Modells an. Dies war zu erwarten, da die Stichprobengröße ausreichend Power liefert (sodass das Modell sinnvoll geschätzt werden kann) und der $\chi^2$-Wert trotzdem nicht signifikant auf dem 5%-Niveau war. Es gibt also keinen Grund an der $H_0$ (auf Modellpassung zwischen Daten und Modell) zu zweifeln. Denn **nur in solchen Modellen**, in denen tatsächlich die $H_1$-Hypothese gilt, wächst der $\chi^2$-Wert tatsächlich mit der Stichprobengröße (dies steht im Widerspruch zu einigen Textbüchern, welche propagieren, dass der $\chi^2$-Wert immer mit der Stichprobengröße wächst!). _Es empfiehlt sich sehr über die Beziehung zwischen Stichprobengröße, $\chi^2$-Wert und den Fit-Indizes noch einmal im [Appendix A](#AppendixA) nachzulesen!_  </mark>
-
-<mark style="background-color: orange"> Den Messmodellen entnehmen wir, dass die Variablen die latenten Variablen vergleichseweise ähnlich gut messen (ähnlich große Faktorladungen). Wir sehen außerdem, dass die ersten Faktorladungen jeweils auf 1 gesetzt wurden und hier entsprechend keine Signifikanzentscheidung von Nöten ist (wir haben den Wert hier "ohne Unsicherheit" vorgegeben). </mark> Um die Reliabilität beurteilen zu können, schauen wir uns die erklärten Varianzanateile an:
+Diesen entnehmen wir, dass die Variablen auf der latenten Dimension ähnlich stark diskriminieren (ähnlich große Faktorladungen). Wir sehen außerdem, dass die ersten Faktorladungen jeweils auf 1 gesetzt ist und hier entsprechend keine Signifikanzentscheidung von Nöten ist (wir haben den Wert hier "ohne Unsicherheit" vorgegeben). Um die Reliabilität beurteilen zu können, schauen wir uns die erklärten Varianzanateile an:
 
 ```{r, echo = F}
 abbrev(fit_sem_IE_TE, begin = "R-Square", end = "Defined Parameters", rsq = T)
 ```
 
-Die beobachteten Variablen zeigen Reliabilitäten zwischen `r round(min(inspect(fit_sem_IE_TE, "r2")[1:7]), 3)` und  `r round(max(inspect(fit_sem_IE_TE, "r2")[1:7]), 3)`. Nun wollen wir die Ergebnisse mit den Ergenbissen der Pfadanalyse vergleichen. Dazu schauen wir uns die gerichteten Beziehungen zwischen den latenten Variablen an:
+Die beobachteten Variablen zeigen Reliabilitäten zwischen `r round(min(inspect(fit_sem_IE_TE, "r2")[1:7]), 3)` und  `r round(max(inspect(fit_sem_IE_TE, "r2")[1:7]), 3)`.
+
+Nun wollen wir die Ergebnisse mit den Ergenbissen der Pfadanalyse vergleichen. Dazu schauen wir uns die gerichteten Beziehungen zwischen den latenten Variablen an:
 
 ```{r, echo = F}
 abbrev(fit_sem_IE_TE, begin = "Regressions", end = "Variances")
 ```
 
-Hier werden uns erneut die Label "(a)", "(b)" und "(c)" angezeigt. Der direkte Effekt (c) von Zeitdruck auf Psychosomatische beschwerden scheint, im Gegensatz zu den Ergebnissen der Pfadanalyse im Abschnitt zuvor, nicht signifikant von 0 verschieden zu sein. Die beiden anderen Pfade sind statistisch signifikant: Mit einer *Irrtumswahrscheinlichkeit von 5% ist davon auszugehen, dass es eine lineare Beziehung zwischen Zeitdruck und Emotionaler Erschöpfung (Emotionaler Erschöpfung und Psychosomatischen Beschwerden) in der Population gibt.*
+Hier werden uns erneut die Label "(a)", "(b)" und "(c)" angezeigt. Der direkte Effekt (c) von Zeitdruck auf Psychosomatische Beschwerden scheint, im Gegensatz zu den Ergebnissen der Pfadanalyse im Abschnitt zuvor, nicht signifikant von 0 verschieden zu sein. Die beiden anderen Pfade sind statistisch signifikant:
 
 Auch für diese Analysen ist der $R^2$-Output interessant:
 ```{r, echo = F}
 abbrev(fit_sem_IE_TE, begin = "R-Square", end = "Defined Parameters", rsq = T)
 ```
+
 Im Bezug auf die latenten Regressionen enthält der `R-Square` Output die Anteile erklärter Varianzen von `BOEE` und `BFs`. Demnach können `r round(inspect(fit_sem_IE_TE, "r2")[8]*100, 2)`% der Variation der Psychosomatischen Beschwerden durch die Emotionale Erschöpfung (und Zeitdruck, obwohl die Beziehung nicht signifikant ist) erklärt werden. `r round(inspect(fit_sem_IE_TE, "r2")[9]*100, 2)`% der Variation der Emotionale Erschöpfung werden durch Zeitdruck erklärt. Somit kann etwas mehr Variation erklärt werden als im Pfadanalysefall (dort: `r round(inspect(fit_paths_IE_TE, "r2")[2]*100, 2)`% der Variation der Psychosomatischen Beschwerden durch die Emotionale Erschöpfung und Zeitdruck sowie `r round(inspect(fit_paths_IE_TE, "r2")[1]*100, 2)`% der Variation der Emotionale Erschöpfung durch Zeitdruck).
 
 
@@ -584,45 +593,37 @@ parameterEstimates(fit_sem_IE_TE_boot, ci = TRUE)
 
 ```{r, echo = F}
 load('./data/fit_sem_IE_TE_boot.RData')
-cat("[...]")
 print(parameterEstimates(fit_sem_IE_TE_boot, ci = TRUE)[21:22,])
-cat("[...]")
 ```
 
-Die Nummern `21` und `22` am Anfang der Zeilen zeigen an, dass hier insgesamt 22 Zeilen ausgegeben werden, wir uns aber nur die 21. und die 22. ansehen. Auch hier ist zu sehen, dass der indirekte Effekt signifikant von 0 abweicht. Da der direkte Effekt von Zeitdruck auf die Psychosomatischen Beschwerden nicht signifikant ist, handelt es sich in diesem Zusammenhang um eine vollständige Mediation. Die vollständige lineare Beziehung zwischen Zeitdruck und Psychosomatischen Beschwerden "fließt" über die Emotionale Erschöpfung.  Die Frage ist nun, warum es hier zu Unterschieden zwischen der Pfadanalyse und SEM kommt. Naiverweise würde wir zunächst erwarten, dass alle Effekte eher signifikant werden, wenn für Messfehler kontrolliert wird. So hatten wir zuvor mit messfehlerbehaften Regressoren in einer Regressionsanalyse argumentiert. Demnach würden wir eher erwarten, dass der direkte Effekt mit SEM signfikant ist. Allerdings haben wir in der Pfadanalyse die Daten unter der Annahme der essentiellen $\tau$-Äquivalenz zusammengefasst: wir haben einfach Mittelwerte ohne bestimmte Gewichtung verwendet. <mark style="background-color: orange"> Nun is es aber so, dass im SEM zu sehen ist, dass die Variablen nicht alle gleich reliabel sind und sich anscheinend hinsichtlich ihrer Diskriminationsfähigkeit unterscheiden (unterschiedliche $\lambda$s). Auch haben wir in SEM wesentlich mehr empirische Informationen, was die Analysen vertraunswürdiger machen. Zusammenfassend gehen wir also von einer vollständigen Mediation aus. </mark>
+Die Nummern `21` und `22` am Anfang der Zeilen zeigen an, dass hier insgesamt 22 Zeilen ausgegeben werden, wir uns aber nur die 21. und die 22. ansehen. Auch hier ist zu sehen, dass der indirekte Effekt signifikant von 0 abweicht. Da der direkte Effekt von Zeitdruck auf die Psychosomatischen Beschwerden nicht signifikant ist, handelt es sich in diesem Zusammenhang um eine vollständige Mediation. Die vollständige lineare Beziehung zwischen Zeitdruck und Psychosomatischen Beschwerden "fließt" über die Emotionale Erschöpfung.  Die Frage ist nun, warum es hier zu Unterschieden zwischen der Pfadanalyse und SEM kommt. Naiverweise würde wir zunächst erwarten, dass alle Effekte eher signifikant werden, wenn für Messfehler kontrolliert wird. So hatten wir zuvor mit messfehlerbehaften Regressoren in einer Regressionsanalyse argumentiert. Demnach würden wir eher erwarten, dass der direkte Effekt mit SEM signfikant ist. Allerdings haben wir in der Pfadanalyse die Daten unter der Annahme der essentiellen $\tau$-Äquivalenz zusammengefasst: wir haben einfach Mittelwerte ohne bestimmte Gewichtung verwendet. Im SEM haben wir die Faktorladungen frei Schätzen lassen - wir haben also statt eines gleichgewichteten formativen Konstrukts ein reflexives Konstrukt aus den Beziehungen in den Daten schätzen lassen. Zusammenfassend gehen wir also von einer vollständigen Mediation aus.
 
 
 ### Grafische Repräsentation
 Wir können diese Modelle auch wieder grafisch darstellen. Probieren Sie doch einmal aus, was in diesem Zusammenhang durch die folgendenen weiteren Einstellungen passiert:
 ```{r exercise_graph_sem1, fig.align="center", fig.height=6, exercise = T, exercise.eval = F, exercise.setup = "exercise_setup2"}
-semPaths(object = fit_sem_IE_TE,  what = "model", layout = "tree2", 
+semPaths(object = fit_sem_IE_TE,  what = "model", layout = "tree2",
          rotation = 2, curve = T, col = list(man = "skyblue", lat = "yellow"),
          curvePivot = T,  edge.label.cex=1.2, sizeMan = 5, sizeLat = 8)
 ```
 
 ```{r exercise_graph_sem2, fig.align="center", fig.height=6, exercise = T, exercise.eval = F, exercise.setup = "exercise_setup2"}
-semPaths(object = fit_sem_IE_TE, what = "est", layout = "tree2", 
+semPaths(object = fit_sem_IE_TE, what = "est", layout = "tree2",
          rotation = 2, curve = T, col = list(man = "skyblue", lat = "yellow"),
          curvePivot = T,  edge.label.cex=1.2, sizeMan = 5, sizeLat = 8)
 ```
 
 _`curve = T` und `curvePivot = T` haben in diesem Modell **keinen Effekt**, da es hierbei um die Kovarianzen geht, und wird nur der Vollständigkeit halber aufgeführt._ Der Effekt dieser beiden kann im [Appendix A](#AppendixA) der ersten Grafik des $H_0$-Modells entnommen werden: diese Einstellungen bewirken die nicht vollständig runde Kurve der Fehlerkovarianz (durch `curvePivot = T`), welche vor allem dann die Übersichtlichkeit erhöht, wenn mehrere Kovarianzen vorhanden sind. Mit `curve = F` würden alle Fehlerkovarianzen und Kovarianzen (wenn vorhanden) als gerade Linien eingezeichnet werden.
 
-<mark style="background-color: orange"> `BFs` wird hier als Viereck dargestellt, da wir hier Werte gemittelt haben. Somit handelt  es sich hierbei um eine direkt beobachtbare (also eine manifeste) Variable. Wir hatten hier kein Messmodell formuliert, da wir den Psychosomatischen Beschwerden eher ein formatives Messmodell (anstatt eines reflexiven Messmodells) unterstellen. </mark>
+`BFs` wird hier als Viereck dargestellt, da wir hier Werte gemittelt haben und diesen Skalenwert als direkt beobachtbare Variable in das Modell aufgenommen haben.
 
-## Invarianztestungen und Gleichsetzen von Parametern
-Durch Gleichsetzen von Parametern in Modellen können verschiedene Annahmen überprüft werden. Zum einen können wir so, wie auch schon im Appendix der vergangenen Sitzung angesprochen (`PsyMSc1::Sitzung_3()`), auf essentielle $\tau$-Äquivalenz prüfen. Auch kann eine Gruppierungvariable verwendet werden, um Unterschiede zwischen Gruppen zu untersuchen. Wir wollen uns nun Invarianz über Gruppen hinweg ansehen. Diese Analyseform wird unter Multi Sample Analysis (Multi-Gruppen-Analyse) zusammengefasst.
+## Multi Sample Analysis {#MSA}
 
-### Multi Sample Analysis {#MSA}
-Wir könnten uns bspw. fragen, ob die gleichen Beziehungen, so wie wir sie gerade beobachtet haben gleichermaßen für Männer und Frauen gelten. Im Datensatz `StressAtWork` ist die Variable `sex` enthalten. Hier sind Frauen mit `1` und Männer mit `2` kodiert. Wenn wir diese Variable als Gruppierung verwenden, können wir die Invarianz der Parameter über das Geschlecht untersuchen. Um die Gruppierung in das Modell mit aufzunehmen, können wir in `sem` einfach dem Argument `group` den Namen der Gruppierungsvariable übergeben (hierbei sind die "Gänsefüßchen" wichtig!).
+In einer Multi-Sample-Analysis wird in mehreren Gruppen gleichzeitig ein Strukturgleichungsmodell geschätzt. Wir könnten uns bspw. fragen, ob die gleichen Beziehungen, so wie wir sie gerade beobachtet haben gleichermaßen für Männer und Frauen gelten. Im Datensatz `StressAtWork` ist die Variable `sex` enthalten. Hier sind Frauen mit `1` und Männer mit `2` kodiert. Wenn wir diese Variable als Gruppierung verwenden, können wir die Invarianz der Parameter über das Geschlecht untersuchen. Um die Gruppierung in das Modell mit aufzunehmen, können wir in `sem` einfach dem Argument `group` den Namen der Gruppierungsvariable übergeben (hierbei sind die "Gänsefüßchen" wichtig!).
 
 ```{r, results = "hide"}
 fit_sem_IE_TE_MSA <- sem(model_sem_IE_TE, data = StressAtWork, group = "sex")
 summary(fit_sem_IE_TE_MSA)
-```
-
-```{r, echo = F}
-lavaan::summary(fit_sem_IE_TE_MSA)
 ```
 
 Wir sehen, dass im Output nun für jede Gruppe das Modell einzeln geschätzt wurde. Alle Parameter werden sowohl für Frauen als auch für Männer geschätzt. Wir entnehmen
@@ -641,7 +642,7 @@ abbrev(X = fit_sem_IE_TE_MSA, begin = "Model Test User Model", end = "Parameter 
 Der $\chi^2$-Wert für das gesamte Modell liegt bei `r round(fitmeasures(fit_sem_IE_TE_MSA)[3], 3)` bei $df=$ `r round(fitmeasures(fit_sem_IE_TE_MSA)[4], 3)` mit zugehörigem $p$-Wert von `r round(fitmeasures(fit_sem_IE_TE_MSA)[5], 3)`. Demnach verwerfen unsere Daten das Modell nicht. Die Freiheitsgrade sind doppelt so hoch, wie im Ein-Stichprobenfall, da wir alle Parameter für beide Stichproben schätzen müssen. Die $\chi^2$-Werte der beiden Stichproben waren 21.400 für die Frauen und 14.403 für die Männer. Der $\chi^2$-Wert für das gesamte Modell ist also einfach die Summe der subpopulationsspezifischen $\chi^2$-Werte ($\chi^2_{g=1}$ und $\chi^2_{g=2}$, wobei $g=1$ und $g=2$ für die erste und zweite Gruppe steht):
 $$\chi^2=\chi^2_{g=1}+\chi^2_{g=2}.$$
 
-In der gesamten summary fällt uns auf, dass nur in Gruppe 1 die Bennenungen der Pfadkoeffizienten mit $a, b$ und $c$ vorkommen und in Gruppe 2 keine Benennung mehr auftaucht. 
+In der gesamten summary fällt uns auf, dass nur in Gruppe 1 die Bennenungen der Pfadkoeffizienten mit $a, b$ und $c$ vorkommen und in Gruppe 2 keine Benennung mehr auftaucht.
 ```{r, echo = F}
 abbrev(X = fit_sem_IE_TE_MSA, begin = "Group 1", end = "Intercepts")
 
@@ -689,71 +690,30 @@ Bis auf die hinzukommenden indirekten und totalen Effekte:
 ```{r, echo = F}
 abbrev(X = fit_sem_IE_TE_MSA_abc, begin = "Defined Parameters", end = NULL, shift = 1)
 ```
-hat sich nichts am Output geändert. Wir haben ja auch nur Labels vergeben und neu definierte Parameter hinzugefügt, die allerdings, wie zuvor schon erwähnt, die Modellstruktur (und somit auch die $df$) nicht tangieren. 
-<mark style="background-color: orange"> Die totalen und die indirekten Effekte scheinen sich kaum über die Gruppen hinweg zu unterscheiden. Wir könnten hier eine Signifikanztestung durchführen, indem wir wieder via Bootstrapping Konfidenzintervalle für die beiden indirekten Effekte erstellen und dann untersuchen, ob diese überlappen. Diese Untersuchung wird dem/der motivierten Lesenden überlassen. </mark>
+hat sich nichts am Output geändert. Wir haben ja auch nur Labels vergeben und neu definierte Parameter hinzugefügt, die allerdings, wie zuvor schon erwähnt, die Modellstruktur (und somit auch die $df$) nicht tangieren.
 
-### Invarianztestungen über das Geschlecht
-<mark style="background-color: orange"> Mit Invarianz meinen wir die Gleichheit von Parametern über Gruppen hinweg, also bspw., dass es keine Unterschiede über das Geschlecht hinweg gibt. Welche Stufen der Invarianz es gibt, was diese bedeuten und wie wir diese spezifizieren, gucken wir uns im Folgenden an. 
-So wie wir die indirekten Effekte bestimmt und die Koeffizienten für beide Gruppen benannt haben, lassen sich auch Invarianzen händisch prüfen. Wenn zwei Koeffizienten das selbe Label tragen, werden diese Parameter in den Gruppen auf den gleichen Wert gesetzt. Wir könnten nun für die jeweiligen Invarianzstufen die Parameter händisch gleichsetzen. Dieses ganze Prozedere erscheint recht aufwendig. Allerdings kann so in jedem Schritt überprüft werden, dass die Parameter richtig restringiert wurden. Auch lassen sich so auch leicht partielle Invarianz einbauen, in welchen bspw. nicht alle Faktorladungen über die Gruppen hinweg gleich sind. Außerdem könnten Invarianzen nur für bestimmte Variablen angenommen werden. Glücklicherweise enthält das `lavaan`-Paket die extrem hilfreiche Funktion, die automatisiert durchführt. Dazu müssen wir lediglich in der Schätzung unserer Modelle in `sem` das Zusatzargument `group.equal` spezifizieren. Für partielle Invarianzen gibt es zusätzlich `group.partial`. Bevor wir mit den Analysen beginnen, wollen wir die Invarianzstufen noch einmal wiederholen. </mark> 
+Die totalen und die indirekten Effekte müssten in einer wissenschaftlichen Untersuchung erneut mithilfe von Bootstrapping inferenzstatistisch geprüft werden. Diesen Schritt lassen wir an dieser Stelle weg.
 
-#### Invarianzstufen
-Die Invarianzstufen sind nach Einschränkungen der Modellparameter sortiert und werden auch (fast) immer in dieser Reihenfolge sukzessive getestet: konfigurale, metrische (schwache), skalare (starke), strikte und vollständige Invarianz. Wir gehen so vor, wie dies per Default im `R`-Paket `lavaan` durchgeführt wird. Wir gehen hierzu davon aus, dass die Skalierung für die Varianzen auf den ersten Faktorladungen ($\lambda=1$) liegt und dass die Skalierung für die Mittelwerte (Interzepte) auf dem latenten Mittelwert liegt ($\kappa=0$).
+### Invarianzstufen
 
-Die erste und am wenigsten restriktive Invarianzstufe ist die **konfigurale Invarianz**. Unter konfiguraler Invarianz verstehen wir die Gleichheit der Modelle in den Gruppen - oder salopp gesprochen: gilt konfigurale Invarianz, dann gilt in beiden Gruppen die selbe Faktorstruktur; *hier also*: hängt die Faktorstruktur nicht vom Geschlecht ab. Die folgende Grafik soll dies für ein einfaches CFA Modell veranschaulichen, welches auch die oben erwähnten Skalierer enthält. In Schwarz dargestellt sind Invarianzen über die Gruppen hinweg (natürlich ist das Modell, dass wir hier behandeln wesentlich komplexer, aber das angegeben Modell highlighted die wichtigsten Aspekte der Gleichsetzung!):
-<center> <img src="https://raw.githubusercontent.com/martscht/PsyMSc1/master/inst/tutorials/SEM/images/1_Invarianz_Grafiken.png" width="80%"/> </center>
+Mit Invarianz meinen wir die Gleichheit von Parametern über Gruppen hinweg, also bspw., dass es keine Unterschiede über das Geschlecht hinweg gibt. Welche Stufen der Invarianz es gibt, was diese bedeuten und wie wir diese spezifizieren, gucken wir uns im Folgenden an.
 
-Wie müssen wir nun`group.equal` im `sem`-Befehl spezifizieren, um konfigurale Invarianz zu prüfen? Lassen wir es ganz weg oder setzten es auf `group.equal = c("")`, so landen wir beim gewünschten Ergebnis (gleiche Modellstruktur wird über die Gruppen hinweg angenommen). Um die weiteren Invarianzstufen und deren Implikationen besser zu verstehen, schauen wir uns noch einmal die modellimplizierte Varianz und die modellimplizierte Erwartung (den modell implizierten Mittelwert) einer manifesten Variable $X$ an. Wir verwenden $^{(g)}$ um Unterschiede zwischen Gruppen darzustellen, wobei dies als Platzhalter für bspw. die Gruppennummer fungiert. Lassen wir dies weg, so gehen wir davon aus, dass der Parameter gleich ist über die Gruppen hinweg. Alle anderen Indizes lassen wir weg, um das ganze übersichtlicher zu gestalten.
+So wie wir die indirekten Effekte bestimmt und die Koeffizienten für beide Gruppen benannt haben, lassen sich auch Invarianzen händisch prüfen. Wenn zwei Koeffizienten das selbe Label tragen, werden diese Parameter in den Gruppen auf den gleichen Wert gesetzt. Wir könnten nun für die jeweiligen Invarianzstufen die Parameter händisch gleichsetzen. Dieses ganze Prozedere erscheint recht aufwendig. Allerdings kann so in jedem Schritt überprüft werden, dass die Parameter richtig restringiert wurden. Auch lassen sich so auch leicht partielle Invarianz einbauen, in welchen bspw. nicht alle Faktorladungen über die Gruppen hinweg gleich sind. Außerdem könnten Invarianzen nur für bestimmte Variablen angenommen werden. Diesen kompletten, händischen Prozess sehen Sie in [Appendix B](#AppendixB). Glücklicherweise enthält das `lavaan`-Paket aber Möglichkeit, Invarianzen global zu definieren . Dazu müssen wir lediglich in der Schätzung unserer Modelle in `sem` das Zusatzargument `group.equal` spezifizieren. Für partielle Invarianzen gibt es zusätzlich `group.partial`. Bevor wir mit den Analysen beginnen, sehen Sie in der folgenden Tabelle noch einmal eine Übersicht über die Invarianzstufen. Eine detaillierte Wiederholung dessen, was auch in den inhaltlichen Sitzungen zu den Invarianzstufen behandelt wurde, finden Sie im [Appendix D](#AppendixD). Die beiden Spalten "Annahme" und "Implikation" sind kumulativ: Invarianzstufen, die weiter unten stehen enthalten immer auch alle vorherigen Annahmen und erlauben auch immer alle vorherigen Aussagen. Die jeweiligen Einträge einer Zeile sind lediglich für diese Stufe *zusätzlich*.
 
-Eine einfache modellimplizierte Gleichung einer Messung $X$ ist:
+Invarianzstufe | Annahme | Implikation
+---- | ------- | --------
+konfigural | gleiche Modellstruktur | gleiche Konstruktdefinition
+metrisch (schwach) | gleiche Faktorladungen | latente Variablen haben gleiche Bedeutung; Beziehungen zwischen latenten Variablen vergleichbar
+skalar (stark) | gleiche Interzepte | mittlere Gruppenunterschiede in manifesten Variablen auf Unterschiede in latenten Mittelwerten zurückführbar; latente Mittelwerte vergleichbar
+strikt | gleiche Residualvarianzen | Varianzunterschiede in manifesten Variablen auf Varianzunterschiede in latenten Varianzen zurückführbar; Reliabilitäten identisch
 
-$$X^{(g)}=\tau^{(g)}+\lambda^{(g)}\xi^{(g)}+\delta^{(g)}.$$
-$\tau$ ist das Interzept und $\lambda$ ist die Faktorladung. Die Varianz von $X$ ist folglich:
-$$\mathbb{V}ar\left[X^{(g)}\right]=\left(\lambda^{(g)}\right)^2\phi^{(g)}+\theta^{(g)}.$$
-$\phi$ ist die Varianz der latenten Variable ($\xi$) und $\theta$ ist die Residualvarianz, also die Varianz von $\delta$. Wenn Sie sich nun fragen, wieso wir $\lambda$ hier quadrieren müssen, dann überlegen Sie sich folgendes Beispiel anhand der empirischen Stichprobenvarianz von einer Variable $Y$. Diese berechnen wir so:
-$$\hat{\mathbb{V}ar}[Y] = \frac{1}{n}\sum_{i=1}^n(Y_i-\bar{Y})^2,$$ wobei $\bar{Y}$ der Mittelwert von $Y$ ist. Wenn wir nun alle Einträge von $Y$ mit einer Konstanzen multiplizieren, also für alle Personen $aY$ berechnen (z.B. $a=10$) und bestimmen die Varianz; der Mittelwert von $aY$ ist einfach $a\bar{Y}$:
-$$\hat{\mathbb{V}ar}[aY] = \frac{1}{n}\sum_{i=1}^n(aY_i-a\bar{Y})^2=\frac{1}{n}\sum_{i=1}^n\big(a(Y_i-a\bar{Y})\big)^2=\frac{1}{n}\sum_{i=1}^na^2(Y_i-\bar{Y})^2=a^2\frac{1}{n}\sum_{i=1}^n(Y_i-\bar{Y})^2=a^2\hat{\mathbb{V}ar}[Y],$$ 
-Da $a$ in der Klammer steht, die quadriert wird, muss natürlich $a$ quadriert werden. Da auch $a^2$ eine Konstante ist, kann sie vor die Summe gezogen werden. Daraus wird dann ersichtlich, dass die Varianz des Produktes einer Variablen mit einer Konstanten gleich der Konstanten zum Quadrat multipliziert mit der Varianz der Variablen ist. Der Mittelwert von $X$ ergibt sich als:
-$$\mathbb{E}\left[X^{(g)}\right]=\tau^{(g)}+\lambda^{(g)}\kappa^{(g)},$$
-wobei $\kappa$ das Interzept (den Mittelwert) von $\xi$ darstellt. Da $X$ von so vielen Parametern abhängt, ist ohne weitere Annahmen (von Invarianzen der Parameter über die Gruppen hinweg) nicht zu sagen, ob Unterschiede zwischen Gruppen bspw. im Mittelwert von $X$ auf Unterschiede in der latenten Variable oder auf Unterschiede in der Messung zurückzuführen sind. Ähnlich sieht es für die Varianz aus.
-
-Die nächste Invarianzstufe ist die **metrische** oder **schwache Invarianz**. Nehmen wir metrische Invarianz an, so gehen wir davon aus, dass die Faktorladungen ($\lambda$) über die Gruppen hinweg gleich sind. Dies impliziert, dass die latenten Variablen über die Gruppen hinweg die gleiche Bedeutung haben. Die latenten Variablen lassen sich also inhaltlich gleich interpretieren. Dies ist sehr wichtig, wenn wir bspw. Fragebögen oder Tests über Gruppen (z.B. Länder oder das Geschlecht) hinweg vergleichen wollen. In der Grafik sind nun alle $\lambda$s schwarz (anstatt blau oder rot):
-<center> <img src="https://raw.githubusercontent.com/martscht/PsyMSc1/master/inst/tutorials/SEM/images/2_Invarianz_Grafiken.png" width="80%"/> </center>
-
-Die Varianz von $X$ vereinfacht sich zu (Weglassen von $^{(g)}$ symbolisiert Gleichheit über die Gruppen hinweg):
-$$\mathbb{V}ar\left[X^{(g)}\right]=\lambda^2\phi^{(g)}+\theta^{(g)}.$$
-Hierbei ist es so, dass $\lambda^2\phi^{(g)}$ gerade die Systematik oder den wahren Anteil in der Varianz von $X$ beschreibt. Falls metrische Invarianz gilt, so lassen sich also Unterschiede in den wahren Anteilen der Varianzen der Beobachtungen auf Unterschiede in den latenten Varianzen zurückführen (Achtung: dies ist nicht das gleiche wie Gleichheit der Reliabilitäten, was anteilig die Systematik in $X$ an der gesamten Varianz von $X$ beschreibt - hierfür müssten ebenfalls $\theta$ gleich sein). Dies bedeutet,  wenn wir metrische Invarianz nicht verwerfen (also weiter davon ausgehen, dass metrische Invarianz gilt), dass wir durch weitere Modellrestriktionen die latenten Varianzen auf Gleichheit prüfen können. Dies ist nicht zulässig, wenn metrische Invarianz *nicht* gilt, also die Faktorladungen sich über die Gruppen hinweg unterscheiden. Spezifizieren wir `group.equal = c("loadings")` so wird das metrisch-invariante Modell geschätzt. 
-
-
-Unter **skalarer** oder **starker Invarianz** verstehen wir die nächste Invarianzstufe, welche zusätzlich zu den Faktorladungen auch noch die Interzepte ($\tau$) als invariant über die Gruppen hinweg annimmt.  Der Mittelwert von $X$ vereinfacht sich zu:
-$$\mathbb{E}\left[X^{(g)}\right]=\tau+\lambda\kappa^{(g)},$$
-wobei nun ersichtlich ist, dass nur noch $\kappa$ über die Gruppen hinweg variiert (wegen $^{(g)}$). Dies bedeutet also, dass unter Annahme der skalaren Invarianz Unterschiede in den Mittelwerten der Beobachtungen auf Unterschiede in den Mittelwerten der latenten Variablen zurückzuführen sind. Um dies zu prüfen, würden wir überlicherweise über die skalare Invarianz hinaus auch noch $\kappa$ über die Gruppen hinweg gleichgesetzt werden. Der Likelihood-Ratio-Test ($\chi^2$-Differenzentest) zwischen dem skalar-invarianten Modell und dem zusätzlich $\kappa$-invarianten Modell entscheidet dann darüber, ob die latenten Mittelwerte sich über die Gruppen hinweg unterscheidet. Wir schätzen das skalar-invariante Modell durch `group.equal = c("loadings", "intercepts")`. Da auch für die Mittelwertsstruktur Skalierer gesetzt werden müssen und diese üblicherweise auf den latenten Mittelwerten liegen ($\kappa=0$), muss dies bei der Invarianztestung berücksichtigt werden. Wenn wir die Skalierer auf den latenten Mittelwerten lassen und die Interzept der manifesten Variablen gleichsetzen, so nehmen wir damit auch implizit an, dass die latenten Mittelwerte über die Gruppen hinweg gleich sind. Um diesem Problem aus dem Weg zu gehen, stellt die `sem`-Funktion klugerweise ein, dass nur in der ersten Gruppe die latenten Mittelwerte/Interzepte ($\kappa$) auf 0 gesetzt werden, alle übrigen werden frei geschätzt. Dies schauen wir uns genauer an, wenn es weit ist! In der Grafik sind nun alle $\lambda$s und $\tau$s schwarz (anstatt blau oder rot). Außerdem ist die Effektkodierung der $\kappa$s zu sehen: diese bedeutet, dass der erste latente Mittelwert auf 0 restringiert wird, während der zweite frei geschätzt wird und somit die Abweichungen (den Effekt) quantifiziert (beide sind in der Gruppenfarbe dargestellt):
-<center> <img src="https://raw.githubusercontent.com/martscht/PsyMSc1/master/inst/tutorials/SEM/images/3_Invarianz_Grafiken.png" width="80%"/> </center>
-
-Setzen wir zusätzlich zu Faktorladungen und Interzepten auch noch die Residualvarianzen ($\theta$) gleich über die Gruppen, so sprechen wir von **strikter Invarianz**. Gilt diese Invarianzbedingung, so lassen sich Unterschiede in den beobachteten Varianzen ausschließlich auf Unterschiede in den latenten Varianzen (also die Varianzen der latenten Variablen) zurückführen. Dies lässt sich der Varianzformel entnehmen:
-$$\mathbb{V}ar\left[X^{(g)}\right]=\lambda^2\phi^{(g)}+\theta.$$
-Nur noch $\phi$ trägt auf der rechten Seite ein $^{(g)}$. Somit sind nur noch Unterschiede in $\phi$ verantwortlich für Unterschiede in $\mathbb{V}ar\left[X\right]$. In der Grafik sind nun alle $\lambda$s, $\tau$s und $\theta$s schwarz (anstatt blau oder rot):
-<center> <img src="https://raw.githubusercontent.com/martscht/PsyMSc1/master/inst/tutorials/SEM/images/4_Invarianz_Grafiken.png" width="80%"/> </center>
-Wir schätzen das strikt-invariante Modell durch `group.equal = c("loadings", "intercepts", "residuals")`.
-
-Gehen wir von **vollständiger Invarianz** aus, so sind alle Parameter über die Gruppen hinweg gleich. Es gibt also keinerlei Unterschiede mehr zwischen den Gruppen. Die $\phi$s und auch die $\kappa$s müssen wieder auf den gleichen Wert über die Gruppen hinweg gesetzt werden. Die Variablen selbst ($X$, $\xi$ und $\delta$) bleiben farbig, da wir nur Parameter über die Gruppen hinweg gleichsetzen. Die Grafik der vollständigen Invarianz sieht folgendermaßen aus:
-<center> <img src="https://raw.githubusercontent.com/martscht/PsyMSc1/master/inst/tutorials/SEM/images/5_Invarianz_Grafiken.png" width="80%"/> </center>
-
-Das vollständig-invariante Modell erhalten wir mit `group.equal = c("loadings", "intercepts", "residuals",` ` "means", "lv.variances", "lv.covariances", "regressions")`. Hierbei restringiert `"means"` die latenten Mittelwerte ($\kappa$), `"lv.variances"` die latenten (Residual-)Varianzen ($\phi$s und $\psi$s exogen und endogen) und `"regressions"` die Strukturpfadkoeffizienten ($\gamma$s und $\beta$s). Hätten wir Residualkovarianzen bei den manifesten oder latenten Variablen gehabt, so müssten wir diese auch mit `"residual.covariances"` sowie mit `"lv.covariances"` restringieren. 
-
-Die Invarianzstufen lassen sich nach der Anzahl der zu schätzenden Parameter oder den $df$ sortieren. Im _konfigural-invarianten Modell müssen am meisten Parameter_ geschätzt werden, es besitzt also die wenigsten $df$, während im _vollständig-invarianten Modell die wenigsten Parameter_ geschätzt werden müssen, weswegen dieses auch die meisten $df$ hat. Die anderen Modelle liegen wie folgt dazwischen (je weiter links, desto weniger restriktiv ist das Modell, desto mehr Parameter sind zu schätzen und desto weniger $df$ gibt es):
-$$\textbf{konfigural}\quad<\quad\textbf{metrisch/schwach}\quad<\quad\textbf{skalar/stark}\quad<\quad\textbf{strikt}\quad<\quad\textbf{vollständig}.$$
-
-Likelihood-Ratio-Tests ($\chi^2$-Differenzentests) werden herangezogen, um zu prüfen, ob die Invarianzeinschränkungen das Modell signifikant hinsichtlich der Passung zu den Daten verschlechtern. 
-
-<mark style="background-color: orange">  Die folgende Tabelle dient der Übersicht der Invarianzstufen sowie ihrer</mark> Implikationen: 
-
-```{r, echo = F}
+<!-- ```{r, echo = F}
 df <- data.frame(Invarianzstufe = c("konfigural", "metrisch/ schwach", "skalar/ stark", "strikt", "vollständig"), Annahme = paste0(c("gleiche Modellstruktur", "gleiche Modellstruktur und Faktorladungen", "gleiche Modellstruktur, Faktorladungen und Interzepte", "gleiche Modellstruktur, Faktorladungen, Interzepte und Residualvarianzen", "gleiche Modellstruktur und alle Modellparameter sind identisch"),"\n"), Implikation = paste0(c("gleiche Beziehungen zwischen Variablen", "latente Variablen haben gleiche Bedeutung; wahre Anteile vergleichbar, durch Restriktion latenten Varianzen vergleichbar", "Unterschiede in den beobachteten Mittelwerten lassen sich auf Unterschiede in den latenten Mittelwerten zurückführen, Gleichheit latenter Mittelwerte testbar durch Restriktion", "Unterschiede in beobachteten Varianzen oder Reliabilitäten zurückzuführen auf Unterschiede in den latenten Varianzen", "keine Unterschiede zwischen den Gruppen"), "\n"))
 library(htmlTable)
 htmlTable(df,caption="Invarianzstufen und deren Implikationen", align = "lll", cspan.rgroup = 2,  col.rgroup = c("none", "grey85"))
-```
+``` -->
 
-<mark style="background-color: orange"> Damit wir die `sem` Funktion nicht durch unsere vergebenen Labels verwirren und somit die Einstellungen mit `group.equal` überschreiben, _**nehmen wir die Bezeichnungen für den indirekten Effekt heraus.**_ Wir nennen das Modell ohne Labels einfach `model_sem`. Für die aufwendigere Durchführung der MSA zu Fuß sowie simple grafische Repräsentationen siehe [Appendix B](#AppendixB). </mark>
+Probieren wir dies doch gleich einmal aus:
 
 ```{r}
 model_sem <- '
@@ -767,13 +727,14 @@ BFs ~  BOEE + ZD
 '
 ```
 
-<mark style="background-color: orange">  Probieren wir dies doch gleich einmal aus. Um `BFs` hier wie eine latente Variable zu behandeln, müssen wir bestimmen, dass das Interzept und die Residualvarianz nicht mit den manifesten Variablen zusammen gleichgesetzt wird, sondern erst mit den latenten Variablen über die Gruppen restringiert wird (bei der Testung der vollständigen Invarianz). Dazu müssen wir zusätzlich die partielle Invarianzeinstellung verwenden: `group.partial = c("BFs ~ 1", "BFs ~~BFs")`. Hiermit wird bestimmt, welche Koeffizienten **nicht** von den Invarianzeinstellungen betroffen sein sollen. Auch wenn diese Einstellungen erst bei der skalaren/starken Invarianz (`"BFs~1"`) und bei der strikten Invarianz (`"BFs~~BFs"`) zu tragen kommen, stellen wir diese auch beim konfigural-invarianten und beim metrisch-invarianten (schwach-invarianten) Modell mit ein. </mark> Fangen wir mit dem Fitten des konfigural invarianten Modells an.
+Um `BFs` hier wie eine latente Variable zu behandeln, müssen wir bestimmen, dass das Interzept und die Residualvarianz nicht mit den manifesten Variablen zusammen gleichgesetzt wird, sondern erst mit den latenten Variablen über die Gruppen restringiert wird (bei der Testung der vollständigen Invarianz). Dazu müssen wir zusätzlich die partielle Invarianzeinstellung verwenden: `group.partial = c("BFs ~ 1", "BFs ~~BFs")`. Hiermit wird bestimmt, welche Koeffizienten **nicht** von den Invarianzeinstellungen betroffen sein sollen. Auch wenn diese Einstellungen erst bei der skalaren/starken Invarianz (`"BFs~1"`) und bei der strikten Invarianz (`"BFs~~BFs"`) zu tragen kommen, stellen wir diese auch beim konfigural-invarianten und beim metrisch-invarianten (schwach-invarianten) Modell mit ein. Fangen wir mit dem Fitten des konfigural invarianten Modells an.
 
-#### Konfigurale Invarianz
-<mark style="background-color: orange"> Bei der konfiguralen oder auch Struktur-Invarianz </mark> geht es darum, dass in beiden Gruppen die gleichen Modelle aufgestellt werden. Gilt diese Annahme bereits nicht, so macht es keinen Sinn das Modell weiter einzuschränken und Parameter über die Gruppen zu restringieren. Glücklicherweise passt das Modell zu den Daten, in welchem das Modell für das Geschlecht jeweils geschätzt wurde. Hier schauen wir uns dies noch einmal zur Wiederholung und zum Umbennen des geschätzten Modells an und spezifizieren mit `group.equal = c("")`, dass keine Parameter über die Gruppen als identisch angenommen werden sollen:
+### Konfigurale Invarianz
+
+Bei der konfiguralen Invarianz geht es darum, dass in beiden Gruppen die gleichen Modelle aufgestellt werden. Gilt diese Annahme bereits nicht, so macht es keinen Sinn das Modell weiter einzuschränken und Parameter über die Gruppen zu restringieren. Glücklicherweise passt das Modell zu den Daten, in welchem das Modell für das Geschlecht jeweils geschätzt wurde. Hier schauen wir uns dies noch einmal zur Wiederholung und zum Umbenennen des geschätzten Modells an und spezifizieren mit `group.equal = c("")`, dass keine Parameter über die Gruppen als identisch angenommen werden sollen:
 
 ```{r, results = "hide"}
-fit_sem_sex_konfigural <- sem(model_sem, data = StressAtWork, group = "sex", 
+fit_sem_sex_konfigural <- sem(model_sem, data = StressAtWork, group = "sex",
                                      group.equal = c(""), group.partial = c("BFs ~ 1", "BFs ~~*BFs"))
 summary(fit_sem_sex_konfigural, fit.measures = T)
 ```
@@ -785,7 +746,8 @@ abbrev(X = fit_sem_sex_konfigural, begin = "Model Test User Model", end = "Param
 Der $\chi^2$-Wert ist nicht signifikant und auch die Fit-Indizes CFI, TLI, RMSEA und SRMR sind unauffällig und deuten auf guten Modell-Fit hin. Dies bedeutet, dass wir frohen Mutes das Modell einschränken können, um zu prüfen, welche Invarianz über das Geschlecht hinweg gilt.
 
 
-#### Metrische Invarianz
+### Metrische Invarianz
+
 Unter metrischer oder schwacher Invarianz verstehen wir, dass die Faktorladungen ($\lambda$, bzw. $\Lambda$) über die Gruppen hinweg gleich sind. Somit ist der Anteil jedes Items, der auf die latenten Variablen zurückzuführen ist, über die Gruppen hinweg gleichen. Dies ist wichtig, um zu prüfen, ob die Konstrukte über die beiden Gruppen hinweg die gleiche Bedeutung haben. Wir erreichen dies, indem wir `group.equal = c("loadings")` spezifizieren.
 
 ```{r, results="hide"}
@@ -818,10 +780,10 @@ res_metrisch <- lavTestLRT(fit_sem_sex_metrisch, fit_sem_sex_konfigural)
 print(res_metrisch)
 ```
 
-Die $\chi^2$-Differenz liegt bei `r round(res_metrisch[[5]][2], 4)` bei $\Delta df=$ `r res_metrisch[[6]][2]` mit dem zugehörigen $p$-Wert von `r round(res_metrisch[[7]][2], 4)`. Somit können wir weiter von metrischer Invarianz ausgehen. Dies beudeutet, dass über das Geschlecht hinweg die Items zu gleichen Teilen sich aus den latenten Variabeln zusammensetzten und somit die Konstrukte über das Geschlecht hinweg die gleichen Bedeutungen haben.
+Die $\chi^2$-Differenz liegt bei `r round(res_metrisch[[5]][2], 4)` bei $\Delta df=$ `r res_metrisch[[6]][2]` mit dem zugehörigen $p$-Wert von `r round(res_metrisch[[7]][2], 4)`. Somit können wir weiter von metrischer Invarianz ausgehen. Dies bedeutet, dass sich Unterschiede zwischen Frauen auf der latenten Variable in gleicher Weise in den beobachtbaren Variablen niederschlagen, wie sie es bei Männern tun.
 
+### Skalare Invarianz
 
-#### Skalare Invarianz
 Als nächsten wollen wir prüfen, ob zusätzlich zu den Faktorladungen auch die Interzepte ($\tau$) über die Gruppen hinweg gleich sind (insgesamt also $\lambda$s und $\tau$s gleich über die Gruppen hinweg). Dazu passen wir erneut unser Modell an. Hierbei ist zu beachten, dass wir nicht das Interzept von `BFs` über die Gruppen hinweg gleichsetzten, da sich die Interzepte auf die manifesten Variablen beziehen, wir `BFs` hier allerdings wie eine latente Variable behandeln wollen. Dazu haben wir die `group.partial = c("BFs ~ 1", "BFs ~~BFs")` Einstellungen verwendet. Eine Besonderheit der skalaren Invarianz ist, dass sobald wir die Interzepte über die Gruppen hinweg gleichsetzten, haben wir Freiheitsgrade, mit welchen wir die latenten Interzepte von `ZD` und `BOEE` schätzen können. Dies ist  dann eine Art Effektkodierung, wobei der Mittelwert der einen Gruppe auf 0 gesetzt wird und in der anderen Gruppe wird dann die Abweichung zu dieser Gruppe mitgeführt. Andernfalls würden wir fälschlicherweise Invarianz der latenten Mittelwerte annehmen, was wir hier noch gar nicht prüfen wollten! Wir schauen uns dies im Output an.
 
 ```{r, results = "hide"}
@@ -849,10 +811,11 @@ res_skalar <- lavTestLRT(fit_sem_sex_skalar, fit_sem_sex_metrisch)
 print(res_skalar)
 ```
 
-Die $\chi^2$-Differenz ist erneut klein (`r round(res_skalar[[5]][2], 3)`) und der p-Wert zeigt auch hier an, dass es sich um keine signifikante Verschlechterung des Modells handelt p = `r round(res_skalar[[7]][2], 3)`. Die Null-Hypothese, dass die Interzepte über die Faktorladungen hinaus über das Geschlecht hinweg gleich sind, wird somit nicht verworfen. <mark style="background-color: orange"> Dies bedeutet nun, dass Unterschiede im Mittelwert der Items zwischen Personen tatsächlich auch auf Unterschiede  der Mittelwerte der latenten Variablen dieser Personen zurückzuführen sind, was eine sehr wichtige Information ist. Außerdem bedeutet dies, dass die Items als gleich schwer empfunden wurden. </mark>
+Die $\chi^2$-Differenz ist erneut klein (`r round(res_skalar[[5]][2], 3)`) und der p-Wert zeigt auch hier an, dass es sich um keine signifikante Verschlechterung des Modells handelt p = `r round(res_skalar[[7]][2], 3)`. Die Null-Hypothese, dass die Interzepte über die Faktorladungen hinaus über das Geschlecht hinweg gleich sind, wird somit nicht verworfen. Dies bedeutet nun, dass Unterschiede im Mittelwert der Items zwischen den beiden Gruppen tatsächlich auch auf Unterschiede der Mittelwerte der latenten Variablen zurückzuführen sind. Das heißt, dass es erst ab dieser Invarianzstufe zulässig ist, Mittelwerte zwischen den Gruppen zu vergleichen.
 
 
-#### Strikte Invarianz
+### Strikte Invarianz
+
 Unter strikter Invarianz verstehen wir, dass zusätzlich zu den Faktorladungen und den Interzepten auch die Residualvarianzen ($\theta$) gleich sind (insgesamt also $\lambda$s, $\tau$s und $\theta$s gleich über die Gruppen hinweg). Wir passen entsprechend das Modell an:
 ```{r}
 fit_sem_sex_strikt <- sem(model_sem, data = StressAtWork, group = "sex",
@@ -868,13 +831,13 @@ res_strikt <- lavTestLRT(fit_sem_sex_strikt, fit_sem_sex_skalar)
 print(res_strikt)
 ```
 
-Die $\chi^2$-Differenz ist erneut klein (`r round(res_strikt[[5]][2], 3)`) und der p-Wert zeigt auch hier an, dass es sich um keine signifikante Verschlechterung des Modells handelt p = `r round(res_strikt[[7]][2], 3)`. Die Null-Hypothese, dass die Fehlervarianzen über die Faktorladungen und Interzepte hinaus über das Geschlecht hinweg gleich sind, wird somit nicht verworfen. 
-<mark style="background-color: orange"> Dies bedeutet nun, dass Unterschiede in den Reliabilitäten tatsächlich auch auf Unterschiede in den Varianzen der latenten Variablen zurückzuführen sind. Außerdem können nun Unterschiede in den manifesten Varianzen auf Unterschiede in den latenten Varianzen zurückgeführt werden. Dies war vorher nicht möglich. </mark>
+Die $\chi^2$-Differenz ist erneut klein (`r round(res_strikt[[5]][2], 3)`) und der p-Wert zeigt auch hier an, dass es sich um keine signifikante Verschlechterung des Modells handelt p = `r round(res_strikt[[7]][2], 3)`. Die Null-Hypothese, dass die Fehlervarianzen über die Faktorladungen und Interzepte hinaus über das Geschlecht hinweg gleich sind, wird somit nicht verworfen.
+Dies bedeutet nun, dass Unterschiede in der Varianz der manifesten Variablen tatsächlich auf Unterschiede in den Varianzen der latenten Variablen zurückzuführen sind. In anderen Worten, wenn wir z.B. beobachten, dass Männer in den beobachtbaren Verhaltensweisen homogener sind als Frauen, können wir bei dieser Varianzstufe davon ausgehen, dass dies daher kommt, dass Männer im Konstrukt ähnlicher sind und nicht nur daher, dass sie z.B. aufgrund der Formulierung der Fragen genauer gemessen werden konnten.
 
 
-#### Vollständige Invarianz
+### Vollständige Invarianz
 
-Unter vollständiger <mark style="background-color: orange"> oder struktureller </mark> Invarianz verstehen wir das Gleichsetzten aller Strukturparameter. Hier werden nun alle Varianzen, Residualvarianzen, ungerichteten und gerichteten Effekte des Strukturmodells über die Gruppen hinweg gleich gesetzt (insgesamt also $\lambda$s, $\tau$s, $\theta$s, $\gamma$s, $\beta$s, $\kappa$s, $\phi$s und $\psi$s gleich über die Gruppen hinweg). Wir passen entsprechend das Modell an.  Außerdem müssen wir nun das Interzept und die Residualvarianz von `BFs` invariant zwischen den Gruppen setzen, was wir erreichen, indem wir die `group.partial` Option rausnnehmen.
+Unter vollständiger Invarianz verstehen wir das Gleichsetzten aller Strukturparameter. Hier werden nun alle Varianzen, Residualvarianzen, ungerichteten und gerichteten Effekte des Strukturmodells über die Gruppen hinweg gleich gesetzt (insgesamt also $\lambda$s, $\tau$s, $\theta$s, $\gamma$s, $\beta$s, $\kappa$s, $\phi$s und $\psi$s gleich über die Gruppen hinweg). Wir passen entsprechend das Modell an.  Außerdem müssen wir nun das Interzept und die Residualvarianz von `BFs` invariant zwischen den Gruppen setzen, was wir erreichen, indem wir die `group.partial` Option rausnnehmen.
 ```{r}
 fit_sem_sex_voll <- sem(model_sem, data = StressAtWork, group = "sex",
                                  group.equal = c("loadings", "intercepts", "residuals",
@@ -917,7 +880,7 @@ wobei $\hat{\Sigma}_M$ die modellimplizierte Kovarianzmatrix und $S$ die Kovaria
 $$H_0:S=\Sigma_M$$
 Der $\chi^2$-Wert ergibt sie wie folgt:
 $$\chi^2:=(n-1)F(\hat{\Sigma}_M,S)$$
-Somit wirkt es so, dass der $\chi^2$-Wert zwangsläufig mit der Stichprobengröße wachsen muss. Allerdings ist es so, dass für wachsendes ($n\to\infty$) $F(\hat{\Sigma}_M,S)\to0$ solange die Null-Hypothese gilt. Dies liegt daran, dass $F(\hat{\Sigma}_M,S)$ gerade die Differenz zwischen den beiden Matrizen quantifiziert und diese Differenz unter der Null-Hypothese im Mittel gegen 0 konvergiert. Diese Differenz geht für steigende Stichprobengröße gegen den Wert 0, wird also kleiner mit steigender Stichprobengröße. Um eine Verteilung als Referenz verwenden zu können (hier: die kritischen Werte der $\chi^2$-Verteilung) ist eine Reskalierung von Nöten. Aus diesem Grund wird $F(\hat{\Sigma}_M,S)$ mit $n-1$ multipliziert und die bekannte $\chi^2$-Verteilung entsteht. Gilt nun eine Alternativ-Hypothese: 
+Somit wirkt es so, dass der $\chi^2$-Wert zwangsläufig mit der Stichprobengröße wachsen muss. Allerdings ist es so, dass für wachsendes ($n\to\infty$) $F(\hat{\Sigma}_M,S)\to0$ solange die Null-Hypothese gilt. Dies liegt daran, dass $F(\hat{\Sigma}_M,S)$ gerade die Differenz zwischen den beiden Matrizen quantifiziert und diese Differenz unter der Null-Hypothese im Mittel gegen 0 konvergiert. Diese Differenz geht für steigende Stichprobengröße gegen den Wert 0, wird also kleiner mit steigender Stichprobengröße. Um eine Verteilung als Referenz verwenden zu können (hier: die kritischen Werte der $\chi^2$-Verteilung) ist eine Reskalierung von Nöten. Aus diesem Grund wird $F(\hat{\Sigma}_M,S)$ mit $n-1$ multipliziert und die bekannte $\chi^2$-Verteilung entsteht. Gilt nun eine Alternativ-Hypothese:
 $$H_1:S\neq\Sigma_M$$
 dann konvergiert $F(\hat{\Sigma}_M,S)$ im Mittel nicht mehr gegen Null; es gilt also  ($n\to\infty$) $F(\hat{\Sigma}_M,S)\nrightarrow0$, sondern $F(\hat{\Sigma}_M,S)\to d$, wobei $d>0$ gerade die wahre Differenz zwischen den beiden Modellen quantifiziert. Das bedeutet gleichzeitig, dass für den zugehörige mittlere $\chi^2$-Wert unter $H_1$ gilt: $\chi^2_{H_1}\to dn \to \infty$, der $\chi^2$-Wert also mit der Stichprobengröße wächst (da $dn$ gerade proportional zu $n$ wächst)! Wir wollen uns dies an folgendem Modell klar machen:
 
@@ -957,12 +920,12 @@ tauY <- rep(0, nrow(LoadingsY))
 LatInts <- rep(0, 2)
 
 # Combine model:
-mod <- lisrelModel(LY = LoadingsY, PS = Psi, BE = Beta, TE = ManVarY, LX = LoadingsX, 
-    PH = Phi, GA = Gamma, TD = ManVarX, TY = tauY, TX = tauX, AL = c(0), 
+mod <- lisrelModel(LY = LoadingsY, PS = Psi, BE = Beta, TE = ManVarY, LX = LoadingsX,
+    PH = Phi, GA = Gamma, TD = ManVarX, TY = tauY, TX = tauX, AL = c(0),
     KA = LatInts)
 
 # Plot path diagram:
-semPaths(mod, as.expression = c("nodes", "edges"), sizeMan = 5, sizeInt = 3, 
+semPaths(mod, as.expression = c("nodes", "edges"), sizeMan = 5, sizeInt = 3,
     sizeLat = 7, label.prop = 1, layout = "tree2", edge.label.cex = 1)
 ```
 
@@ -975,7 +938,7 @@ Eta1 =~ y1 + 0.8*y2
 Eta2 =~ y3 + 0.9*y4
 
 # Strukturmodell
-Eta1 ~ 0.5*Xi1 
+Eta1 ~ 0.5*Xi1
 Eta2 ~ 0.54*Xi1 + 0.4*Eta1
 
 # Fehlerkovarianzen
@@ -1007,7 +970,7 @@ Eta1 =~ y1 + y2
 Eta2 =~ y3 + y4
 
 # Strukturmodell
-Eta1 ~ Xi1 
+Eta1 ~ Xi1
 Eta2 ~ Xi1 + Eta1
 
 # Fehlerkovarianzen
@@ -1049,7 +1012,7 @@ Eta1 =~ y1 + y2
 Eta2 =~ y3 + y4
 
 # Strukturmodell
-Eta1 ~ Xi1 
+Eta1 ~ Xi1
 Eta2 ~ Xi1 + Eta1
 '
 ```
@@ -1058,7 +1021,7 @@ Eta2 ~ Xi1 + Eta1
 semPaths(sem(model_H1_kov, data))
 ```
 
-Unter `model_H1_Struk`speichern wir ein Modell welches erneut äquivalent bis auf die fehlende gerichtete Beziehung zwischen $\xi_1$ und $\eta_2$ zu `model_H0`ist. 
+Unter `model_H1_Struk`speichern wir ein Modell welches erneut äquivalent bis auf die fehlende gerichtete Beziehung zwischen $\xi_1$ und $\eta_2$ zu `model_H0`ist.
 
 ```{r}
 model_H1_Struk <- '
@@ -1068,7 +1031,7 @@ Eta1 =~ y1 + y2
 Eta2 =~ y3 + y4
 
 # Strukturmodell
-Eta1 ~ Xi1 
+Eta1 ~ Xi1
 Eta2 ~ Eta1
 
 # Fehlerkovarianzen
@@ -1133,11 +1096,11 @@ Wir sehen, dass das weglassen der gerichteten Beziehung zu einem größeren mitt
 
 <center> <img src="https://raw.githubusercontent.com/martscht/PsyMSc1/master/inst/tutorials/SEM/images/chi2_vs_n.png" width="80%"/> </center>
 
-Wir sehen deutlich, dass in beiden $H_1$-Bedingungen der mittlere $\chi^2$-Wert mit der Stichprobengröße wächst. Nur in der $H_0$-Bedingung pendelt sich der mittlere $\chi^2$-Wert gerade bei den $df$ ein. Die gestrichelte Linie repräsentiert den  $\chi^2_\text{krit}(df=11)$, somit ist ersichtlich, dass beide $H_1$-Modelle ab einer gewissen Stichprobengröße verworfen werden. Nun ist es aber so, dass in der Wissenschaft Daten häufig nicht perfekt vorliegen, sondern kleine Fehlspezifikationen (also Abweichungen von der Theorie, die aber an sich nicht bedeutsam sind) vorhanden sind. Aus diesem Grund wurden Fit-Indizes entwickelt, welche kleine Fehlspezifikationen relativieren sollen. Ansonsten würde das Verhalten dieses Tests die Wissenschaft dazu bringen kleinere Stichproben zu untersuchen, was allerdings das Aufdecken von Effekten erschwert. Um diesem Dilemma aus dem Weg zu gehen, wird auf die Fit-Indizes zurückgegriffen. 
+Wir sehen deutlich, dass in beiden $H_1$-Bedingungen der mittlere $\chi^2$-Wert mit der Stichprobengröße wächst. Nur in der $H_0$-Bedingung pendelt sich der mittlere $\chi^2$-Wert gerade bei den $df$ ein. Die gestrichelte Linie repräsentiert den  $\chi^2_\text{krit}(df=11)$, somit ist ersichtlich, dass beide $H_1$-Modelle ab einer gewissen Stichprobengröße verworfen werden. Nun ist es aber so, dass in der Wissenschaft Daten häufig nicht perfekt vorliegen, sondern kleine Fehlspezifikationen (also Abweichungen von der Theorie, die aber an sich nicht bedeutsam sind) vorhanden sind. Aus diesem Grund wurden Fit-Indizes entwickelt, welche kleine Fehlspezifikationen relativieren sollen. Ansonsten würde das Verhalten dieses Tests die Wissenschaft dazu bringen kleinere Stichproben zu untersuchen, was allerdings das Aufdecken von Effekten erschwert. Um diesem Dilemma aus dem Weg zu gehen, wird auf die Fit-Indizes zurückgegriffen.
 
 Beispielhaft gucken wir uns nun das Verhalten des $CFI$ und des $RMSEA$ an. Die Definition der Fit-Indizes ist:
 $$CFI:= 1- \frac{\max(\chi^2_t-df_t,0)}{\max(\chi^2_t-df_t,\chi^2_i-df_i,0)},$$
-wobei die Subskripts $t$ und $i$ für das $target$-Modell, also unser Modell und das $independence$-Modell stehen, welches keine Beziehung zwischen den manifesten Variablen annimmt (das am schlechtesten passende Modell). Einen Ausdruck wie $\max(\chi^2_t-df_t,0)$ bzw. $\max(\chi^2_t-df_t,\chi^2_i-df_i,0)$  oder einfacher $\max(a,0)$ bzw. $\max(a,b,0)$ lesen wir so: hier wir das Maximum zwischen 2 bzw. 3 Ausdrücken bestimmt und damit weitergerechnet; dadurch das einer der 2 bzw. 3 Ausdrücke gerade die 0 ist, bedeutet dies, dass dieses Maximum immer größer oder gleich 0 sein wird ($\ge0$). 
+wobei die Subskripts $t$ und $i$ für das $target$-Modell, also unser Modell und das $independence$-Modell stehen, welches keine Beziehung zwischen den manifesten Variablen annimmt (das am schlechtesten passende Modell). Einen Ausdruck wie $\max(\chi^2_t-df_t,0)$ bzw. $\max(\chi^2_t-df_t,\chi^2_i-df_i,0)$  oder einfacher $\max(a,0)$ bzw. $\max(a,b,0)$ lesen wir so: hier wir das Maximum zwischen 2 bzw. 3 Ausdrücken bestimmt und damit weitergerechnet; dadurch das einer der 2 bzw. 3 Ausdrücke gerade die 0 ist, bedeutet dies, dass dieses Maximum immer größer oder gleich 0 sein wird ($\ge0$).
 Der $CFI$ ist ein Vergleich zwischen dem schlechtesten und dem betrachteten Modell. Der mittlere $CFI$ unter der $H_0$-Hypothese sollte bei 1 liegen für große $n$, da für große $n$ der $\chi^2$-Wert im Mittel bei den $df$ liegt und somit $\chi^2_t-df_t=0$, also der Bruch im Mittel bei 0 liegt (somit wird von der 1 im Mittel nichts abgezogen unter der $H_0$). Dies erkennen wir in der Grafik daran, dass im $H_0$-Modell der mittlere $CFI$-Wert gegen 1 geht (dies bedeutet gleichzeitig, dass kleine $CFI$s gerade für einen schlechten Fit sprechen!):
 <center> <img src="https://raw.githubusercontent.com/martscht/PsyMSc1/master/inst/tutorials/SEM/images/CFI_vs_n.png" width="80%"/> </center>
 
@@ -1153,7 +1116,7 @@ Die gestrichelten Linien geben jeweils die Grenze an, ab welchen Wert nicht mehr
 Die Abweichungen von 0 bzw. 1 beim $RMSEA$ sowie bei $CFI$ sind allerdings nur für eines der beiden $H_1$ Modelle "extrem". Nur in diesem würde von keinem guten Fit mehr gesprochen werden: nämlich beim Modell, in welchem fälschlicherweise eine vollständige Mediation angenommen wird (keine gerichtete Beziehung zwischen $\xi_1$ und $\eta_2$).
 
 
-Wann genau die Fit-Indizes für eine deutliche Abweichung zwischen Daten und Modell sprechen, hängt von vielen Dingen ab. Im Artikel von Schermelleh et al. (2003) wurden Cut-Kriterien für spezifische Modelle entwickelt ($CFI < .97$ und $RMSEA > .05$), welche nicht notwendigerweise auf alle anderen Modelle mit unterschiedlicher Komplexität, Stichprobengröße und Anzahl manifester Variablen, etc. übertragbar sind. Diesem Umstand geschuldet wurde das `R`-Paket `ezCutoffs` entwickelt, welches simulationsbasierte Cut-Kriterien speziell angepasst an das vorliegende Modell berechnet. Die `ezCutoffs`-Funktion müssten wir dazu einfach unser angenommenes Modell sowie die Daten übergeben. Schauen wir uns dem Output zu unserem `model_sem` Modell, in welchem die Mediation von Zeitdruck über Emotionale Erschöpfung auf Burnout modelliert wurde, an: 
+Wann genau die Fit-Indizes für eine deutliche Abweichung zwischen Daten und Modell sprechen, hängt von vielen Dingen ab. Im Artikel von Schermelleh et al. (2003) wurden Cut-Kriterien für spezifische Modelle entwickelt ($CFI < .97$ und $RMSEA > .05$), welche nicht notwendigerweise auf alle anderen Modelle mit unterschiedlicher Komplexität, Stichprobengröße und Anzahl manifester Variablen, etc. übertragbar sind. Diesem Umstand geschuldet wurde das `R`-Paket `ezCutoffs` entwickelt, welches simulationsbasierte Cut-Kriterien speziell angepasst an das vorliegende Modell berechnet. Die `ezCutoffs`-Funktion müssten wir dazu einfach unser angenommenes Modell sowie die Daten übergeben. Schauen wir uns dem Output zu unserem `model_sem` Modell, in welchem die Mediation von Zeitdruck über Emotionale Erschöpfung auf Burnout modelliert wurde, an:
 
 ```{r, eval = F}
 library(ezCutoffs)
@@ -1168,8 +1131,8 @@ cat("Data Generation
 Model Fitting
 
   |==================================================| 100% elapsed =  8s  ~  0s
-  
-  
+
+
       Empirical fit Cutoff (alpha = 0.05)
 chisq  18.444008456           29.49324699
 cfi     0.999650351            0.97982435
@@ -1185,7 +1148,7 @@ srmr    0.027500985            0.04021870")
 
 ## Appendix B {#AppendixB}
 ### MSA zu Fuß
-Wir wollen uns die Invarianztestung auch noch einmal zu Fuß ansehen. Um das ganze abzukürzen, schauen wir uns immer mit `fitMeasures` nur den $\chi^2$-Wert, die $df$ sowie den $p$-Wert an und vergleichen diese mit den bereits geschätzten Modell aus dem Abschnitt zur [MSA](#MSA). 
+Wir wollen uns die Invarianztestung auch noch einmal zu Fuß ansehen. Um das ganze abzukürzen, schauen wir uns immer mit `fitMeasures` nur den $\chi^2$-Wert, die $df$ sowie den $p$-Wert an und vergleichen diese mit den bereits geschätzten Modell aus dem Abschnitt zur [MSA](#MSA).
 
 #### Konfigurale Invarianz
 Wir beginnen mit der Spezifikation des konfigural invariante Modell. Hier muss nichts gleichgesetzt werden. Wir kopieren also einfach das Modell `model_sem`:
@@ -1205,7 +1168,7 @@ BFs ~  BOEE + ZD
 und schätzen dies anschließend. Wir verwenden das Anhängsel `2`, um zu zeigen, welches die händisch gleichgesetzte Variante ist:
 
 ```{r, results = "hide"}
-fit_sem_sex_konfigural <- sem(model_sem, data = StressAtWork, group = "sex", 
+fit_sem_sex_konfigural <- sem(model_sem, data = StressAtWork, group = "sex",
                                      group.equal = c(""), group.partial = c("BFs ~ 1", "BFs ~~*BFs"))
 fit_sem_sex_konfigural2 <- sem(model_sem, data = StressAtWork,  group = "sex")
 
@@ -1221,11 +1184,11 @@ cat("zu Fuß/händisch:")
 print(round(fitmeasures(fit_sem_sex_konfigural2, c("chisq", 'df', "pvalue")), 3))
 ```
 
-Wir erkennen keine Unterschiede, was nicht verwunderlich ist, hier wurde noch nichts gleichgesetzt. 
+Wir erkennen keine Unterschiede, was nicht verwunderlich ist, hier wurde noch nichts gleichgesetzt.
 
 
 #### Metrische Invarianz
-Wir müssen nun ein neues Modell spezifizieren, in welchem wir alle Faktorladungen ($\lambda$s) jeweils über die Gruppen hinweg das gleiche Label geben. Hierbei verwenden wir `l` als Label für die Faktorladungen und nummerieren alle Faktorladungen nach einander durch (wie genau hier vorgegangen wird, ist immer dem Anwender überlassen, es muss lediglich darauf geachtet werden, nicht mehrfach das gleiche Label für unterschiedliche Parameter zu verwenden, wenn dies nicht explizit gewünscht ist). 
+Wir müssen nun ein neues Modell spezifizieren, in welchem wir alle Faktorladungen ($\lambda$s) jeweils über die Gruppen hinweg das gleiche Label geben. Hierbei verwenden wir `l` als Label für die Faktorladungen und nummerieren alle Faktorladungen nach einander durch (wie genau hier vorgegangen wird, ist immer dem Anwender überlassen, es muss lediglich darauf geachtet werden, nicht mehrfach das gleiche Label für unterschiedliche Parameter zu verwenden, wenn dies nicht explizit gewünscht ist).
 
 ```{r}
 model_sem_metrisch <- '
@@ -1260,7 +1223,7 @@ Erneut erkennen wir keine Unterschiede zwischen den Modellen. Beide Vorgehenswei
 
 
 #### Skalare Invarianz
-Erneut müssen wir ein neues Modell spezifizieren, in welchem wir jeweils allen Faktorladungen und Interzepten ($\lambda$s und $\tau$s) über die Gruppen hinweg das gleiche Label geben. Hierbei verwenden wir `tau` als Label für die Interzepte und nummerieren alle Interzepte der manifesten Variablen nach einander durch. Wir fügen außerdem die Effektkodierung ein via `ZD ~ c(0, NA)*1` und `BOEE ~c(0, NA)*1`, womit der latente Mittelwert in einer Gruppe auf 0 gesetzt und in der zweiten frei geschätzt wird und erweitern das Modell `model_sem_metrisch` zu: 
+Erneut müssen wir ein neues Modell spezifizieren, in welchem wir jeweils allen Faktorladungen und Interzepten ($\lambda$s und $\tau$s) über die Gruppen hinweg das gleiche Label geben. Hierbei verwenden wir `tau` als Label für die Interzepte und nummerieren alle Interzepte der manifesten Variablen nach einander durch. Wir fügen außerdem die Effektkodierung ein via `ZD ~ c(0, NA)*1` und `BOEE ~c(0, NA)*1`, womit der latente Mittelwert in einer Gruppe auf 0 gesetzt und in der zweiten frei geschätzt wird und erweitern das Modell `model_sem_metrisch` zu:
 
 ```{r}
 model_sem_skalar <- '
@@ -1307,7 +1270,7 @@ Erneut erkennen wir keine Unterschiede zwischen den Modellen. Beide Vorgehenswei
 
 
 #### Strikte Invarianz
-Wieder müssen wir ein neues Modell spezifizieren, in welchem wir jeweils allen Faktorladungen, Interzepten und Fehlervarianzen ($\lambda$s, $\tau$s und $\theta$s) über die Gruppen hinweg das gleiche Label geben. Hierbei verwenden wir `t` als Label für die Fehlervarianzen und nummerieren alle Fehlervarianzen der manifesten Variablen nach einander durch. Wir erweitern das Modell `model_sem_skalar`. 
+Wieder müssen wir ein neues Modell spezifizieren, in welchem wir jeweils allen Faktorladungen, Interzepten und Fehlervarianzen ($\lambda$s, $\tau$s und $\theta$s) über die Gruppen hinweg das gleiche Label geben. Hierbei verwenden wir `t` als Label für die Fehlervarianzen und nummerieren alle Fehlervarianzen der manifesten Variablen nach einander durch. Wir erweitern das Modell `model_sem_skalar`.
 
 ```{r}
 model_sem_strikt <- '
@@ -1570,7 +1533,7 @@ Sowie folgenden Ergebnisse für die Messmodelle:
 abbrev(fit_sem_IE_TE_tau, begin = "Latent Variables", end = "Regressions")
 ```
 
-Wir erkennen durch die gleiche Bennenung, dass es sich hier um restringierte Koeffizienten handelt. Auch erkennen wir, dass die Faktorladungen von `ZD` und `BOEE` alle gleich heißen und auf 1 gesetzt wurden. 
+Wir erkennen durch die gleiche Bennenung, dass es sich hier um restringierte Koeffizienten handelt. Auch erkennen wir, dass die Faktorladungen von `ZD` und `BOEE` alle gleich heißen und auf 1 gesetzt wurden.
 
 Dem Modellfit ist zu entnehmen, dass das Modell immer noch zu den Daten passt: der $\chi^2$-Wert liegt bei `r round(fitmeasures(fit_sem_IE_TE_tau)[3], 3)` bei $df=$ `r round(fitmeasures(fit_sem_IE_TE_tau)[4], 3)` mit zugehörigem $p$-Wert von `r round(fitmeasures(fit_sem_IE_TE_tau)[5], 3)`. Demnach verwerfen unsere Daten das Modell nicht. Außerdem sind die $df$ genau um `r round(fitmeasures(fit_sem_IE_TE_tau)[4] - fitmeasures(fit_sem_IE_TE)[4], 3)` größer als im unrestringierten Modell (ohne die Annahme der essentiellen $\tau$-Äquivalenz pro latenter Variable). Wir können diese Differrenz leicht prüfen: es mussten 2 Faktorladungen weniger für `ZD` geschätzt werden und 3 weniger für `BOEE` - aus diesem Grund unterscheiden sich die $df$ gerade um 5! Da das Modell nicht durch die Daten verworfen wird, müssen wir uns auch nicht unbedingt die Fit-Indizes ansehen. Diese sind hier nämlich auch unauffällig. Ob sie überhaupt im Bezug zu diesem Modell interpretiert werden sollten, wurde im [Appendix A](#AppendixA) näher beleuchtet.
 
@@ -1650,14 +1613,79 @@ resLRT_tau <- lavTestLRT(fit_sem_IE_TE_tau, fit_sem_IE_TE) # 2 Faktoren passen b
 
 Dem Modellvergleich ist zu entnehmen, dass das $\tau$-Äquivalenz-Modell signifikant schlechter zu den Daten passt. Der $p$-Wert liegt bei `r round(resLRT_tau[[7]][2], 3)` und ist somit  $<.05$. Auch die Differenz der $df$ lässt sich diesem Output entnehmen. Dies zeigt erneut, dass die Annahme der essentiellen $\tau$-Äquivalenz, auf welcher das Pfadanalysemodell untersucht wurde, auf dem 5% Signifikanzniveau nicht haltbar ist.
 
-Auf die gleiche Art und Weise können wir auch Invarianz über die Zeit oder über Gruppen hinweg untersuchen. Über die Zeit würden wir zwei latente Variablen formulieren, welche einmal $t_1$ und einmal $t_2$ symbolisiert. Die Annahme, dass zu beiden Zeitpunkte die Messmodelle gleich sind, ist tatsächlich in vielen Situation sinnvoll. 
+Auf die gleiche Art und Weise können wir auch Invarianz über die Zeit oder über Gruppen hinweg untersuchen. Über die Zeit würden wir zwei latente Variablen formulieren, welche einmal $t_1$ und einmal $t_2$ symbolisiert. Die Annahme, dass zu beiden Zeitpunkte die Messmodelle gleich sind, ist tatsächlich in vielen Situation sinnvoll.
 
+## Appendix D {#AppendixD}
+
+### Invarianzstufen
+Die Invarianzstufen sind nach Einschränkungen der Modellparameter sortiert und werden auch (fast) immer in dieser Reihenfolge sukzessive getestet: konfigurale, metrische (schwache), skalare (starke), strikte und vollständige Invarianz. Wir gehen so vor, wie dies per Default im `R`-Paket `lavaan` durchgeführt wird. Wir gehen hierzu davon aus, dass die Skalierung für die Varianzen auf den ersten Faktorladungen ($\lambda=1$) liegt und dass die Skalierung für die Mittelwerte (Interzepte) auf dem latenten Mittelwert liegt ($\kappa=0$).
+
+Die erste und am wenigsten restriktive Invarianzstufe ist die **konfigurale Invarianz**. Unter konfiguraler Invarianz verstehen wir die Gleichheit der Modelle in den Gruppen - oder salopp gesprochen: gilt konfigurale Invarianz, dann gilt in beiden Gruppen die selbe Faktorstruktur. Die folgende Grafik soll dies für ein einfaches CFA Modell veranschaulichen, welches auch die oben erwähnten Skalierer enthält. In Schwarz dargestellt sind Invarianzen über die Gruppen hinweg (natürlich ist das Modell, dass wir hier behandeln wesentlich komplexer, aber das angegeben Modell stellt die wichtigsten Aspekte der Gleichsetzung dar!):
+
+<center> <img src="https://raw.githubusercontent.com/martscht/PsyMSc1/master/inst/tutorials/SEM/images/1_Invarianz_Grafiken.png" width="80%"/> </center>
+
+Ob diese Invarianzstufe hält können wir krude durch die Modellpassung des Multigruppenmodells aus dem letzten Abschnitt prüfen. Weil wir das Modell aufgrund der sehr guten Passung nicht verwerfen müssen, gibt uns das den Hinweis, dass zumindest die Faktorstruktur in beiden Gruppen gleich ist (als konfigurale Invarianz hält). Wenn wir z.B. durch Fehlpassung feststellen würden, dass in einer der beiden Gruppen eine zusätzliche Residualkorrelation oder eine Querladung aufgenommen werden muss, müssten wir die Annahme der konfiguralen Messinvarianz verwerfen.
+
+Um die weiteren Invarianzstufen und deren Implikationen besser zu verstehen, schauen wir uns noch einmal die modellimplizierte Varianz und die modellimplizierte Erwartung (den modell implizierten Mittelwert) einer manifesten Variable $X$ an. Wir verwenden $^{(g)}$ um Unterschiede zwischen Gruppen darzustellen, wobei dies als Platzhalter für bspw. die Gruppennummer fungiert. Lassen wir dies weg, so gehen wir davon aus, dass der Parameter gleich ist über die Gruppen hinweg. Alle anderen Indizes lassen wir weg, um das ganze übersichtlicher zu gestalten.
+
+Eine einfache modellimplizierte Gleichung einer Messung $X$ ist:
+
+$$X^{(g)}=\tau^{(g)}+\lambda^{(g)}\xi^{(g)}+\delta^{(g)}.$$
+
+$\tau$ ist das Interzept und $\lambda$ ist die Faktorladung. Die Varianz von $X$ ist folglich:
+
+$$\mathbb{V}ar\left[X^{(g)}\right]=\left(\lambda^{(g)}\right)^2\phi^{(g)}+\theta^{(g)}.$$
+
+$\phi$ ist die Varianz der latenten Variable ($\xi$) und $\theta$ ist die Residualvarianz, also die Varianz von $\delta$. Wenn Sie sich nun fragen, wieso wir $\lambda$ hier quadrieren müssen, dann überlegen Sie sich folgendes Beispiel anhand der empirischen Stichprobenvarianz von einer Variable $Y$. Diese berechnen wir so:
+
+$$\hat{\mathbb{V}ar}[Y] = \frac{1}{n}\sum_{i=1}^n(Y_i-\bar{Y})^2,$$
+
+wobei $\bar{Y}$ der Mittelwert von $Y$ ist. Wenn wir nun alle Einträge von $Y$ mit einer Konstanten multiplizieren, also für alle Personen $aY$ berechnen (z.B. $a=10$) und bestimmen die Varianz; der Mittelwert von $aY$ ist einfach $a\bar{Y}$:
+
+$$\hat{\mathbb{V}ar}[aY] = \frac{1}{n}\sum_{i=1}^n(aY_i-a\bar{Y})^2=\frac{1}{n}\sum_{i=1}^n\big(a(Y_i-a\bar{Y})\big)^2=\frac{1}{n}\sum_{i=1}^na^2(Y_i-\bar{Y})^2=a^2\frac{1}{n}\sum_{i=1}^n(Y_i-\bar{Y})^2=a^2\hat{\mathbb{V}ar}[Y],$$
+
+Da $a$ in der Klammer steht, die quadriert wird, muss natürlich $a$ quadriert werden. Da auch $a^2$ eine Konstante ist, kann sie vor die Summe gezogen werden. Daraus wird dann ersichtlich, dass die Varianz des Produktes einer Variablen mit einer Konstanten gleich der Konstanten zum Quadrat multipliziert mit der Varianz der Variablen ist. Der Mittelwert von $X$ ergibt sich als:
+$$\mathbb{E}\left[X^{(g)}\right]=\tau^{(g)}+\lambda^{(g)}\kappa^{(g)},$$
+wobei $\kappa$ das Interzept (den Mittelwert) von $\xi$ darstellt. Da $X$ von so vielen Parametern abhängt, ist ohne weitere Annahmen (von Invarianzen der Parameter über die Gruppen hinweg) nicht zu sagen, ob Unterschiede zwischen Gruppen bspw. im Mittelwert von $X$ auf Unterschiede in der latenten Variable oder auf Unterschiede in der Messung zurückzuführen sind. Ähnlich sieht es für die Varianz aus.
+
+Die nächste Invarianzstufe ist die **metrische** oder **schwache Invarianz**. Nehmen wir metrische Invarianz an, so gehen wir davon aus, dass die Faktorladungen ($\lambda$) über die Gruppen hinweg gleich sind. Dies impliziert, dass die latenten Variablen über die Gruppen hinweg die gleiche Bedeutung haben. Die latenten Variablen lassen sich also inhaltlich gleich interpretieren. Dies ist sehr wichtig, wenn wir bspw. Fragebögen oder Tests über Gruppen (z.B. Länder oder das Geschlecht) hinweg vergleichen wollen. In der Grafik sind nun alle $\lambda$s schwarz (anstatt blau oder rot):
+
+<center> <img src="https://raw.githubusercontent.com/martscht/PsyMSc1/master/inst/tutorials/SEM/images/2_Invarianz_Grafiken.png" width="80%"/> </center>
+
+Die Varianz von $X$ vereinfacht sich zu (Weglassen von $^{(g)}$ symbolisiert Gleichheit über die Gruppen hinweg):
+$$\mathbb{V}ar\left[X^{(g)}\right]=\lambda^2\phi^{(g)}+\theta^{(g)}.$$
+
+
+
+Hierbei ist es so, dass $\lambda^2\phi^{(g)}$ gerade die Systematik oder den wahren Anteil in der Varianz von $X$ beschreibt. Falls metrische Invarianz gilt, so lassen sich also Unterschiede in den wahren Anteilen der Varianzen der Beobachtungen auf Unterschiede in den latenten Varianzen zurückführen (Achtung: dies ist nicht das gleiche wie Gleichheit der Reliabilitäten, was anteilig die Systematik in $X$ an der gesamten Varianz von $X$ beschreibt - hierfür müssten ebenfalls $\theta$ gleich sein). Dies bedeutet,  wenn wir metrische Invarianz nicht verwerfen (also weiter davon ausgehen, dass metrische Invarianz gilt), dass wir durch weitere Modellrestriktionen die latenten Varianzen auf Gleichheit prüfen können. Dies ist nicht zulässig, wenn metrische Invarianz *nicht* gilt, also die Faktorladungen sich über die Gruppen hinweg unterscheiden. Spezifizieren wir `group.equal = c("loadings")` so wird das metrisch-invariante Modell geschätzt.
+
+
+Unter **skalarer** oder **starker Invarianz** verstehen wir die nächste Invarianzstufe, welche zusätzlich zu den Faktorladungen auch noch die Interzepte ($\tau$) als invariant über die Gruppen hinweg annimmt.  Der Mittelwert von $X$ vereinfacht sich zu:
+$$\mathbb{E}\left[X^{(g)}\right]=\tau+\lambda\kappa^{(g)},$$
+wobei nun ersichtlich ist, dass nur noch $\kappa$ über die Gruppen hinweg variiert (wegen $^{(g)}$). Dies bedeutet also, dass unter Annahme der skalaren Invarianz Unterschiede in den Mittelwerten der Beobachtungen auf Unterschiede in den Mittelwerten der latenten Variablen zurückzuführen sind. Um dies zu prüfen, würden wir überlicherweise über die skalare Invarianz hinaus auch noch $\kappa$ über die Gruppen hinweg gleichgesetzt werden. Der Likelihood-Ratio-Test ($\chi^2$-Differenzentest) zwischen dem skalar-invarianten Modell und dem zusätzlich $\kappa$-invarianten Modell entscheidet dann darüber, ob die latenten Mittelwerte sich über die Gruppen hinweg unterscheidet. Wir schätzen das skalar-invariante Modell durch `group.equal = c("loadings", "intercepts")`. Da auch für die Mittelwertsstruktur Skalierer gesetzt werden müssen und diese üblicherweise auf den latenten Mittelwerten liegen ($\kappa=0$), muss dies bei der Invarianztestung berücksichtigt werden. Wenn wir die Skalierer auf den latenten Mittelwerten lassen und die Interzept der manifesten Variablen gleichsetzen, so nehmen wir damit auch implizit an, dass die latenten Mittelwerte über die Gruppen hinweg gleich sind. Um diesem Problem aus dem Weg zu gehen, stellt die `sem`-Funktion klugerweise ein, dass nur in der ersten Gruppe die latenten Mittelwerte/Interzepte ($\kappa$) auf 0 gesetzt werden, alle übrigen werden frei geschätzt. Dies schauen wir uns genauer an, wenn es weit ist! In der Grafik sind nun alle $\lambda$s und $\tau$s schwarz (anstatt blau oder rot). Außerdem ist die Effektkodierung der $\kappa$s zu sehen: diese bedeutet, dass der erste latente Mittelwert auf 0 restringiert wird, während der zweite frei geschätzt wird und somit die Abweichungen (den Effekt) quantifiziert (beide sind in der Gruppenfarbe dargestellt):
+<center> <img src="https://raw.githubusercontent.com/martscht/PsyMSc1/master/inst/tutorials/SEM/images/3_Invarianz_Grafiken.png" width="80%"/> </center>
+
+Setzen wir zusätzlich zu Faktorladungen und Interzepten auch noch die Residualvarianzen ($\theta$) gleich über die Gruppen, so sprechen wir von **strikter Invarianz**. Gilt diese Invarianzbedingung, so lassen sich Unterschiede in den beobachteten Varianzen ausschließlich auf Unterschiede in den latenten Varianzen (also die Varianzen der latenten Variablen) zurückführen. Dies lässt sich der Varianzformel entnehmen:
+$$\mathbb{V}ar\left[X^{(g)}\right]=\lambda^2\phi^{(g)}+\theta.$$
+Nur noch $\phi$ trägt auf der rechten Seite ein $^{(g)}$. Somit sind nur noch Unterschiede in $\phi$ verantwortlich für Unterschiede in $\mathbb{V}ar\left[X\right]$. In der Grafik sind nun alle $\lambda$s, $\tau$s und $\theta$s schwarz (anstatt blau oder rot):
+<center> <img src="https://raw.githubusercontent.com/martscht/PsyMSc1/master/inst/tutorials/SEM/images/4_Invarianz_Grafiken.png" width="80%"/> </center>
+Wir schätzen das strikt-invariante Modell durch `group.equal = c("loadings", "intercepts", "residuals")`.
+
+Gehen wir von **vollständiger Invarianz** aus, so sind alle Parameter über die Gruppen hinweg gleich. Es gibt also keinerlei Unterschiede mehr zwischen den Gruppen. Die $\phi$s und auch die $\kappa$s müssen wieder auf den gleichen Wert über die Gruppen hinweg gesetzt werden. Die Variablen selbst ($X$, $\xi$ und $\delta$) bleiben farbig, da wir nur Parameter über die Gruppen hinweg gleichsetzen. Die Grafik der vollständigen Invarianz sieht folgendermaßen aus:
+<center> <img src="https://raw.githubusercontent.com/martscht/PsyMSc1/master/inst/tutorials/SEM/images/5_Invarianz_Grafiken.png" width="80%"/> </center>
+
+Das vollständig-invariante Modell erhalten wir mit `group.equal = c("loadings", "intercepts", "residuals",` ` "means", "lv.variances", "lv.covariances", "regressions")`. Hierbei restringiert `"means"` die latenten Mittelwerte ($\kappa$), `"lv.variances"` die latenten (Residual-)Varianzen ($\phi$s und $\psi$s exogen und endogen) und `"regressions"` die Strukturpfadkoeffizienten ($\gamma$s und $\beta$s). Hätten wir Residualkovarianzen bei den manifesten oder latenten Variablen gehabt, so müssten wir diese auch mit `"residual.covariances"` sowie mit `"lv.covariances"` restringieren.
+
+Die Invarianzstufen lassen sich nach der Anzahl der zu schätzenden Parameter oder den $df$ sortieren. Im _konfigural-invarianten Modell müssen am meisten Parameter_ geschätzt werden, es besitzt also die wenigsten $df$, während im _vollständig-invarianten Modell die wenigsten Parameter_ geschätzt werden müssen, weswegen dieses auch die meisten $df$ hat. Die anderen Modelle liegen wie folgt dazwischen (je weiter links, desto weniger restriktiv ist das Modell, desto mehr Parameter sind zu schätzen und desto weniger $df$ gibt es):
+$$\textbf{konfigural}\quad<\quad\textbf{metrisch/schwach}\quad<\quad\textbf{skalar/stark}\quad<\quad\textbf{strikt}\quad<\quad\textbf{vollständig}.$$
+
+Likelihood-Ratio-Tests ($\chi^2$-Differenzentests) werden herangezogen, um zu prüfen, ob die Invarianzeinschränkungen das Modell signifikant hinsichtlich der Passung zu den Daten verschlechtern.
 
 ## Literatur
-[Eid, M., Gollwitzer, M., & Schmitt, M. (2017).](https://hds.hebis.de/ubffm/Record/HEB366849158) *Statistik und Forschungsmethoden* (5. Auflage, 1. Auflage: 2010). Weinheim: Beltz. 
+[Eid, M., Gollwitzer, M., & Schmitt, M. (2017).](https://hds.hebis.de/ubffm/Record/HEB366849158) *Statistik und Forschungsmethoden* (5. Auflage, 1. Auflage: 2010). Weinheim: Beltz.
 
 Gregorich, S. E. (2006). Do self-report instruments allow meaningful comparisons across diverse population groups? Testing measurement invariance using the confirmatory factor analysis framework. _Medical Care_, _44_(11), 78-94.
-	
+
 Schermelleh-Engel, K., Moosbrugger, H., & Müller, H. (2003). Evaluation the fit of structural equation models: tests of significance and descriptive goodness-of-fit measures. _Methods of Psychological Research Online,_ *8*(2), 23-74.
 
 
