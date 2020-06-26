@@ -1018,24 +1018,24 @@ x1 ~~ x2
 Das Pfaddiagramm sieht so aus (hier wurden die Zusatzeinstellungen `curve = T, curvePivot = T` im `semPlot` verwenden)
 
 ```{r}
-fitH0 <- sem(model = model_H0, data = data)
-semPaths(fitH0, curve = T, curvePivot = T)
+fit_H0 <- sem(model = model_H0, data = data)
+semPaths(fit_H0, curve = T, curvePivot = T)
 ```
 
 Schätzen wir nun das Modell und gucken uns den den $\chi^2$-Wert an.
 ```{r, results = "hide"}
-fitH0 <- sem(model = model_H0, data = data)
-summary(fitH0)
+fit_H0 <- sem(model = model_H0, data = data)
+summary(fit_H0)
 ```
 
 ```{r, echo = F}
-lavaan::summary(fitH0)
+lavaan::summary(fit_H0)
 ```
 
 Besonders von Interesse ist der $\chi^2$-Wert, die $df$ und der zugehörige $p$-Wert, die wir auch so erhalten:
 
 ```{r}
-fitmeasures(fitH0, c("chisq", 'df', "pvalue"))
+fitmeasures(fit_H0, c("chisq", 'df', "pvalue"))
 ```
 
 Außerdem wollen wir zwei fehlspezifizierte Modell betrachten. Unter `model_H1_kov` speichern wir ein Modell, welches äquivalent zu `model_H0` bis auf die fehleende Fehlerkovarianz ist.
@@ -1097,7 +1097,7 @@ fit_H1_kov <- sem(model_H1_kov, data)
 fit_H1_Struk <- sem(model_H1_Struk, data)
 
 cat("H0:")
-print(round(fitmeasures(fitH0, c("chisq", 'df', "pvalue")), 3))
+print(round(fitmeasures(fit_H0, c("chisq", 'df', "pvalue")), 3))
 cat("H1: Fehlerkovarianz")
 print(round(fitmeasures(fit_H1_kov, c("chisq", 'df', "pvalue")), 3))
 cat("H1: Vollständige Mediation")
@@ -1109,20 +1109,20 @@ Nun wiederholen wir das ganze für eine größere Stichprobengröße von $n=1000
 ```{r}
 set.seed(123456)
 data <- simulateData(model = pop_model_H0, meanstructure = F, sample.nobs = 1000)
-fitH0 <- sem(model = model_H0, data = data)
+fit_H0 <- sem(model = model_H0, data = data)
 fit_H1_kov <- sem(model_H1_kov, data)
 fit_H1_Struk <- sem(model_H1_Struk, data)
 ```
 
 ```{r, eval = F}
-fitmeasures(fitH0, c("chisq", 'df', "pvalue"))
+fitmeasures(fit_H0, c("chisq", 'df', "pvalue"))
 fitmeasures(fit_H1_kov, c("chisq", 'df', "pvalue"))
 fitmeasures(fit_H1_Struk, c("chisq", 'df', "pvalue"))
 ```
 
 ```{r, echo = F}
 cat("H0:")
-print(round(fitmeasures(fitH0, c("chisq", 'df', "pvalue")), 3))
+print(round(fitmeasures(fit_H0, c("chisq", 'df', "pvalue")), 3))
 cat("H1: Fehlerkovarianz")
 print(round(fitmeasures(fit_H1_kov, c("chisq", 'df', "pvalue")), 3))
 cat("H1: Vollständige Mediation")
