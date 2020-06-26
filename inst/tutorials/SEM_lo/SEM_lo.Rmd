@@ -40,3 +40,111 @@ library(semPlot)
 
 
 ### Datensatz
+Wir wollen den Datensatz "StressAtWork" noch weiter untersuchen. Dazu müssen Sie diesen erneut einladen:
+
+`data("StressAtWork", package = "PsyMSc1")`
+
+Fassen Sie zunächst die Items zu Skalen zusammen via bspw. "rowMeans". Bilden Sie Skalen für Zeitdruck (ZDs), Emotionale Erschöpfung (BOEEs), Psychosomatische Beschwerden (BFs), Arbeitsorganisationale Probleme (AOPs) und Leistungserfüllung (BOLEs). Verwenden Sie als die eingeklammerten Abkürzungen als Skalennamen. Um beispielhaft ihr Vorgehen zu prüfen, vergleichen Sie bitte Ihre Ergebnisse mit folgenden Werten:
+```{r, echo=F}
+cat('
+> # BOEE: 
+> mean(StressAtWork$BOEEs) 
+[1] 2.504098 
+> sd(StressAtWork$BOEEs) 
+[1] 1.308572
+
+> # BFs 
+> mean(StressAtWork$BFs) 
+[1] 2.404918 
+> sd(StressAtWork$BFs) 
+[1] 0.7548366
+')
+```
+Wir beginnen damit die Daten zu laden und die Skalen zu bilden:
+```{r}
+data("StressAtWork", package = "PsyMSc1")
+
+StressAtWork$ZDs = rowMeans(StressAtWork[,paste0("zd",c(1, 2, 6))])
+StressAtWork$BOEEs <- rowMeans(StressAtWork[,paste0("bo",c(1, 6, 12, 19))])
+StressAtWork$BOLEs <- rowMeans(StressAtWork[,paste0("bo",c(7, 8, 21))])
+StressAtWork$AOPs <- rowMeans(StressAtWork[,paste0("aop",c(3, 4, 8))])
+StressAtWork$BFs <- rowMeans(StressAtWork[,paste0("bf",1:20)])
+```
+
+Mittelwerte und Standardabweichungen von `BOEE` und `BFs` waren angegeben:
+```{r}
+mean(StressAtWork$BOEEs) 
+sd(StressAtWork$BOEEs) 
+
+mean(StressAtWork$BFs) 
+sd(StressAtWork$BFs) 
+```
+
+## Aufgaben: Daten laden
+### Mittelwert und SD von Zeitdruck
+Berichten Sie den Mittelwert Ihrer Zeitdruckskala `r round(mean(StressAtWork$ZDs), 4)` sowie deren Standardabweichung `r round(sd(StressAtWork$ZDs), 4)`.
+```{r}
+StressAtWork$ZDs <- rowMeans(StressAtWork[,paste0("zd",c(1, 2, 6))])
+mean(StressAtWork$ZDs)
+sd(StressAtWork$ZDs)
+```
+Hierbei wurde im Feedback `StressAtWork$ZDs = rowMeans(StressAtWork[,paste0("zd",c(1, 2, 6))])` mit `=` als Zuordnung anstatt `<-`. Dies ist beides möglich. Im Feedback lies sich jedoch in OLAT `<-` nicht realisieren.
+
+## Aufgaben: Pfadanalyse
+Wir wollen das Modell aus der Sitzung erweitern und stellen folgenden Hypothesen.
+
+Zeitdruck und Arbeitsorganisationale Probleme fungieren als unabhängige Variablen und werden als korreliert angenommen (Probleme führen üblicherweise zu Zeitdruck und Zeitdruck führt oft zu Problemen). Emotionale Erschöpfung soll als Mediator fungieren und die Effekte von Zeitdruck und Arbeitsorganisationalen Problemen auf Leistungserfüllung und Psychosomatische Beschwerden mediieren. Die Residuen der beiden abhängigen Variablen  Leistungserfüllung und Psychosomatische Beschwerden werden als korreliert angenommen. Außerdem wollen wir die direkten Effekte der unabhängigen auf die abhängigen Variablen mit in das Modell aufnehmen.
+
+Wir wollen diese Hypothesen zunächst mit einem Pfadanalysemodell auf Skalenwertebasis untersuchen.
+### Pfadmdelle - Allgemein
+Siehe OLAT.
+
+### Pfadanalysemodell
+Stellen Sie das Modell in R auf und schätzen es. Benutzen Sie Labels, um die indirekten Effekte von Zeitdruck und Arbeitsorganisationale Probleme über Erschöpfung auf Psychosomatische Beschwerden und Leistungserfüllung zu quantifizieren (insgesamt 4 indirekte Effekte). Prüfen Sie diese indirekten Effekte mittels Bootstrapping auf Signifikanz.
+
+_Folgender Code führt zum Ergebnis:_
+```{r}
+model_paths <- '
+BOEEs ~ a1*ZDs + a2*AOPs
+BFs ~ b1*BOEEs + c1*ZDs + c2*AOPs
+BOLEs ~ b2*BOEEs + d2*ZDs + d2*AOPs
+ZDs ~~ AOPs
+BFs ~~ BOLEs
+
+# Definitionen
+IE_ZD_BF := a1*b1
+IE_AOP_BF := a2*b1
+
+IE_ZD_BOLE := a1*b2
+IE_AOP_BOLE := a2*b2
+'
+
+fit_paths = sem(model_paths, data = StressAtWork)
+summary(fit_paths)
+
+fit_paths_boot = sem(model_paths, data = StressAtWork, se="boot", bootstrap = 100) # bootstrap = 1000
+parameterEstimates(fit_paths_boot, ci = TRUE)
+```
+_Hierbei wurde die Anzahl der Bootstrapp-Replikationen auf 100 gesetzt_ (`bootstrap = 100`) _damit Sie beim Laden dieser Übung nicht so lange warten müssen. Sie sollten hier 1000 wählen!_
+
+Um zu prüfen, dass Sie das richtige Modell spezifiziert haben vergleichen Sie den $\chi^2$-Wert dieses Modells der bei 1.793 mit $df = 1$ liegt.
+
+Die Fit-Indizes sprechen für einen **guten Fit**. Folglich dürfen die Ergebnisse **interpretiert werden**.
+
+In der R Sitzung hatten wir in einem ähnlichen Modell den direkten Effekt von Zeitdruck auf Psychosomatische Beschwerden betrachtet. Dieser war signifikant von 0 verschieden. In diesem Modell ist dieser Effekt **nicht signifikant**.
+
+Der indirekte Effekt von Arbeitsorganisationalen Problemen auf Leistungserfüllung ist **nicht signifikant**.
+
+Der indirekte Effekt von Zeitdruck auf die Psychosomatischen Beschwerden ist **signifikant**.
+
+## Aufgaben: Strukturgleichungsmodell
+Nun wollen wir folgenden Hypothesen auch noch mittels Strukturgleichungsmodellen untersuchen:
+
+Zeitdruck und Arbeitsorganisationale Probleme fungieren als unabhängige Variablen und werden als korreliert angenommen (Probleme führen üblicherweise zu Zeitdruck und Zeitdruck führt oft zu Problemen). Emotionale Erschöpfung soll als Mediator fungieren und die Effekte von Zeitdruck und Arbeitsorganisationalen Problemen auf Leistungserfüllung und Psychosomatische Beschwerden mediieren. Die Residuen der beiden abhängigen Variablen  Leistungserfüllung und Psychosomatische Beschwerden werden als korreliert angenommen. Außerdem wollen wir die direkten Effekte der unabhängigen auf die abhängigen Variablen mit in das Modell aufnehmen.
+
+Hierbei gehen wir davon aus, dass bis auf den Psychosomatischen Beschwerden allen latenten Variablen ein reflexives Messmodell unterstellt werden kann. Setzen Sie alle Skalierer auf die erste Faktorladung pro latenter Variable.
+
+
+
+## Aufgaben: Invarianztestung
+
