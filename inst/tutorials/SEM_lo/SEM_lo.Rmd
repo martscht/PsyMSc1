@@ -103,7 +103,7 @@ Siehe OLAT.
 Stellen Sie das Modell in R auf und schätzen es. Benutzen Sie Labels, um die indirekten Effekte von Zeitdruck und Arbeitsorganisationale Probleme über Erschöpfung auf Psychosomatische Beschwerden und Leistungserfüllung zu quantifizieren (insgesamt 4 indirekte Effekte). Prüfen Sie diese indirekten Effekte mittels Bootstrapping auf Signifikanz.
 
 _Folgender Code führt zum Ergebnis:_
-```{r}
+```{r, results="hide"}
 model_paths <- '
 BOEEs ~ a1*ZDs + a2*AOPs
 BFs ~ b1*BOEEs + c1*ZDs + c2*AOPs
@@ -121,9 +121,18 @@ IE_AOP_BOLE := a2*b2
 
 fit_paths = sem(model_paths, data = StressAtWork)
 summary(fit_paths)
+```
 
+```{r, echo = F}
+lavaan::summary(fit_paths)
+```
+
+```{r, results = "hide"}
 fit_paths_boot = sem(model_paths, data = StressAtWork, se="boot", bootstrap = 100) # bootstrap = 1000
 parameterEstimates(fit_paths_boot, ci = TRUE)
+```
+```{r, echo = F}
+print(parameterEstimates(fit_paths_boot, ci = TRUE))
 ```
 _Hierbei wurde die Anzahl der Bootstrapp-Replikationen auf 100 gesetzt_ (`bootstrap = 100`) _damit Sie beim Laden dieser Übung nicht so lange warten müssen. Sie sollten hier 1000 wählen!_
 
