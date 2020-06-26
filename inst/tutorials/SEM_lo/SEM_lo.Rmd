@@ -96,11 +96,12 @@ Wir wollen das Modell aus der Sitzung erweitern und stellen folgenden Hypothesen
 Zeitdruck und Arbeitsorganisationale Probleme fungieren als unabhängige Variablen und werden als korreliert angenommen (Probleme führen üblicherweise zu Zeitdruck und Zeitdruck führt oft zu Problemen). Emotionale Erschöpfung soll als Mediator fungieren und die Effekte von Zeitdruck und Arbeitsorganisationalen Problemen auf Leistungserfüllung und Psychosomatische Beschwerden mediieren. Die Residuen der beiden abhängigen Variablen  Leistungserfüllung und Psychosomatische Beschwerden werden als korreliert angenommen. Außerdem wollen wir die direkten Effekte der unabhängigen auf die abhängigen Variablen mit in das Modell aufnehmen.
 
 Wir wollen diese Hypothesen zunächst mit einem Pfadanalysemodell auf Skalenwertebasis untersuchen.
+
 ### Pfadmdelle - Allgemein
 Siehe OLAT: _Mit SEM und Pfadanalysen soll die Struktur in der Kovarianzmatrix der Daten beschrieben werden. Durch die systematische Modellierung der Messfehler in SEM unterscheiden sich die Ergebnisse, die mit Pfadanalysen und Mittelwerte über Skalen bestimmt werden, von jenen, die durch SEM bestimmt werden, wenn Messfehler vorhanden sind. Ist dies der Fall, so werden Effekte konsistent unterschätzt und fallen zu klein aus (in Pfadmodellen)._
 
 ### Pfadanalysemodell
-Stellen Sie das Modell in R auf und schätzen es. Benutzen Sie Labels, um die indirekten Effekte von Zeitdruck und Arbeitsorganisationale Probleme über Erschöpfung auf Psychosomatische Beschwerden und Leistungserfüllung zu quantifizieren (insgesamt 4 indirekte Effekte). Prüfen Sie diese indirekten Effekte mittels Bootstrapping auf Signifikanz.
+Stellen Sie das Modell in `R` auf und schätzen es. Benutzen Sie Labels, um die indirekten Effekte von Zeitdruck und Arbeitsorganisationale Probleme über Erschöpfung auf Psychosomatische Beschwerden und Leistungserfüllung zu quantifizieren (insgesamt 4 indirekte Effekte). Prüfen Sie diese indirekten Effekte mittels Bootstrapping auf Signifikanz.
 
 _Folgender Code führt zum Ergebnis:_
 ```{r, results="hide"}
@@ -135,7 +136,7 @@ _Stehen die Fit-Indizes für einen guten Fit, so dürfen die Ergebnisse hinsicht
 
 Die Fit-Indizes sprechen für einen **guten Fit**. Folglich dürfen die Ergebnisse **interpretiert werden**.
 
-In der R Sitzung hatten wir in einem ähnlichen Modell den direkten Effekt von Zeitdruck auf Psychosomatische Beschwerden betrachtet. Dieser war signifikant von 0 verschieden. In diesem Modell ist dieser Effekt **nicht signifikant**.
+In der `R` Sitzung hatten wir in einem ähnlichen Modell den direkten Effekt von Zeitdruck auf Psychosomatische Beschwerden betrachtet. Dieser war signifikant von 0 verschieden. In diesem Modell ist dieser Effekt **nicht signifikant**.
 
 ```{r, results = "hide"}
 fit_paths_boot <- sem(model_paths, data = StressAtWork, se="boot", bootstrap = 100) # bootstrap = 1000
@@ -158,7 +159,7 @@ Zeitdruck und Arbeitsorganisationale Probleme fungieren als unabhängige Variabl
 Hierbei gehen wir davon aus, dass bis auf den Psychosomatischen Beschwerden allen latenten Variablen ein reflexives Messmodell unterstellt werden kann. Setzen Sie alle Skalierer auf die erste Faktorladung pro latenter Variable.
 
 ### SEM Modell
-Stellen Sie das Modell in R auf und schätzen es. Benutzen Sie Labels, um die indirekten Effekte von Zeitdruck und Arbeitsorganisationale Probleme über Erschöpfung auf Psychosomatische Beschwerden und Leistungserfüllung zu quantifizieren (insgesamt 4 indirekte Effekte). Prüfen Sie diese indirekten Effekte mittels Bootstrapping auf Signifikanz.
+Stellen Sie das Modell in `R` auf und schätzen es. Benutzen Sie Labels, um die indirekten Effekte von Zeitdruck und Arbeitsorganisationale Probleme über Erschöpfung auf Psychosomatische Beschwerden und Leistungserfüllung zu quantifizieren (insgesamt 4 indirekte Effekte). Prüfen Sie diese indirekten Effekte mittels Bootstrapping auf Signifikanz.
 
 _Folgender Code führt zum Ergebnis:_
 ```{r, results = "hide"}
@@ -203,7 +204,7 @@ _Der $\chi^2$-Wert liegt bei `r fitmeasures(fit_sem)["chisq"]` mit einem zugehö
 
 Der $\chi^2$-Wert zeigen auf dem 5% Niveau **eine signifikante Diskrepanz** zwischen Daten und Modell an. Die Fit-Indizes sprechen für einen **guten Fit**. Folglich dürfen die Ergebnisse **interpretiert werden**.
 
-In der R Sitzung hatten wir in einem ähnlichen SEM-Modell den direkten Effekt von Zeitdruck auf Psychosomatische Beschwerden betrachtet. Dieser war nicht signifikant von 0 verschieden. In diesem Modell ist dieser Effekt **nicht signifikant**.
+In der `R` Sitzung hatten wir in einem ähnlichen SEM-Modell den direkten Effekt von Zeitdruck auf Psychosomatische Beschwerden betrachtet. Dieser war nicht signifikant von 0 verschieden. In diesem Modell ist dieser Effekt **nicht signifikant**.
 
 _Das CI für den indirekten Effekt von Arbeitsorganisationalen Problemen auf Leistungserfüllung schließt die Null ein, während das CI für den  indirekten Effekt von Zeitdruck auf die Psychosomatischen Beschwerden dies NICHT tut:_
 
@@ -221,7 +222,7 @@ Der indirekte Effekt von Arbeitsorganisationalen Problemen auf Leistungserfüllu
 Der indirekte Effekt von Zeitdruck auf die Psychosomatischen Beschwerden ist **signifikant**.
 
 ### Fit Indizes
-Sie sind sich nicht sicher, ob die Fit-Index-Kriterien auch für Ihr Modell passen und benutzen deshalb die ezCutoffs-Funktion, ob dies genauer zu Untersuchen. Die Funktion hat folgenden Output (das Modell hatten wir zuvor model_sem genannt):
+Sie sind sich nicht sicher, ob die Fit-Index-Kriterien auch für Ihr Modell passen und benutzen deshalb die `ezCutoffs`-Funktion, ob dies genauer zu Untersuchen. Die Funktion hat folgenden Output (das Modell hatten wir zuvor model_sem genannt):
 
  
 ```{r, eval = F}
@@ -255,13 +256,13 @@ Um zu prüfen, dass Ihr Modell richtig aufgestellt wurde, vergleichen Sie den $\
 
 _Hierbei ist zu beachten, dass nur die angenommenen Effekte spezifiziert werden. Folgende Beziehungen wurden angenommen:_
 
-_AOP --> ZD_
+_AOP $\longrightarrow$ ZD_
 
-_AOP --> BFs_
+_AOP $\longrightarrow$ BFs_
 
-_ZD --> BOEE_
+_ZD $\longrightarrow$ BOEE_
 
-_BOEE --> BFs_
+_BOEE $\longrightarrow$ BFs_
 
 _Alle weiteren Effekte sind auf 0 restringiert und können somit auch nicht auf Signifikanz geprüft werden (sie würden ja ohne Unsicherheit auf den Wert 0 festgelegt - ein schlechter Modellfit würde gegen diese Restriktionen sprechen). Es ergibt sich bspw. folgendes Modell:_
 
@@ -298,20 +299,22 @@ _Der Summary entnehmen wir, dass wir das richtige Modell geschätzt haben!_
  
 _Diese Effekte mussten benannt werden. Im obigen Modell haben wir sie so benannt:_
 
-_AOP --> ZD: aAZ_
+_AOP $\longrightarrow$ ZD: aAZ_
 
-_AOP --> BOEE: bAE_
+_AOP $\longrightarrow$ BOEE: bAE_
 
-_ZD --> BOEE: bZE_
+_ZD $\longrightarrow$ BOEE: bZE_
 
-_BOEE --> BFs: bEP_
+_BOEE $\longrightarrow$ BFs: bEP_
 
 _wobei hier a für Effekte von UV zu Mediatoren genannt werden und b Effekte von Mediatoren auf Mediatoren oder auf AVs. Die Buchstaben hinter den Parametern "a" und "b" zeigen die beiden Variablen an, um die es ging: A = AOP, Z = ZD, E = BOEE (Erschöpfung) und P = BFs (Psychosomatische Beschwerden). Es können nun 2 indirekte Effekte bestimmt werden:_
 
-_AOP --> ZD --> BOEE --> BFs in `R`: `IE_AZEP := aAZ*bZE*bEP`_
-_AOP --> BOEE --> BFs in `R`: `IE_AEP := aAE*bEP`_
+_AOP $\longrightarrow$ ZD $\longrightarrow$ BOEE $\longrightarrow$ BFs in `R`: `IE_AZEP := aAZ*bZE*bEP`_
+
+_AOP $\longrightarrow$ BOEE $\longrightarrow$ BFs in `R`: `IE_AEP := aAE*bEP`_
 _diese addiert ergeben den totalen Effekt:_
-_(AOP --> ZD --> BOEE --> BFs) + (AOP --> BOEE --> BFs) in `R`: `T_AP := IE_AZEP + IE_AEP`_
+
+_(AOP $\longrightarrow$ ZD $\longrightarrow$ BOEE $\longrightarrow$ BFs) + (AOP $\longrightarrow$ BOEE $\longrightarrow$ BFs) in `R`: `T_AP := IE_AZEP + IE_AEP`_
 
 
 Wie groß ist der direkte Effekt von Arbeitsorganisationalen Problemen auf die Psychosomatischen Beschwerden? Antwort = **0**. Ist dieser Effekt in diesem Modell mit Unsicherheit verbunden (kann man diesen Effekt auf Signifikanz prüfen)? Antwort = **nein**  ("ja" vs. "nein").
@@ -419,4 +422,3 @@ Berichten Sie den t-Wert und den zugehörigen p-Wert: t = **2.2727**, p = **0.02
 
 Geht der t-Test mit Ihrer Invarianztestung konform?  Antwort ("ja" vs. "nein"): **ja**.
 
- 
