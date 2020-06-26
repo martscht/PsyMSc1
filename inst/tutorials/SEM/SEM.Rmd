@@ -37,7 +37,7 @@ library(lavaan)
 library(semPlot) # grafische Darstellung von Pfadanalyse- und Strukturgleichungsmodellen
 ```
 
-Den gesamten R-Code, der in dieser Sitzung genutzt wird, können Sie [`r fontawesome::fa("download")` hier herunterladen](https://raw.githubusercontent.com/martscht/PsyMSc1/master/inst/scripts/EFA.R). 
+Den gesamten R-Code, der in dieser Sitzung genutzt wird, können Sie [`r fontawesome::fa("download")` hier herunterladen](https://raw.githubusercontent.com/martscht/PsyMSc1/master/inst/scripts/SEM.R). 
 
 ## Datensatz
 Der Datensatz `StressAtWork`, den wir im Folgenden untersuchen wollen, ist eine Zusammenstellung aus mehreren Studien der Arbeits- und Organisationspsychologie Abteilung der Goethe-Universität, in welchen Call-Center-Mitarbeiter untersucht wurden. Wir können diesen wie gewohnt laden:
