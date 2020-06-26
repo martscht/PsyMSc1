@@ -46,6 +46,10 @@ Loesungen_3 <- function(password) {
 #' @rdname Loesungen
 #' @export
 Loesungen_4 <- function(password) {
-  message('Leider ist die Sitzung noch nicht fertig :(.')
+  if (digest::digest(password) != "8907a926ba43ceb87047b0055529250c") {
+    stop('Leider haben Sie nicht das richtige Passwort eingegeben.', call. = FALSE)
+  }  else {
+    compile('SEM_lo')
+  }
 }
 

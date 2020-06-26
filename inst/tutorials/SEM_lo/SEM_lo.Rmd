@@ -21,7 +21,9 @@ library(gradethis)    # grade Code from input in HTML
 library(shiny)        # nice appearance in R
 library(fontawesome)  # nice fonts
 library(corrplot)     # Korrelationsmatrix grafisch darstellen
-library(psych)        # EFA durchführen
+library(lavaan)
+library(ezCutoffs)
+library(semPlot)
 
 knitr::opts_chunk$set(exercise.checker = gradethis::grade_learnr)
 ```
@@ -31,7 +33,9 @@ knitr::opts_chunk$set(exercise.checker = gradethis::grade_learnr)
 Am besten beginnen Sie mit dem Laden der nötigen R-Pakete:
 
 ```{r, eval = F}
-library(psych) 
+library(lavaan)
+library(ezCutoffs)
+library(semPlot)
 ```
 
 
