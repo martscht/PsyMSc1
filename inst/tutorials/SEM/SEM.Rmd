@@ -1634,7 +1634,7 @@ $\phi$ ist die Varianz der latenten Variable, $\xi$, und $\theta$ ist die Residu
 
 $$\hat{\mathbb{V}ar}[Y] = \frac{1}{n}\sum_{i=1}^n(Y_i-\bar{Y})^2,$$
 
-wobei $\bar{Y}$ der Mittelwert von $Y$ ist. Wenn wir nun alle Einträge von $Y$ mit einer Konstanten multiplizieren, also für jede Person $i$ $aY_i$ berechnen (z.B. $a=10$) und die Varianz bestimmen (der Mittelwert von $aY$ ist einfach $a\bar{Y}$), dann ergibt sich:
+wobei $\bar{Y}$ der Mittelwert von $Y$ ist. Wenn wir nun alle Einträge von $Y$ mit einer Konstanten multiplizieren, also für jede Person $i$ das Produkt $aY_i$ berechnen (z.B. $a=10$) und die Varianz bestimmen (der Mittelwert von $aY$ ist einfach $a\bar{Y}$), dann ergibt sich:
 
 $$\hat{\mathbb{V}ar}[aY] = \frac{1}{n}\sum_{i=1}^n(aY_i-a\bar{Y})^2=\frac{1}{n}\sum_{i=1}^n\big(a(Y_i-a\bar{Y})\big)^2=\frac{1}{n}\sum_{i=1}^na^2(Y_i-\bar{Y})^2=a^2\frac{1}{n}\sum_{i=1}^n(Y_i-\bar{Y})^2=a^2\hat{\mathbb{V}ar}[Y],$$
 
