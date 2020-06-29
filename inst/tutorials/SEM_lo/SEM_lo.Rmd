@@ -108,7 +108,7 @@ _Folgender Code führt zum Ergebnis:_
 model_paths <- '
 BOEEs ~ a1*ZDs + a2*AOPs
 BFs ~ b1*BOEEs + c1*ZDs + c2*AOPs
-BOLEs ~ b2*BOEEs + d2*ZDs + d2*AOPs
+BOLEs ~ b2*BOEEs + d1*ZDs + d2*AOPs
 ZDs ~~ AOPs
 BFs ~~ BOLEs
 
@@ -130,11 +130,8 @@ lavaan::summary(fit_paths)
 _Der Summary entnehmen wir, dass wir das richtige Modell geschätzt haben!_
 
 
-Um zu prüfen, dass Sie das richtige Modell spezifiziert haben, vergleichen Sie den $\chi^2$-Wert dieses Modells der bei 1.793 mit $df = 1$ liegt.
+Um zu prüfen, dass Sie das richtige Modell spezifiziert haben, vergleichen Sie den $\chi^2$-Wert dieses Modells der bei 0 mit $df = 0$ liegt.
 
-_Stehen die Fit-Indizes für einen guten Fit, so dürfen die Ergebnisse hinsichtlich Signifikanzen etc. interpretiert werden._
-
-Die Fit-Indizes sprechen für einen **guten Fit**. Folglich dürfen die Ergebnisse **interpretiert werden**.
 
 In der `R` Sitzung hatten wir in einem ähnlichen Modell den direkten Effekt von Zeitdruck auf psychosomatische Beschwerden betrachtet. Dieser war signifikant von 0 verschieden. In diesem Modell ist dieser Effekt **nicht signifikant**.
 
