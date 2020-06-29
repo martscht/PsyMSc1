@@ -44,7 +44,7 @@ Wir wollen den Datensatz "StressAtWork" noch weiter untersuchen. Dazu müssen Si
 
 `data("StressAtWork", package = "PsyMSc1")`
 
-Fassen Sie zunächst die Items zu Skalen zusammen via bspw. "rowMeans". Bilden Sie Skalen für Zeitdruck (ZDs), Emotionale Erschöpfung (BOEEs), Psychosomatische Beschwerden (BFs), Arbeitsorganisationale Probleme (AOPs) und Leistungserfüllung (BOLEs). Verwenden Sie als die eingeklammerten Abkürzungen als Skalennamen. Um beispielhaft ihr Vorgehen zu prüfen, vergleichen Sie bitte Ihre Ergebnisse mit folgenden Werten:
+Fassen Sie zunächst die Items zu Skalen zusammen via bspw. "rowMeans". Bilden Sie Skalen für Zeitdruck (ZDs), emotionale Erschöpfung (BOEEs), psychosomatische Beschwerden (BFs), arbeitsorganisationale Probleme (AOPs) und Leistungserfüllung (BOLEs). Verwenden Sie die eingeklammerten Abkürzungen als Skalennamen. Um beispielhaft ihr Vorgehen zu prüfen, vergleichen Sie bitte Ihre Ergebnisse mit folgenden Werten:
 ```{r, echo=F}
 cat('
 > # BOEE: 
@@ -60,7 +60,7 @@ cat('
 [1] 0.7548366
 ')
 ```
-Wir beginnen damit die Daten zu laden und die Skalen zu bilden:
+Wir beginnen damit, die Daten zu laden und die Skalen zu bilden:
 ```{r}
 data("StressAtWork", package = "PsyMSc1")
 
@@ -88,20 +88,20 @@ StressAtWork$ZDs <- rowMeans(StressAtWork[,paste0("zd",c(1, 2, 6))])
 mean(StressAtWork$ZDs)
 sd(StressAtWork$ZDs)
 ```
-Hierbei wurde im Feedback `StressAtWork$ZDs = rowMeans(StressAtWork[,paste0("zd",c(1, 2, 6))])` mit `=` als Zuordnung anstatt `<-`. Dies ist beides möglich. Im Feedback lies sich jedoch in OLAT `<-` nicht realisieren. **Aus diesem Grund steht in den meisten Fällen im Feedback in OLAT `=` anstatt von `<-`!**
+Hierbei wurde im Feedback `StressAtWork$ZDs = rowMeans(StressAtWork[,paste0("zd",c(1, 2, 6))])` mit `=` als Zuordnung statt mit `<-`. Dies ist beides möglich. Im Feedback lies sich jedoch in OLAT `<-` nicht realisieren. **Aus diesem Grund steht in den meisten Fällen im Feedback in OLAT `=` anstatt von `<-`!**
 
 ## Aufgaben: Pfadanalyse
-Wir wollen das Modell aus der Sitzung erweitern und stellen folgenden Hypothesen.
+Wir wollen das Modell aus der Sitzung erweitern und stellen folgende Hypothesen.
 
-Zeitdruck und Arbeitsorganisationale Probleme fungieren als unabhängige Variablen und werden als korreliert angenommen (Probleme führen üblicherweise zu Zeitdruck und Zeitdruck führt oft zu Problemen). Emotionale Erschöpfung soll als Mediator fungieren und die Effekte von Zeitdruck und Arbeitsorganisationalen Problemen auf Leistungserfüllung und Psychosomatische Beschwerden mediieren. Die Residuen der beiden abhängigen Variablen  Leistungserfüllung und Psychosomatische Beschwerden werden als korreliert angenommen. Außerdem wollen wir die direkten Effekte der unabhängigen auf die abhängigen Variablen mit in das Modell aufnehmen.
+Zeitdruck und arbeitsorganisationale Probleme fungieren als unabhängige Variablen und werden als korreliert angenommen (Probleme führen üblicherweise zu Zeitdruck und Zeitdruck führt oft zu Problemen). Emotionale Erschöpfung soll als Mediator fungieren und die Effekte von Zeitdruck und arbeitsorganisationalen Problemen auf Leistungserfüllung und psychosomatische Beschwerden mediieren. Die Residuen der beiden abhängigen Variablen  Leistungserfüllung und psychosomatische Beschwerden werden als korreliert angenommen. Außerdem wollen wir die direkten Effekte der unabhängigen auf die abhängigen Variablen mit in das Modell aufnehmen.
 
 Wir wollen diese Hypothesen zunächst mit einem Pfadanalysemodell auf Skalenwertebasis untersuchen.
 
-### Pfadmdelle - Allgemein
-Siehe OLAT: _Mit SEM und Pfadanalysen soll die Struktur in der Kovarianzmatrix der Daten beschrieben werden. Durch die systematische Modellierung der Messfehler in SEM unterscheiden sich die Ergebnisse, die mit Pfadanalysen und Mittelwerte über Skalen bestimmt werden, von jenen, die durch SEM bestimmt werden, wenn Messfehler vorhanden sind. Ist dies der Fall, so werden Effekte konsistent unterschätzt und fallen zu klein aus (in Pfadmodellen)._
+### Pfadmodelle - Allgemein
+Siehe OLAT: _Mit SEM und Pfadanalysen soll die Struktur in der Kovarianzmatrix der Daten beschrieben werden. Durch die systematische Modellierung der Messfehler in SEM unterscheiden sich die Ergebnisse, die mit Pfadanalysen und Mittelwerten über Skalen bestimmt werden, von jenen, die durch SEM bestimmt werden, wenn Messfehler vorhanden sind. Ist dies der Fall, so werden Effekte konsistent unterschätzt und fallen zu klein aus (in Pfadmodellen)._
 
 ### Pfadanalysemodell
-Stellen Sie das Modell in `R` auf und schätzen es. Benutzen Sie Labels, um die indirekten Effekte von Zeitdruck und Arbeitsorganisationale Probleme über Erschöpfung auf Psychosomatische Beschwerden und Leistungserfüllung zu quantifizieren (insgesamt 4 indirekte Effekte). Prüfen Sie diese indirekten Effekte mittels Bootstrapping auf Signifikanz.
+Stellen Sie das Modell in `R` auf und schätzen es. Benutzen Sie Labels, um die indirekten Effekte von Zeitdruck und arbeitsorganisationale Probleme über Erschöpfung auf psychosomatische Beschwerden und Leistungserfüllung zu quantifizieren (insgesamt 4 indirekte Effekte). Prüfen Sie diese indirekten Effekte mittels Bootstrapping auf Signifikanz.
 
 _Folgender Code führt zum Ergebnis:_
 ```{r, results="hide"}
@@ -130,13 +130,13 @@ lavaan::summary(fit_paths)
 _Der Summary entnehmen wir, dass wir das richtige Modell geschätzt haben!_
 
 
-Um zu prüfen, dass Sie das richtige Modell spezifiziert haben vergleichen Sie den $\chi^2$-Wert dieses Modells der bei 1.793 mit $df = 1$ liegt.
+Um zu prüfen, dass Sie das richtige Modell spezifiziert haben, vergleichen Sie den $\chi^2$-Wert dieses Modells der bei 1.793 mit $df = 1$ liegt.
 
 _Stehen die Fit-Indizes für einen guten Fit, so dürfen die Ergebnisse hinsichtlich Signifikanzen etc. interpretiert werden._
 
 Die Fit-Indizes sprechen für einen **guten Fit**. Folglich dürfen die Ergebnisse **interpretiert werden**.
 
-In der `R` Sitzung hatten wir in einem ähnlichen Modell den direkten Effekt von Zeitdruck auf Psychosomatische Beschwerden betrachtet. Dieser war signifikant von 0 verschieden. In diesem Modell ist dieser Effekt **nicht signifikant**.
+In der `R` Sitzung hatten wir in einem ähnlichen Modell den direkten Effekt von Zeitdruck auf psychosomatische Beschwerden betrachtet. Dieser war signifikant von 0 verschieden. In diesem Modell ist dieser Effekt **nicht signifikant**.
 
 ```{r, results = "hide"}
 fit_paths_boot <- sem(model_paths, data = StressAtWork, se="boot", bootstrap = 100) # bootstrap = 1000
@@ -145,21 +145,21 @@ parameterEstimates(fit_paths_boot, ci = TRUE)
 ```{r, echo = F}
 print(parameterEstimates(fit_paths_boot, ci = TRUE))
 ```
-_Hierbei wurde die Anzahl der Bootstrapp-Replikationen auf 100 gesetzt_ (`bootstrap = 100`) _damit Sie beim Laden dieser Übung nicht so lange warten müssen. Sie sollten hier 1000 wählen!_
+_Hierbei wurde die Anzahl der Bootstrap-Replikationen auf 100 gesetzt_ (`bootstrap = 100`) _damit Sie beim Laden dieser Übung nicht so lange warten müssen. Sie sollten hier 1000 wählen!_
 
-Der indirekte Effekt von Arbeitsorganisationalen Problemen auf Leistungserfüllung ist **nicht signifikant**.
+Der indirekte Effekt von arbeitsorganisationalen Problemen auf Leistungserfüllung ist **nicht signifikant**.
 
-Der indirekte Effekt von Zeitdruck auf die Psychosomatischen Beschwerden ist **signifikant**.
+Der indirekte Effekt von Zeitdruck auf die psychosomatischen Beschwerden ist **signifikant**.
 
 ## Aufgaben: Strukturgleichungsmodell
 Nun wollen wir folgenden Hypothesen auch noch mittels Strukturgleichungsmodellen untersuchen:
 
-Zeitdruck und Arbeitsorganisationale Probleme fungieren als unabhängige Variablen und werden als korreliert angenommen (Probleme führen üblicherweise zu Zeitdruck und Zeitdruck führt oft zu Problemen). Emotionale Erschöpfung soll als Mediator fungieren und die Effekte von Zeitdruck und Arbeitsorganisationalen Problemen auf Leistungserfüllung und Psychosomatische Beschwerden mediieren. Die Residuen der beiden abhängigen Variablen  Leistungserfüllung und Psychosomatische Beschwerden werden als korreliert angenommen. Außerdem wollen wir die direkten Effekte der unabhängigen auf die abhängigen Variablen mit in das Modell aufnehmen.
+Zeitdruck und arbeitsorganisationale Probleme fungieren als unabhängige Variablen und werden als korreliert angenommen (Probleme führen üblicherweise zu Zeitdruck und Zeitdruck führt oft zu Problemen). Emotionale Erschöpfung soll als Mediator fungieren und die Effekte von Zeitdruck und arbeitsorganisationalen Problemen auf Leistungserfüllung und psychosomatische Beschwerden mediieren. Die Residuen der beiden abhängigen Variablen  Leistungserfüllung und psychosomatische Beschwerden werden als korreliert angenommen. Außerdem wollen wir die direkten Effekte der unabhängigen auf die abhängigen Variablen mit in das Modell aufnehmen.
 
-Hierbei gehen wir davon aus, dass bis auf den Psychosomatischen Beschwerden allen latenten Variablen ein reflexives Messmodell unterstellt werden kann. Setzen Sie alle Skalierer auf die erste Faktorladung pro latenter Variable.
+Hierbei gehen wir davon aus, dass bis auf die psychosomatischen Beschwerden allen latenten Variablen ein reflexives Messmodell unterstellt werden kann. Setzen Sie alle Skalierer auf die erste Faktorladung pro latenter Variable.
 
 ### SEM Modell
-Stellen Sie das Modell in `R` auf und schätzen es. Benutzen Sie Labels, um die indirekten Effekte von Zeitdruck und Arbeitsorganisationale Probleme über Erschöpfung auf Psychosomatische Beschwerden und Leistungserfüllung zu quantifizieren (insgesamt 4 indirekte Effekte). Prüfen Sie diese indirekten Effekte mittels Bootstrapping auf Signifikanz.
+Stellen Sie das Modell in `R` auf und schätzen Sie es. Benutzen Sie Labels, um die indirekten Effekte von Zeitdruck und arbeitsorganisationale Probleme über Erschöpfung auf psychosomatische Beschwerden und Leistungserfüllung zu quantifizieren (insgesamt 4 indirekte Effekte). Prüfen Sie diese indirekten Effekte mittels Bootstrapping auf Signifikanz.
 
 _Folgender Code führt zum Ergebnis:_
 ```{r, results = "hide"}
@@ -196,17 +196,17 @@ lavaan::summary(fit_sem, fit.measures=T)
 
 _Der Summary entnehmen wir, dass wir das richtige Modell geschätzt haben!_
 
-Um zu prüfen, dass Sie das richtige Modell spezifiziert haben vergleichen Sie den $\chi^2$-Wert dieses Modells der bei 93.466 mit df = 69 liegt.
+Um zu prüfen, dass Sie das richtige Modell spezifiziert haben, vergleichen Sie den $\chi^2$-Wert dieses Modells der bei 93.466 mit df = 69 liegt.
 
 _Der $\chi^2$-Wert liegt bei `r fitmeasures(fit_sem)["chisq"]` mit einem zugehörigen $p$-Wert von `r fitmeasures(fit_sem)["pvalue"]`. Die Fit-Indizes liegen bei: CFI = `r fitmeasures(fit_sem)["cfi"]`, TLI = `r fitmeasures(fit_sem)["tli"]`, RMSEA = `r fitmeasures(fit_sem)["rmsea"]` und SRMR = `r fitmeasures(fit_sem)["srmr"]` und zeigen alle somit einen guten Fit an (da größer [CFI,TLI] bzw. kleiner [RMSEA, SRMR] als der Cut-Off-Wert)._
 
 
 
-Der $\chi^2$-Wert zeigen auf dem 5% Niveau **eine signifikante Diskrepanz** zwischen Daten und Modell an. Die Fit-Indizes sprechen für einen **guten Fit**. Folglich dürfen die Ergebnisse **interpretiert werden**.
+Der $\chi^2$-Wert zeigt auf dem 5% Niveau **eine signifikante Diskrepanz** zwischen Daten und Modell an. Die Fit-Indizes sprechen für einen **guten Fit**. Folglich dürfen die Ergebnisse **interpretiert werden**.
 
-In der `R` Sitzung hatten wir in einem ähnlichen SEM-Modell den direkten Effekt von Zeitdruck auf Psychosomatische Beschwerden betrachtet. Dieser war nicht signifikant von 0 verschieden. In diesem Modell ist dieser Effekt **nicht signifikant**.
+In der `R` Sitzung hatten wir in einem ähnlichen SEM-Modell den direkten Effekt von Zeitdruck auf psychosomatische Beschwerden betrachtet. Dieser war nicht signifikant von 0 verschieden. In diesem Modell ist dieser Effekt **nicht signifikant**.
 
-_Das CI für den indirekten Effekt von Arbeitsorganisationalen Problemen auf Leistungserfüllung schließt die Null ein, während das CI für den  indirekten Effekt von Zeitdruck auf die Psychosomatischen Beschwerden dies NICHT tut:_
+_Das CI für den indirekten Effekt von arbeitsorganisationalen Problemen auf Leistungserfüllung schließt die Null ein, während das CI für den  indirekten Effekt von Zeitdruck auf die psychosomatischen Beschwerden dies NICHT tut:_
 
 ```{r, results = "hide"}
 fit_sem_boot = sem(model_sem, data = StressAtWork, se="boot", bootstrap = 100) # bootstrap = 1000
@@ -217,12 +217,12 @@ parameterEstimates(fit_sem_boot, ci = TRUE)
 print(parameterEstimates(fit_sem_boot, ci = TRUE))
 ```
 
-Der indirekte Effekt von Arbeitsorganisationalen Problemen auf Leistungserfüllung ist **nicht signifikant von 0 verschieden**.
+Der indirekte Effekt von arbeitsorganisationalen Problemen auf Leistungserfüllung ist **nicht signifikant von 0 verschieden**.
 
-Der indirekte Effekt von Zeitdruck auf die Psychosomatischen Beschwerden ist **signifikant**.
+Der indirekte Effekt von Zeitdruck auf die psychosomatischen Beschwerden ist **signifikant**.
 
 ### Fit Indizes
-Sie sind sich nicht sicher, ob die Fit-Index-Kriterien auch für Ihr Modell passen und benutzen deshalb die `ezCutoffs`-Funktion, ob dies genauer zu Untersuchen. Die Funktion hat folgenden Output (das Modell hatten wir zuvor model_sem genannt):
+Sie sind sich nicht sicher, ob die Fit-Index-Kriterien auch für Ihr Modell passen und benutzen deshalb die `ezCutoffs`-Funktion, um dies genauer zu Untersuchen. Die Funktion hat folgenden Output (das Modell hatten wir zuvor model_sem genannt):
 
  
 ```{r, eval = F}
@@ -241,16 +241,16 @@ cat('
 ```
 Wie viele Simulationen wurden durchgeführt? Antwort = **1000**. 
 
-_mit `n_rep = 10^3` sagen wir, dass wir 1000 Replikationen betrachten wollen. Um zu entscheiden, ob die Fit-Indizes extrem sind müssen wir gucken, wie sich die 1. Datenspalte im Vergleich zur 2. Datenspalte verhält._
+_mit `n_rep = 10^3` sagen wir, dass wir 1000 Replikationen betrachten wollen. Um zu entscheiden, ob die Fit-Indizes extrem sind, müssen wir gucken, wie sich die 1. Datenspalte im Vergleich zur 2. Datenspalte verhält._
 
 
-Hier wird nun ein für den CFI **ein guter Fit** angezeigt, für den TLI wird **ein guter Fit**  angzeigt, für den RMSEA wird **kein guter Fit** angezeigt und für den SRMR wird  **kein guter Fit** angzeigt. Somit kommen **nicht alle Fit-Indizes zum selben Schluss**. Des Weiteren **widersprechen die hier angegeben Cut-Kriterien** zum Teil den Daumenregeln.
+Hier wird nun  für den CFI **ein guter Fit** angezeigt, für den TLI wird **ein guter Fit**  angzeigt, für den RMSEA wird **kein guter Fit** angezeigt und für den SRMR wird  **kein guter Fit** angzeigt. Somit kommen **nicht alle Fit-Indizes zum selben Schluss**. Des Weiteren **widersprechen die hier angegeben Cut-Kriterien** zum Teil den Daumenregeln.
 
-_Wenn große Werte schlecht sind, dann spricht man nicht mehr von einem guten Fit, wenn der beobachtete Wert (Empirical Fit) größer als der Cutoff ist. Wenn kleine Werte schlecht sind, dann dann spricht man nicht mehr von einem guten Fit, wenn der beobachtete Wert (Empirical Fit) kleiner als der Cutoff ist. Demnach zeigen CFI und TLI guten und RMSEA und SRMR keinen guten Fit an._
+_Wenn große Werte schlecht sind, dann spricht man nicht mehr von einem guten Fit, wenn der beobachtete Wert (Empirical Fit) größer als der Cutoff ist. Wenn kleine Werte schlecht sind, dann spricht man nicht mehr von einem guten Fit, wenn der beobachtete Wert (Empirical Fit) kleiner als der Cutoff ist. Demnach zeigen CFI und TLI guten und RMSEA und SRMR keinen guten Fit an._
 
 
 ### Komplexere indirekte Effekte
-Wir wollen nun die Hypothesen etwas abändern. Leistungserfüllung scheint keine besonders interessante Variable in diesem Zusammenhang zu sein. Deshalb lassen wir diese raus. Stattdessen wollen wir untersuchen, ob nicht ein anderes Mediationsmodell die Daten besser beschreibt. Wir nehmen dazu an, dass Arbeitsorganisationale Probleme zu Zeitdruck führen, Zeitdruck zu Emotionaler Erschöpfung führt und Emotionale Erschöpfung letztendlich zu Psychosomatischen Beschwerden führt. Außerdem nehmen wir an, dass Arbeitsorganisationale Probleme auch direkt zu Erschöpfung führen kann. Darüber hinaus nehmen wir keine weiteren Beziehungen zwischen den latenten Variablen an. Schätzen Sie das Modell und benutzen sie Labels, um die latenten Beziehungen zu quantifizieren. Diese brauchen Sie, um die folgenden Aufgaben zu lösen:
+Wir wollen nun die Hypothesen etwas abändern. Leistungserfüllung scheint keine besonders interessante Variable in diesem Zusammenhang zu sein. Deshalb lassen wir diese raus. Stattdessen wollen wir untersuchen, ob nicht ein anderes Mediationsmodell die Daten besser beschreibt. Wir nehmen dazu an, dass arbeitsorganisationale Probleme zu Zeitdruck führen, Zeitdruck zu emotionaler Erschöpfung führt und emotionale Erschöpfung letztendlich zu psychosomatischen Beschwerden führt. Außerdem nehmen wir an, dass arbeitsorganisationale Probleme auch direkt zu Erschöpfung führen können. Darüber hinaus nehmen wir keine weiteren Beziehungen zwischen den latenten Variablen an. Schätzen Sie das Modell und benutzen sie Labels, um die latenten Beziehungen zu quantifizieren. Diese brauchen Sie, um die folgenden Aufgaben zu lösen:
 
 Um zu prüfen, dass Ihr Modell richtig aufgestellt wurde, vergleichen Sie den $\chi^2$-Wert ihres Modells mit 56.544 bei 41 df.
 
@@ -264,7 +264,7 @@ _ZD $\longrightarrow$ BOEE_
 
 _BOEE $\longrightarrow$ BFs_
 
-_Alle weiteren Effekte sind auf 0 restringiert und können somit auch nicht auf Signifikanz geprüft werden (sie würden ja ohne Unsicherheit auf den Wert 0 festgelegt - ein schlechter Modellfit würde gegen diese Restriktionen sprechen). Es ergibt sich bspw. folgendes Modell:_
+_Alle weiteren Effekte sind auf 0 restringiert und können somit auch nicht auf Signifikanz geprüft werden (sie wurden ja ohne Unsicherheit auf den Wert 0 festgelegt - ein schlechter Modellfit würde gegen diese Restriktionen sprechen). Es ergibt sich bspw. folgendes Modell:_
 
 ```{r, results = "hide"}
 model_sem <- '
@@ -307,7 +307,7 @@ _ZD $\longrightarrow$ BOEE: bZE_
 
 _BOEE $\longrightarrow$ BFs: bEP_
 
-_wobei hier a für Effekte von UV zu Mediatoren genannt werden und b Effekte von Mediatoren auf Mediatoren oder auf AVs. Die Buchstaben hinter den Parametern "a" und "b" zeigen die beiden Variablen an, um die es ging: A = AOP, Z = ZD, E = BOEE (Erschöpfung) und P = BFs (Psychosomatische Beschwerden). Es können nun 2 indirekte Effekte bestimmt werden:_
+_wobei hier a für Effekte von UV zu Mediatoren genannt werden und b Effekte von Mediatoren auf Mediatoren oder auf AVs. Die Buchstaben hinter den Parametern "a" und "b" zeigen die beiden Variablen an, um die es ging: A = AOP, Z = ZD, E = BOEE (Erschöpfung) und P = BFs (psychosomatische Beschwerden). Es können nun 2 indirekte Effekte bestimmt werden:_
 
 _AOP $\longrightarrow$ ZD $\longrightarrow$ BOEE $\longrightarrow$ BFs in `R`: `IE_AZEP := aAZ*bZE*bEP`_
 
@@ -317,7 +317,7 @@ _diese addiert ergeben den totalen Effekt:_
 _(AOP $\longrightarrow$ ZD $\longrightarrow$ BOEE $\longrightarrow$ BFs) + (AOP $\longrightarrow$ BOEE $\longrightarrow$ BFs) in `R`: `T_AP := IE_AZEP + IE_AEP`_
 
 
-Wie groß ist der direkte Effekt von Arbeitsorganisationalen Problemen auf die Psychosomatischen Beschwerden? Antwort = **0**. Ist dieser Effekt in diesem Modell mit Unsicherheit verbunden (kann man diesen Effekt auf Signifikanz prüfen)? Antwort = **nein**  ("ja" vs. "nein").
+Wie groß ist der direkte Effekt von arbeitsorganisationalen Problemen auf die psychosomatischen Beschwerden? Antwort = **0**. Ist dieser Effekt in diesem Modell mit Unsicherheit verbunden (kann man diesen Effekt auf Signifikanz prüfen)? Antwort = **nein**  ("ja" vs. "nein").
 
 ```{r, results = "hide"}
 fit_boot = sem(model_sem, StressAtWork, se = "boot", bootstrap = 100) # bootstrap = 1000
@@ -328,14 +328,14 @@ parameterEstimates(fit_boot)
 print(parameterEstimates(fit_boot))
 ```
 
-Wie groß ist der totale Effekt von Arbeitsorganisationalen Problemen auf die Psychosomatischen Beschwerden? Antwort: T = **0.298**.
+Wie groß ist der totale Effekt von arbeitsorganisationalen Problemen auf die psychosomatischen Beschwerden? Antwort: T = **0.298**.
 
 Ist dieser statistisch signifikant? Benutzen Sie Bootstrapping, um dieser Frage auf den Grund zu gehen. Antwort: **signifikant** ("signifikant" vs "ns").
 
 _Das CI schließt die Null nicht ein - daher ist der indirekte Effekt signifikant._
 
 ## Aufgaben: Invarianztestung
-Wir hatten in der R-Sitzung herausgefunden, dass für das angenommene Mediationsmodell von Zeitdruck über Emotionale Erschöpfung auf Psyschosomatische Beschwerden nur von strikter nicht aber von vollständiger Invarianz ausgegangen werden kann. Als Gründe hierfür hatten wir mögliche Unterschiede im latenten Mittelwert von Zeitdruck bzw. im Mittelwert der manifesten Kompositvariable Psychosomatische Beschwerden genannt. Dem wollen wir nun weiter nachgehen. Wir wollen das CFA Modell für Zeitdruck hinsichtlich der Invarianzannahmen über das Geschlecht prüfen. Das zu verwendende Modell lautet:
+Wir hatten in der R-Sitzung herausgefunden, dass für das angenommene Mediationsmodell von Zeitdruck über emotionale Erschöpfung auf psyschosomatische Beschwerden nur von strikter nicht aber von vollständiger Invarianz ausgegangen werden kann. Als Gründe hierfür hatten wir mögliche Unterschiede im latenten Mittelwert von Zeitdruck bzw. im Mittelwert der manifesten Kompositvariable psychosomatische Beschwerden genannt. Dem wollen wir nun weiter nachgehen. Wir wollen das CFA Modell für Zeitdruck hinsichtlich der Invarianzannahmen über das Geschlecht prüfen. Das zu verwendende Modell lautet:
 ```{r}
  model_ZD <- '
 ZD =~ zd1 + zd2 + zd6
@@ -343,10 +343,10 @@ ZD =~ zd1 + zd2 + zd6
 ```
 
 ### Invarianz in `R` 
-Siehe OLAT: _Mit group.equal konnten wir der lavaan Funktion sem diejenigen Parameter als Vektor von Strings, also von Buchstabenketten, übergeben, die über die Gruppen hinweg gleichgesetzt werden sollten. Hierbei sind die Anführungszeichen wichtig und die richtige Benennung der Parameter. Den Lösungen sind nochmals die Zuordnung zu entnehmen. Die Residualvarianzen der manifesten Variablen werden "residuals" genannt._
+Siehe OLAT: _Mit group.equal konnten wir der lavaan Funktion sem diejenigen Parameter als Vektor von Strings, also von Buchstabenketten, übergeben, die über die Gruppen hinweg gleichgesetzt werden sollten. Hierbei sind die Anführungszeichen wichtig und die richtige Benennung der Parameter. Den Lösungen ist nochmals die Zuordnung zu entnehmen. Die Residualvarianzen der manifesten Variablen werden "residuals" genannt._
 
 ### Invarianz von Zeitdruck
-Um die Modelle miteinander zu vergleichen müssen wir einige Likelihood-Ratio-Tests durchführen. Bevor wir dies tun, müssen wir den Fit des konfigural invarianten Modell betrachten. Der $\chi^2$-Wert dieses Modells liegt bei 0 bei 0 df. Damit ist hier kein Modelltest möglich, die Daten werden perfekt durch das Modell beschrieben. Beginnen wir mit dem Vergleich der Modelle. Wir wollen die verschiedenen Invarianzstufen prüfen:
+Um die Modelle miteinander zu vergleichen, müssen wir einige Likelihood-Ratio-Tests durchführen. Bevor wir dies tun, müssen wir den Fit des konfigural-invarianten Modells betrachten. Der $\chi^2$-Wert dieses Modells liegt bei 0 bei 0 df. Damit ist hier kein Modelltest möglich, die Daten werden perfekt durch das Modell beschrieben. Beginnen wir mit dem Vergleich der Modelle. Wir wollen die verschiedenen Invarianzstufen prüfen:
 
 #### Konfigurale Invarianz
 ```{r, results = "hide"}
@@ -408,7 +408,7 @@ lavTestLRT(fit4, fit3)
 ```{r, echo = F}
 print(lavTestLRT(fit4, fit3))
 ```
-Nun wollen wir zunächst prüfen, ob die latenten Mittelwert gleich sind. Dazu spezifizieren Sie zu den anderen Invarianzbedingungen zusätzlich noch "means" in group.equal. Berichten Sie die Ergebnisse:
+Nun wollen wir zunächst prüfen, ob die latenten Mittelwerte gleich sind. Dazu spezifizieren Sie zu den anderen Invarianzbedingungen zusätzlich noch "means" in group.equal. Berichten Sie die Ergebnisse:
 
 Die $\chi^2$-Differenz der beiden Modelle liegt bei **3.8735** bei **1** Freiheitsgraden ($\Delta df$). Der zugehörige p-Wert liegt bei **0.04905**. Somit wird die $H_0$-Hypothese **verworfen** ("verworfen" vs. "nicht verworfen"). Können wir von Invarianz der latenten Mittelwerte über das Geschlecht ausgehen? Antwort ("ja" vs. "nein"): **nein**.
 
