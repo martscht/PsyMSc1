@@ -170,7 +170,7 @@ BOLE =~ bo7 + bo8 + bo21
 # Structural
 BOEE ~ a1*ZD + a2*AOP
 BFs ~ b1*BOEE + c1*ZD + c2*AOP
-BOLE ~ b2*BOEE + d2*ZD + d2*AOP
+BOLE ~ b2*BOEE + d1*ZD + d2*AOP
 ZD ~~ AOP
 BFs ~~ BOLE
 
@@ -193,7 +193,7 @@ lavaan::summary(fit_sem, fit.measures=T)
 
 _Der Summary entnehmen wir, dass wir das richtige Modell geschätzt haben!_
 
-Um zu prüfen, dass Sie das richtige Modell spezifiziert haben, vergleichen Sie den $\chi^2$-Wert dieses Modells der bei 93.466 mit df = 69 liegt.
+Um zu prüfen, dass Sie das richtige Modell spezifiziert haben, vergleichen Sie den $\chi^2$-Wert dieses Modells der bei  91.291 mit df = 68 liegt.
 
 _Der $\chi^2$-Wert liegt bei `r fitmeasures(fit_sem)["chisq"]` mit einem zugehörigen $p$-Wert von `r fitmeasures(fit_sem)["pvalue"]`. Die Fit-Indizes liegen bei: CFI = `r fitmeasures(fit_sem)["cfi"]`, TLI = `r fitmeasures(fit_sem)["tli"]`, RMSEA = `r fitmeasures(fit_sem)["rmsea"]` und SRMR = `r fitmeasures(fit_sem)["srmr"]` und zeigen alle somit einen guten Fit an (da größer [CFI,TLI] bzw. kleiner [RMSEA, SRMR] als der Cut-Off-Wert)._
 
